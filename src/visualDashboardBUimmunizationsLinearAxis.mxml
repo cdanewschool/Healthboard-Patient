@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="600" width="100%" height="100%"
+			   skinClass="skins.general.backgroundGradient"
+			   xmlns:components="components.*"
+			   xmlns:ns="external.calendar.mxml_views.*"
+			   xmlns:views="external.calendar.classes.views.*"
+			   xmlns:calendar="external.com.flexcalendar.components.calendar.*" xmlns:home="components.home.*" xmlns:fxg="components.fxg.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import external.calendar.classes.events.CustomEvents;
+			import external.calendar.classes.model.DataHolder;
+			import external.calendar.classes.utils.CommonUtils;
+			import external.calendar.classes.views.MonthView;
+			
+			import components.appointments.myAppointmentsWindow;
+			import components.appointments.myClassesWindow;
+			
+			import mx.charts.CategoryAxis;
+			import mx.charts.ChartItem;
+			import mx.charts.GridLines;
+			import mx.charts.HitData;
+			import mx.charts.chartClasses.AxisBase;
+			import mx.charts.chartClasses.Series;
+			import mx.charts.events.ChartItemEvent;
+			import mx.charts.series.items.PlotSeriesItem;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.mx_internal;
+			import mx.graphics.IFill;
+			import mx.graphics.SolidColor;
+			import mx.graphics.SolidColorStroke;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;
+			
+			import external.calendar.mxml_views.hourCell;
+			
+			
+			/* Current date will be bound all views */
+			[Bindable]
+			private var m_intCurrentDate:Date;
+			
+			/*ADDED BY MICHAEL*/
+			[Bindable] private var _timeSlots:Object = {
+				'date-7-14-2011:04pm': {
+					'firstSlot': true,
+					'secondSlot': false
+				}
+			}
+			
+			/* Function will execute on creation complete of main.mxml */
+			private function onApplicationStart():void
+			{
+				var objDate:Date = new Date();
+				dtPicker.selectedDate = objDate;
+				
+				// create events
+				monthView.addEventListener(CustomEvents.MONTH_VIEW_CLICK, onMonthViewClick);
+				DataHolder.getInstance().addEventListener(CustomEvents.ADD_NEW_EVENT, onNewEventAdded);
+				
+				onDateChange();
+			}
+			
+			/* Custom Events */
+			private function onDateScroll():void
+			{
+				onDateChange();
+			}
+			
+			private function onDateChange():void
+			{
+				m_intCurrentDate = new Date(dtPicker.displayedYear, dtPicker.displayedMonth, dtPicker.selectedDate.date);
+			}
+			
+			/*private function onDayClick():void
+			{
+			stackViews.selectedIndex = 1;
+			}*/
+			private function onWeekClick():void
+			{
+				stackViews.selectedIndex = 1;
+				btnCalendarMonth.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarWeek.setStyle("chromeColor", 0xFF931E);
+				btnCalendarList.setStyle("chromeColor", 0xB3B3B3);
+			}
+			private function onMonthClick():void
+			{
+				stackViews.selectedIndex = 0;
+				btnCalendarMonth.setStyle("chromeColor", 0xFF931E);
+				btnCalendarWeek.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarList.setStyle("chromeColor", 0xB3B3B3);
+			}
+			private var wasGridDisplayedAlready:Boolean = false;
+			private function onListClick():void
+			{
+				stackViews.selectedIndex = 2;
+				if(wasGridDisplayedAlready) {
+					appointmentsList.invalidateList();		//this refreshes the datagrid! (if the dataProvider was an ArrayCollection, should use invalidateDisplayList() instead.
+				}
+				wasGridDisplayedAlready = true;
+				btnCalendarMonth.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarWeek.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarList.setStyle("chromeColor", 0xFF931E);
+			}
+			
+			// function fires when a cell is being clicked from the Month View
+			private function onMonthViewClick(_event:CustomEvents):void
+			{
+				dtPicker.selectedDate = _event.object.date;
+				onDateChange();
+				stackViews.selectedIndex = 0;
+				btnCalendarMonth.setStyle("chromeColor", 0xFF931E);
+				btnCalendarWeek.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarList.setStyle("chromeColor", 0xB3B3B3);
+			}
+			
+			// function fires when Save button is clicked from Event From to save an event
+			private function onNewEventAdded(_event:CustomEvents):void
+			{
+				onDateChange();
+				monthView.redraw();
+			}
+			
+			/**
+			 * ADDED BY MICHAEL
+			 */
+			public function setAvailable(set:String, reason:String):void{
+				trace('clicked: '+set);
+				if(set == 'set1'){
+					_timeSlots = {
+						'date-7-12-2011:04am': {
+							'firstSlot': true,
+							'secondSlot': true,
+							'reason': reason,
+							'has hour slot': function():String{
+								return 'adsf';
+							}
+						}
+					};
+				}else{
+					_timeSlots = {
+						'date-7-13-2011:06am': {
+							'firstSlot': true,
+							'secondSlot': true,
+							'reason': reason
+						},
+						'date-7-14-2011:01pm': {
+							'firstSlot': false,
+							'secondSlot': true,
+							'reason': reason
+						}
+					};
+				}
+			}
+			/*END CODE FOR CALENDAR*******/
+			
+			/*[Bindable] public var appointmentRequested:Boolean = false;
+			private function requestAppointment():void {
+			appointmentRequested = true;
+			
+			}*/
+			
+			//added by damian... (obsolete)
+			private function displayAppointments():void {
+				//...
+			}
+			
+			private function requestAppointment():void {
+				var myAppointment:myAppointmentsWindow = myAppointmentsWindow(PopUpManager.createPopUp(this, myAppointmentsWindow) as spark.components.TitleWindow);
+				PopUpManager.centerPopUp(myAppointment);
+				stackViews.selectedIndex = 1;
+				btnCalendarMonth.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarWeek.setStyle("chromeColor", 0xFF931E);
+				btnCalendarList.setStyle("chromeColor", 0xB3B3B3);
+			}
+			
+			private function requestClasses():void {
+				var myClass:myClassesWindow = myClassesWindow(PopUpManager.createPopUp(this, myClassesWindow) as spark.components.TitleWindow);
+				PopUpManager.centerPopUp(myClass);
+				stackViews.selectedIndex = 1;
+				btnCalendarMonth.setStyle("chromeColor", 0xB3B3B3);
+				btnCalendarWeek.setStyle("chromeColor", 0xFF931E);
+				btnCalendarList.setStyle("chromeColor", 0xB3B3B3);
+			}
+			
+			/*BEGIN IMMUNIZATIONS*/
+			//obsolete ArrayCollection, replaced by XML data
+			/*[Bindable] private var immunizationsData:ArrayCollection = new ArrayCollection( [
+			{Date: "06/01/2011", Order: 0.5, Immunization: "Yellow Fever" },
+			{Date: "03/01/2011", Order: 1, Immunization: "Tetanus & Diphteria" },
+			{Date: "08/15/2011", Order: 2, Immunization: "Polio" },
+			{Date: "05/01/2011", Order: 3, Immunization: "MMR" },
+			{Date: "07/21/2011", Order: 4, Immunization: "Influenza" },
+			{Date: "07/21/2011", Order: 5, Immunization: "Hepatitis A" } ]);*/		//dateFormatterToday.format(new Date())
+			
+			//USE ONLY FOR LINEAR AXIS
+			private function lblVAxisImmunizations(cat:Object, pcat:Object, ax:LinearAxis):String {
+				if(cat == 0) return "";
+				else return immunizationsCategories[Number(cat) - 1];	//immunizationsData[Number(cat) - 1]['name']
+			}
+			
+			/*private function lblVAxisImmunizations(cat:Object, pcat:Object, axis:CategoryAxis, categoryItem:Object):String {
+			if(cat == 0) return "";
+			else return immunizationsData[Math.floor(Number(categoryItem.Order))]['Immunization'];
+			}*/
+			
+			private function lblHAxisImmunizations(cat:Object, pcat:Object, ax:DateTimeAxis):String {
+				return dateFormatter.format(new Date(cat.fullYear, cat.month + 1, cat.dateUTC));				
+			}
+			
+			private function lblHAxisImmunizationsYear(cat:Object, pcat:Object, ax:DateTimeAxis):String {
+				return dateFormatterYear.format(new Date(cat.fullYear, cat.month + 1, cat.dateUTC));				
+			}
+			
+			private function immunizationsFillFunction(element:ChartItem, index:Number):IFill {
+				var c:SolidColor = colorImmunizationsDue1Month	//yellow
+				var item:PlotSeriesItem = PlotSeriesItem(element);
+				var immunizationDate:Date = new Date(item.xValue.substr(6),item.xValue.substr(0,2)-1,item.xValue.substr(3,2));
+				var todayWithTime:Date = new Date();
+				var today:Date = new Date(todayWithTime.getFullYear(),todayWithTime.getMonth(),todayWithTime.getDate());
+				
+				if(item.item.completed == true) {
+					c = colorImmunizationsCompleted;		//gray
+				}
+				else if(immunizationDate.getTime() == today.getTime()) {
+					c = colorImmunizationsToday;		//green
+				}
+				else if(immunizationDate.getTime() < today.getTime()) {
+					c = colorImmunizationsDue;		//red
+				}
+				
+				return c;
+			}
+			
+			/**This function is basically identical to the preceding one.
+			 * It is used, however, by the itemRenderer component in the Data Grid showing the immunizations list.
+			 * The preceding one couldn't be used in this case, since the required parameters for that function weren't available in the itemRenderer component.
+			 */
+			public function myImmunizationsFillFunction(completed:Boolean, immunizationDateString:String):SolidColor {
+				var c:SolidColor = colorImmunizationsDue1Month	//yellow
+				var immunizationDate:Date = new Date(immunizationDateString.substr(6),Number(immunizationDateString.substr(0,2))-1,immunizationDateString.substr(3,2));
+				var todayWithTime:Date = new Date();
+				var today:Date = new Date(todayWithTime.getFullYear(),todayWithTime.getMonth(),todayWithTime.getDate());
+				
+				if(completed == true) {
+					c = colorImmunizationsCompleted;		//gray
+				}
+				else if(immunizationDate.getTime() == today.getTime()) {
+					c = colorImmunizationsToday;		//green
+				}
+				else if(immunizationDate.getTime() < today.getTime()) {
+					c = colorImmunizationsDue;		//red
+				}
+				
+				return c;
+			}
+			
+			[Bindable] private var minDate:Date = new Date( "Oct 1 2010 01:03:54 AM");
+			[Bindable] private var maxDate:Date = new Date( "Oct 1 2011 01:03:54 AM");
+			private function immunizationsSetMinMax():void {
+				hAxisImmunizations.minimum = minDate;	//new Date( "Oct 1 2010 01:03:54 AM");
+				hAxisImmunizations.maximum = maxDate;	//new Date( "Oct 1 2011 01:03:54 AM");
+				
+				canvas.clear();
+				canvas.lineStyle(3,0x00ADEE,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
+				canvas.moveTo(dateFormatterToday.format(new Date()),immunizationsCategories.length);		//canvas.moveTo(dateFormatterToday.format(new Date()),'Hepatitis A');
+				canvas.lineTo(dateFormatterToday.format(new Date()),0.05);	//canvas.lineTo(dateFormatterToday.format(new Date()),'Yellow Fever');
+				
+				/*canvas.lineStyle(1,0xFFFFFF,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
+				//canvas.moveTo(dateFormatterToday.format(new Date("Sep 30 2010 01:03:54 AM")),'Influenza');
+				//canvas.lineTo(dateFormatterToday.format(new Date()),'Influenza');
+				for(var i:uint = 0; i < immunizationsCategories.length; i++) {
+				var minDatePlus1:Date = minDate;
+				minDatePlus1.setDate(minDate.getDate() + 1);
+				canvas.moveTo(this.dateFormatterToday.format(minDatePlus1),this.immunizationsCategories[i]);
+				canvas.lineTo(this.dateFormatterToday.format(maxDate),this.immunizationsCategories[i]);
+				}*/
+			}
+			
+			private function handleImmDateRange(range:String):void {
+				if(range == '1m') {
+					minDate = new Date( "Jun 28 2011 01:03:54 AM");
+					maxDate = new Date( "Aug 4 2011 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizations;
+					immVerticalGridLine.alpha = 0;
+				}
+				else if(range == '3m') {
+					minDate = new Date( "May 4 2011 01:03:54 AM");
+					maxDate = new Date( "Aug 4 2011 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizations;
+					immVerticalGridLine.alpha = 0;
+				}
+				else if(range == '1y') {
+					minDate = new Date( "Oct 4 2010 01:03:54 AM");
+					maxDate = new Date( "Oct 4 2011 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizations;
+					immVerticalGridLine.alpha = 0;
+				}
+				else if(range == '3y') {
+					minDate = new Date( "Jan 4 2009 01:03:54 AM");
+					maxDate = new Date( "Jan 4 2012 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizationsYear;
+					immVerticalGridLine.alpha = 0.3;
+				}
+				else if(range == '5y') {
+					minDate = new Date( "Jan 4 2007 01:03:54 AM");
+					maxDate = new Date( "Jan 4 2012 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizationsYear;
+					immVerticalGridLine.alpha = 0.3;
+				}
+				else if(range == '10y') {
+					minDate = new Date( "Jan 4 2002 01:03:54 AM");
+					maxDate = new Date( "Jan 4 2012 01:03:54 AM");
+					hAxisImmunizations.labelFunction = lblHAxisImmunizationsYear;
+					immVerticalGridLine.alpha = 0.3;
+				}
+				hAxisImmunizations.minimum = minDate;
+				hAxisImmunizations.maximum = maxDate;
+				
+				/*for(var i:uint = 0; i < immunizationsCategories.length; i++) {
+				var minDatePlus1:Date = minDate;
+				minDatePlus1.setDate(minDate.getDate() + 1);
+				canvas.moveTo(this.dateFormatterToday.format(minDatePlus1),this.immunizationsCategories[i]);
+				canvas.lineTo(this.dateFormatterToday.format(maxDate),this.immunizationsCategories[i]);
+				}*/
+			}
+			
+			private function switchImmunizationsView(index:uint):void {
+				viewsImmunization.selectedIndex = index;
+				if(index == 0) {
+					btnImmunizationsChart.setStyle("chromeColor", 0xFF931E);
+					btnImmunizationsList.setStyle("chromeColor", 0xB3B3B3);
+				}
+				else {
+					btnImmunizationsChart.setStyle("chromeColor", 0xB3B3B3);
+					btnImmunizationsList.setStyle("chromeColor", 0xFF931E);
+				}
+			}
+			
+			[Bindable] private var immunizationItemDrillDown:ArrayCollection = new ArrayCollection();
+			private function showImmunizationDetails(e:ChartItemEvent):void{
+				this.immunizationItemDrillDown.source = e.hitData.item.details.source;
+				immunizationsDetails.visible = true;
+			}
+			
+			[Bindable] public var immunizationsData:ArrayCollection = new ArrayCollection();
+			[Bindable] private var immunizationsCategories:Array = new Array(); //new Array("Yellow Fever", "Tetanus & Diphteria", "Polio", "Influenza", "Hepatitis A");
+			private function immunizationsResultHandler(event:ResultEvent):void {
+				/*if(event.result.autnresponse.responsedata.clusters.cluster is ObjectProxy ) {
+				= new ArrayCollection( [event.result.autnresponse.responsedata.clusters.cluster] );
+				}
+				else {*/
+				//clusterData = event.result.autnresponse.responsedata.clusters.cluster;	
+				//}
+				immunizationsData = event.result.immunizations.immunization;
+				for(var i:uint = 0; i < immunizationsData.length; i++) {
+					if(immunizationsCategories.indexOf(immunizationsData[i].name) == -1) immunizationsCategories.push(immunizationsData[i].name);
+				}
+				
+				//the following is for when the "Required only" checkbox is UNCHECKED, so the categories for the Y axis are re-calculated.
+				/* COMMENTED OUT BECAUSE WHEN USING A LINEAR AXIS, WE MESS UP THE GRAPH IF WE REMOVE AN ENTIRE ROW/CATEGORY, SINCE THIS MESSES UP THE "POINTS" POSITION IN THE GRAPH, SINCE THEY ARE REPRESENTED BY A NUMERIC "ORDER"... 
+				var immunizationsCategories3:Array = new Array();		//using this temp variable in case this is called after unchecking the "Required only" checkbox; if we set immunizationsCategories = new Array(); then it messes up the graph
+				for(var i:uint = 0; i < immunizationsData.length; i++) {
+					if(immunizationsCategories3.indexOf(immunizationsData[i].name) == -1) immunizationsCategories3.push(immunizationsData[i].name);
+				}
+				immunizationsCategories = immunizationsCategories3;		//therefore we just assign it here
+				*/
+				this.currentState='modImmunizations';
+				getImmunizationsDueNumber();
+				//immunizationsSetMinMax();
+			}
+			
+			private function lblImmunizationDetailsNextDue(item:Object, column:DataGridColumn):String {
+				return item.details[5].data1;
+			}
+			private function lblImmunizationDetailsSeries(item:Object, column:DataGridColumn):String {
+				return item.details[1].data1;
+			}
+			private function lblImmunizationDetailsExpires(item:Object, column:DataGridColumn):String {
+				return item.details[7].data1;
+			}
+			private function lblImmunizationDetailsLastEdit(item:Object, column:DataGridColumn):String {
+				return item.details[0].data2;
+			}
+			
+			private function dataTipsImmunizations(hd:HitData):String {
+				var completed:String = hd.item.completed == true ? "Completed" : "Not completed";
+				return "<b>" + hd.item.name + " immunization: " + hd.item.date + "</b><br><i>" + completed + ".</i><br><br>" + hd.item.description;
+			}
+			
+			/* This is used to get the number to be displayed at the top of the module */
+			[Bindable] private var immunizationsDueNumber:uint = 0;
+			private function getImmunizationsDueNumber():void {
+				var count:uint = 0;
+				for(var i:uint = 0; i < immunizationsData.source.length; i++) {
+					var immunizationDate:Date = new Date(immunizationsData[i].date.substr(6),immunizationsData[i].date.substr(0,2)-1,immunizationsData[i].date.substr(3,2));
+					var todayWithTime:Date = new Date();
+					var today:Date = new Date(todayWithTime.getFullYear(),todayWithTime.getMonth(),todayWithTime.getDate());
+					
+					if(immunizationsData[i].completed != true) {
+						if(immunizationDate.getTime() < today.getTime()) {
+							count++;
+						}
+						else if(immunizationDate.getTime() > today.getTime()) {
+							count++;
+						}
+					}
+				}
+				immunizationsDueNumber = count;
+			}
+			
+			protected function checkImmunizationsRequired_clickHandler(event:MouseEvent):void {
+				if(checkImmunizationsRequired.selected) {
+					for(var i:uint = 0; i < immunizationsData.length; i++) {
+						if(immunizationsData[i].required == false) {
+							immunizationsData.removeItemAt(i);
+							i--;
+						}	
+					}
+					
+					//The following is done so that once we check the "Required Only" box, not only we hide the "not required points", but also remove the entire "row" or "category" for the non-required immunization. Therefore, we reset immunizationsCategories.
+					/*COMMENTED OUT BECAUSE WHEN USING A LINEAR AXIS, WE MESS UP THE GRAPH IF WE REMOVE AN ENTIRE ROW/CATEGORY, SINCE THIS MESSES UP THE "POINTS" POSITION IN THE GRAPH, SINCE THEY ARE REPRESENTED BY A NUMERIC "ORDER"... 
+					var immunizationsCategories2:Array = new Array();		//using this temp variable in case this is called after checking the "Required only" checkbox; if we set immunizationsCategories = new Array(); then it messes up the graph
+					for(var j:uint = 0; j < immunizationsData.length; j++) {
+						if(immunizationsCategories2.indexOf(immunizationsData[j].name) == -1) immunizationsCategories2.push(immunizationsData[j].name);
+					}
+					canvas.clear();
+					immunizationsCategories = immunizationsCategories2;		//therefore we just assign it here
+					canvas.lineStyle(3,0x00ADEE,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
+					canvas.moveTo(dateFormatterToday.format(new Date()),immunizationsCategories.length);		//canvas.moveTo(dateFormatterToday.format(new Date()),'Hepatitis A');
+					canvas.lineTo(dateFormatterToday.format(new Date()),0.05);	//canvas.lineTo(dateFormatterToday.format(new Date()),'Yellow Fever');
+					*/
+				}
+				else {
+					immunizationsXMLdata.send();
+					
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Array id="bgeImmunizations">
+			<mx:GridLines gridDirection="both">
+				<mx:horizontalStroke>
+					<mx:SolidColorStroke alpha="0" />
+				</mx:horizontalStroke>
+				<mx:verticalStroke>
+					<s:SolidColorStroke id="immVerticalGridLine" alpha="0" color="0xFFFFFF" />
+				</mx:verticalStroke>
+				<mx:horizontalAlternateFill>
+					<mx:SolidColor color="0x303030" />
+				</mx:horizontalAlternateFill>
+			</mx:GridLines>
+		</fx:Array>
+		
+		<mx:DateFormatter id="dateFormatter" formatString="MMM YY"/>
+		<mx:DateFormatter id="dateFormatterYear" formatString="YYYY"/>
+		<mx:DateFormatter id="dateFormatterToday" />
+		
+		<mx:HTTPService id="immunizationsXMLdata"
+						url="data/immunizations.xml"
+						result="immunizationsResultHandler(event)" />
+		
+		<s:SolidColor id="colorImmunizationsDue" color="0xF40000" />
+		<s:SolidColor id="colorImmunizationsDue1Month" color="0xFCEE21" />
+		<s:SolidColor id="colorImmunizationsToday" color="0x39B54A" />
+		<s:SolidColor id="colorImmunizationsCompleted" color="0xC0CED2" />
+	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace comps "comps.*";		/*for logo.fxg*/
+		
+		@font-face {
+			src:url("fonts/MyriadWebPro.ttf");
+			fontFamily: "myMyriad";
+		}
+		
+		@font-face {
+			src:url("fonts/MyriadWebPro-Bold.ttf");
+			fontFamily: "myMyriad";
+			font-weight: bold;
+		}
+		
+		@font-face {
+			src:url("fonts/MyriadWebPro-Italic.ttf");
+			fontFamily: "myMyriad";
+			font-style: italic;
+		}
+		
+		/*@font-face {
+		src:url("fonts/HelveticaNeue.dfont");
+		fontFamily: "Helvetica Neue";
+		}
+		
+		@font-face {
+		src:url("fonts/HelveticaNeue.dfont");
+		fontFamily: "Helvetica Neue Bold";
+		font-weight:bold;
+		}*/
+		
+		.title {
+			fontFamily: "myMyriad";
+			font-weight: bold;
+			fontSize: 21;
+			color: "0xBED63A";
+		}
+		
+		.text {
+			fontFamily: "myMiriad";
+			fontSize: 14;
+			font-weight:normal;
+			color: "0xFFFFFF";
+		}
+		
+		.textItalic {
+			fontFamily: "myMiriad";
+			font-style:italic;
+			fontSize: 14;
+			font-weight:normal;
+			color: "0xFFFFFF";
+		}
+		
+		.formLabels {
+			fontFamily: "myMiriad";
+			font-weight: bold;
+			fontSize: 12;
+			color: "0xFFFFFF";
+		}
+		
+		.formTextField {
+			content-background-color: "0xFFFFFF";
+			color: "0x666666";
+		}
+		
+		.profileFormTitle {
+			font-family: "myMiriad";
+			font-size: 23;
+			font-weight:bold;
+			color: "0xFFFFFF";
+		}
+		
+		.profileFormName {
+			font-family: "myMiriad";
+			font-size: 18;
+			font-weight:bold;
+			color: "0xAEDEE4";
+		}
+		
+		.profileFormSubtitle {
+			font-family: "myMiriad";
+			font-size: 13;
+			font-weight:bold;
+			color: "0xBED63A";
+		}
+		
+		.profileFormText {
+			font-family: "myMiriad";
+			font-size: 13;
+			font-weight:normal;
+			color: "0xFFFFFF";
+		}
+		
+		.widgetTabTitle {
+			font-family: "myMiriad";
+			font-size: 17;
+			font-weight:bold;
+			color: "0xFFFFFF";
+		}
+		
+		.subtitles {
+			font-family: "myMyriad";
+			font-size: 12;
+			color: "0xBED63A";
+		}
+		
+		.moduleSubtitleItalic {
+			fontFamily: "myMiriad";
+			font-style:italic;
+			fontSize: 16;
+			color: "0xFFFFFF";
+		}
+		
+		.smallText {
+			font-family: "myMyriad";
+			font-size: 9;
+			color: "0xEDEDED";
+		}
+		
+		.smallTextBlue {
+			font-family: "myMyriad";
+			font-size: 9;
+			color: "0xAEDEE4";
+		}
+		
+		.smallTextBold {
+			font-family: "myMyriad";
+			font-size: 9;
+			font-weight:bold;
+			color: "0xEDEDED";
+		}
+		
+		/*s|Button {
+		chrome-color: "0xF07E2A";	
+		color: "0xFFFFFF";
+		}*/
+		.orangeButton {
+			chrome-color: "0xF07E2A";	
+			color: "0xFFFFFF";
+		}
+		
+		.buttonText {
+			font-family: "myMyriad";
+			font-size: 11;
+			color: "0x000000";
+			chromeColor: "0xB3B3B3";
+		}
+		
+		.DashBorder {
+			dashlen: 20;
+			gaplen: 20;
+		}   
+		.tightDashBorder {
+			dashlen: 2;
+			gaplen: 2;
+		}
+		.tightDashWideGapBorder {
+			dashlen: 2;
+			gaplen: 20;
+		}
+		.wideDashTightGapBorder {
+			dashlen: 20;
+			gaplen: 2;
+		}
+		
+		.dataGridHeader {
+			color: "0xAEDEE4";
+			fontSize: 11;
+			fontWeight: bold;
+		}
+		
+		mx|PlotChart {
+			fontFamily:Myriad;
+			fontSize:11;
+			color:#FFFFFF;
+		}
+		
+		.immunizationsVAxisLabels{
+			paddingTop: 20;
+		}
+		
+		/*mx|DataTip {
+		paddingRight:30;
+		paddingLeft:30;
+		}*/
+		
+	</fx:Style>
+	
+	<fx:Style source="external/calendar/styles/skin.css"/>
+	
+	<s:states>
+		<s:State name="default" />
+		<s:State name="loggedIn" />
+		<s:State name="widgetView" />
+		<s:State name="modCalendar" />
+		<s:State name="modImmunizations" />
+		<s:State name="profile" />
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" />
+	</s:layout>
+	
+	<!--<s:transitions>
+	<s:Transition id="profTransition" fromState="loggedIn" toState="profile">
+	<s:Sequence id="t1" targets="{[home, profile]}">             
+	<mx:Blur duration="500" blurXFrom="10.0" blurXTo="0.0" 
+	blurYFrom="10.0" blurYTo="0.0"/> 
+	</s:Sequence>
+	</s:Transition>
+	</s:transitions>-->
+	
+	<s:VGroup width="1024" includeIn="default">
+		<s:VGroup paddingLeft="25" paddingTop="7">
+			<fxg:healthBoardLogo id="hbLogo" />
+		</s:VGroup>
+		
+		<!-- LOGIN BOX -->
+		<s:VGroup width="100%" horizontalAlign="center" paddingTop="156">
+			<s:BorderContainer width="528" height="328" backgroundColor="0xFFFFFF" backgroundAlpha="0.2" cornerRadius="3">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
+				
+				<s:Label text="Login" styleName="title" paddingTop="26" paddingLeft="44" />
+				
+				<s:HGroup paddingLeft="44" paddingTop="26">
+					<s:Label text="If you don't have one already, please" styleName="text" />
+					<s:VGroup paddingTop="-6" paddingLeft="-10">
+						<mx:LinkButton label="create an account." styleName="text" color="0xFF931E" textDecoration="underline" skin="{null}" />
+					</s:VGroup>
+				</s:HGroup>	
+				
+				<mx:Form id="myForm" paddingLeft="44" width="100%">
+					<s:Label text="User ID" styleName="formLabels" />
+					<mx:FormItem paddingLeft="-14">
+						<mx:TextInput id="userID" styleName="formTextField" width="240" height="26" fontSize="16" />
+					</mx:FormItem>
+					
+					<s:Label text="Password" styleName="formLabels" />
+					<mx:FormItem paddingLeft="-14">
+						<mx:TextInput id="password" styleName="formTextField" width="240" height="26" fontSize="16" />
+					</mx:FormItem>
+					
+					<mx:LinkButton label="Forgot User ID or Password?" color="0xFF931E" textDecoration="underline" fontStyle="italic" fontSize="14" skin="{null}" paddingLeft="-3" paddingTop="10" />
+					
+					<s:HGroup horizontalAlign="center" paddingTop="20">
+						<s:Button label="Login" width="103" height="24" styleName="orangeButton" click="{this.currentState='loggedIn';}" />
+					</s:HGroup>
+					
+				</mx:Form>
+			</s:BorderContainer>
+		</s:VGroup>
+	</s:VGroup>
+	
+	<!--<mx:ApplicationControlBar id="dockedBar" includeIn="loggedIn" 
+	dock="true" width="1024" borderVisible="false" dropShadowVisible="false" height="38" paddingLeft="0" paddingRight="0" fillColors="[0x999999,0xB3B3B3]" fillAlphas="[1,0]" cornerRadius="0" borderAlpha="0">
+	<s:VGroup paddingLeft="27" paddingTop="-3">
+	<comps:healthBoardLogoGray id="hbLogoGray" />
+	</s:VGroup>
+	
+	<mx:Spacer width="100%" />				
+	
+	<s:HGroup paddingTop="0" paddingRight="23">
+	<s:DropDownList selectedIndex="0" width="125" dropShadowVisible="false" contentBackgroundAlpha="0" focusAlpha="0" skinClass="skins.MyDropDownListSkin" fontFamily="myMyriad" fontWeight="bold" fontSize="12" color="0xAEDBE2"> 
+	<mx:ArrayCollection>
+	<fx:String>Isaac Goodman</fx:String>
+	<fx:String>User Profile</fx:String>
+	</mx:ArrayCollection>
+	</s:DropDownList>
+	
+	<mx:LinkButton label="Logout" color="0xFFFFFF" textDecoration="underline" fontSize="11" skin="{null}" paddingTop="2" paddingLeft="9" />
+	
+	<s:HGroup paddingTop="3">
+	<s:DropDownList dropShadowVisible="false" skinClass="skins.MyOptionsDropDownListSkin" width="17" fontFamily="myMyriad" fontSize="11"> 
+	<mx:ArrayCollection>
+	<fx:String>Button View</fx:String>
+	<fx:String>Widget View</fx:String>
+	</mx:ArrayCollection>
+	</s:DropDownList>
+	</s:HGroup>
+	</s:HGroup>
+	</mx:ApplicationControlBar>-->
+	
+	<s:VGroup includeIn="loggedIn, profile, widgetView, modCalendar, modImmunizations" width="1024" horizontalAlign="center">		
+		<!-- HEADER -->
+		<s:Group width="100%">
+			<s:BorderContainer width="1024" height="38" borderAlpha="0">
+				<s:layout>
+					<s:HorizontalLayout />
+				</s:layout>
+				<s:backgroundFill>
+					<s:LinearGradient rotation="270">
+						<s:GradientEntry color="0xB3B3B3" alpha="0" ratio="0" />
+						<s:GradientEntry color="0x999999" alpha="1" ratio="1" /> <!--ratio="0.8834"-->
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+				<s:VGroup paddingLeft="27" paddingTop="6">
+					<fxg:healthBoardLogoGray id="hbLogoGray2" />
+				</s:VGroup>
+				
+				<mx:Spacer width="100%" />				
+				
+				<s:HGroup paddingTop="6" paddingRight="23">
+					<s:DropDownList id="dropDownProfile" selectedIndex="0" width="125" dropShadowVisible="false" contentBackgroundAlpha="0" focusAlpha="0" skinClass="skins.general.MyDropDownListSkin" fontFamily="myMyriad" fontWeight="bold" fontSize="12" color="0xAEDBE2" change="{dropDownProfile.selectedIndex == 1 ? currentState = 'profile' : currentState = 'loggedIn'}"> 
+						<mx:ArrayCollection>
+							<fx:String>Isaac Goodman</fx:String>
+							<fx:String>User Profile</fx:String>
+						</mx:ArrayCollection>
+					</s:DropDownList>
+					
+					<mx:LinkButton label="Logout" color="0xFFFFFF" textDecoration="underline" fontSize="11" skin="{null}" paddingTop="2" paddingLeft="9" click="{currentState='default'}" />
+					
+					<s:HGroup paddingTop="3">
+						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MyOptionsDropDownListSkin" width="17" fontFamily="myMyriad" fontSize="11" change="{dropDownView.selectedIndex == 1 ? currentState = 'widgetView' : currentState = 'loggedIn'}"> 
+							<mx:ArrayCollection>
+								<fx:String>Button View</fx:String>
+								<fx:String>Widget View</fx:String>
+							</mx:ArrayCollection>
+						</s:DropDownList>
+					</s:HGroup>
+				</s:HGroup>
+			</s:BorderContainer>
+		</s:Group>
+		
+		<!-- HOME / BUTTON VIEW -->
+		<s:HGroup id="home" paddingTop="59" includeIn="loggedIn">
+			<s:TileGroup requestedColumnCount="5" horizontalGap="42" verticalGap="46" clipAndEnableScrolling="true">
+				<mx:Button upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" />
+				<mx:Button upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="{this.currentState='modCalendar'; onApplicationStart();}" />
+				<mx:Button upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" />
+				<mx:Button upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{immunizationsXMLdata.send();  }" />
+				<mx:Button upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" />
+				<mx:Button upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" />
+				<mx:Button upSkin="@Embed('images/nutrition.png')" overSkin="@Embed('images/nutrition_over.png')" downSkin="@Embed('images/nutrition_down.png')" />
+				<mx:Button upSkin="@Embed('images/educationalResources.png')" overSkin="@Embed('images/educationalResources_over.png')" downSkin="@Embed('images/educationalResources_down.png')" />
+				<mx:Button upSkin="@Embed('images/communityGroup.png')" overSkin="@Embed('images/communityGroup_over.png')" downSkin="@Embed('images/communityGroup_down.png')" />
+				<mx:Button upSkin="@Embed('images/medications.png')" overSkin="@Embed('images/medications_over.png')" downSkin="@Embed('images/medications_down.png')" />
+			</s:TileGroup>
+		</s:HGroup>
+		
+		<!-- HOME / WIDGET VIEW -->
+		<mx:Grid includeIn="widgetView" horizontalGap="33" verticalGap="18" horizontalAlign="center" width="100%" paddingTop="40">
+			<mx:GridRow>
+				<mx:GridItem>
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsMessages}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsMessages">
+							<s:NavigatorContent label="Messages">
+								<s:TitleWindow id="messages" skinClass="skins.general.myHeaderlessTitleWindow" title="Messages" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenMessages.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+				<mx:GridItem colSpan="2">
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsMedicalRecords}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsMedicalRecords">
+							<s:NavigatorContent label="Medical Records">
+								<s:TitleWindow id="medicalRecords" skinClass="skins.general.myHeaderlessTitleWindow" title="Medical Records" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenMedicalRecords.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem>
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsAppointments}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsAppointments">
+							<s:NavigatorContent label="Appointments (2)">
+								<s:TitleWindow id="appointments" skinClass="skins.general.myHeaderlessTitleWindow" title="Appointments" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenAppointments.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+				<mx:GridItem>
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsExercise}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsExercise">
+							<s:NavigatorContent label="Exercise">
+								<s:TitleWindow id="exercise" skinClass="skins.general.myHeaderlessTitleWindow" title="Exercise" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenExercise.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+				<mx:GridItem rowSpan="2">
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsVitals}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsVitals">
+							<s:NavigatorContent label="Vitals">
+								<s:TitleWindow id="vitals" skinClass="skins.general.myHeaderlessTitleWindow" title="Vitals" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenVitals.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem>
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsNutrition}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsNutrition">
+							<s:NavigatorContent label="Nutrition">
+								<s:TitleWindow id="nutrition" skinClass="skins.general.myHeaderlessTitleWindow" title="Nutrition" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenNutrition.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+				<mx:GridItem>	
+					<s:VGroup gap="0">
+						<s:TabBar dataProvider="{vsImmunization}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
+						<mx:ViewStack id="vsImmunization">
+							<s:NavigatorContent label="Immunization (1)">
+								<s:TitleWindow id="immunization" skinClass="skins.general.myHeaderlessTitleWindow" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
+									<mx:Image source="@Embed('images/screenImmunization.jpg')" />
+								</s:TitleWindow>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		
+		<!-- USER PROFILE SCREEN -->
+		<s:VGroup id="profile" paddingTop="35" width="100%" horizontalAlign="center" includeIn="profile">
+			<home:userProfileForm id="myProfileForm" skinClass="skins.general.myChromelessTitleWindow"
+								   width="980" height="681"
+								   title=" User Profile" backgroundColor="0x4A4A49" borderColor="0X898989" styleName="profileFormTitle" dropShadowVisible="false" chromeColor="#706F6F" />
+		</s:VGroup>
+		
+		<!-- CALENDAR ATTEMPT -->
+		<s:VGroup includeIn="modCalendar" width="976" paddingTop="10">
+			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState='loggedIn';" buttonMode="true" />
+				<s:Label text="Appointments" styleName="profileFormTitle" paddingLeft="13" />
+				<s:Label text="▼" fontSize="12" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
+				<s:Label text="You have" fontStyle="italic" fontSize="14" color="0xFFFFFF" paddingLeft="30" paddingTop="4" />
+				<s:Label id="lblAppointmentsNumber" text="0" fontStyle="italic" fontWeight="bold" fontSize="14" color="0xFF931E" paddingTop="4" />
+				<s:Label text="appointments in the coming week." fontStyle="italic" fontSize="14" color="0xFFFFFF" paddingTop="4" />
+				<s:Spacer width="100%" />
+				<s:HGroup gap="-1">
+					<mx:TextInput id="appointmentsSearch" text="Search appointments" fontSize="10" fontStyle="italic" color="0x999999" height="24" paddingTop="5" click="{appointmentsSearch.text=''}" />
+					<s:Button icon="@Embed('images/btnSearchIcon.png')" width="24" height="24" chromeColor="0xB3B3B3" left="-4" />
+				</s:HGroup>	
+			</s:HGroup>
+			<s:BorderContainer borderColor="0xBDBCBC" cornerRadius="4" backgroundColor="0x4A4A49" width="976">
+				<s:layout>
+					<s:HorizontalLayout horizontalAlign="center" />
+				</s:layout>
+				<s:HGroup>
+					<s:VGroup width="150" height="100%">
+						<s:Label text="Upcoming" styleName="subtitles" textAlign="center" width="100%" paddingTop="15" />
+						<s:Label text="{'Dr. Berg  –  Chronic Back Pain\nMon, Nov 16, 0830 hrs\n\nDr. Hammond  – Physical Exam\nMon, Nov 16, 1145  hrs'}" styleName="smallText" paddingLeft="9" paddingTop="12" width="100%" />
+						<s:Label text="Recommended" styleName="subtitles" textAlign="center" width="100%" paddingTop="20" />
+						<s:Label text="{'Tetanus Vaccination\nSchedule Appointment\n\nGentle Chair Yoga\nSchedule Class'}" styleName="smallText" paddingLeft="9" paddingTop="12" width="100%" />
+						<s:Spacer height="100%" />
+						<mx:DateChooser id="dtPicker" scroll="onDateScroll()" change="onDateChange()" showToday="true" yearNavigationEnabled="true" contentBackgroundAlpha="1" borderColor="0x4A4A49" fontSize="11" width="160" />
+					</s:VGroup>
+					<s:BorderContainer width="646" borderColor="0xBDBCBC" backgroundColor="0X3C3C3B">
+						<s:layout>
+							<s:VerticalLayout />
+						</s:layout>
+						
+						<s:BorderContainer height="37" width="100%" borderVisible="false" backgroundColor="0x706F6F">
+							<s:layout>
+								<s:HorizontalLayout paddingTop="6" paddingLeft="6" paddingRight="6" />
+							</s:layout>
+							<s:Button label="+ Request an Appointment" height="24" styleName="buttonText" click="requestAppointment()" />		<!-- click="{weekView.displayAppointments()}" click reference added by damian -->
+							<s:Button label="+ Find a Class" height="24" styleName="buttonText" click="requestClasses()" />
+							<s:Button label="Export" height="24" styleName="buttonText" />
+							<s:Spacer width="100%" />
+							
+							<s:HGroup gap="0">
+								<s:Button id="btnCalendarMonth" width="29" height="24" icon="@Embed('images/btnCalendarMonth.png')" click="onMonthClick()" chromeColor="0xFF931E" />
+								<s:Button id="btnCalendarWeek" width="29" height="24" icon="@Embed('images/btnCalendarWeek.png')" click="onWeekClick()" chromeColor="0xB3B3B3" />
+								<s:Button id="btnCalendarList" width="29" height="24" icon="@Embed('images/btnCalendarList.png')" click="onListClick()" chromeColor="0xB3B3B3" />
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						<mx:ViewStack id="stackViews" width="100%" height="100%">
+							<views:MonthView id="monthView" label="Month View" horizontalScrollPolicy="off" currentMonth="{dtPicker.displayedMonth}" currentYear="{dtPicker.displayedYear}" showEffect="WipeDown" hideEffect="WipeUp" />
+							<views:WeekViewTimeSlots timeSlots="{_timeSlots}" id="weekView" label="Week View" x="0" y="0" currentDate="{m_intCurrentDate}" horizontalScrollPolicy="off" showEffect="WipeDown" hideEffect="WipeUp" />
+							<mx:VBox showEffect="WipeDown" hideEffect="WipeUp">
+								<mx:DataGrid id="appointmentsList" dataProvider="{DataHolder.getInstance().dataProvider}"
+											 width="100%" height="100%"
+											 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x286982"
+											 color="0xFFFFFF" fontFamily="Myriad" fontSize="9" verticalAlign="middle"
+											 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="28" headerStyleName="dataGridHeader"
+											 borderVisible="false" rowHeight="27" horizontalGridLines="false" verticalGridLines="false">
+									<mx:columns> 
+										<mx:DataGridColumn dataField="date" headerText="Date of Service" width="180"/> 
+										<mx:DataGridColumn dataField="type" headerText="Type" /> 
+										<mx:DataGridColumn dataField="provider" headerText="Provider"/> 
+										<mx:DataGridColumn dataField="desc" headerText="Description"/> 
+										<mx:DataGridColumn headerText="Next Steps"/> 
+										<mx:DataGridColumn dataField="status" headerText="Status"/> 
+									</mx:columns> 
+								</mx:DataGrid>
+							</mx:VBox>
+							<!--<views:WeekView id="weekView" label="Week View" currentDate="{m_intCurrentDate}" horizontalScrollPolicy="off" showEffect="WipeDown" hideEffect="WipeUp" />-->
+						</mx:ViewStack>
+					</s:BorderContainer>
+					<s:VGroup width="166">
+						<s:Label text="Event Details" styleName="subtitles" textAlign="center" width="100%" paddingTop="15" />
+						<s:Label text="Dr. Gregory Bern, Team 1" textAlign="center" width="100%" styleName="smallTextBlue" paddingTop="12" />
+						<s:Line xFrom="0" xTo="160" left="20">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9E9E9E" weight="1"/>
+							</s:stroke>
+						</s:Line>
+						<s:HGroup>
+							<s:Label text="From" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="Nov 16, 2011 at 08:30" styleName="smallText" />
+						</s:HGroup>
+						<s:HGroup>
+							<s:Label text="To" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="Nov 16, 2011 at 11:45" styleName="smallText" />
+						</s:HGroup>
+						<s:Line xFrom="0" xTo="160" left="20">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9E9E9E" weight="1"/>
+							</s:stroke>
+						</s:Line>
+						<s:HGroup>
+							<s:Label text="Type" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="Routine" styleName="smallText" />
+						</s:HGroup>
+						<s:HGroup>
+							<s:Label text="Classification" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="Outpatient" styleName="smallText" />
+						</s:HGroup>
+						<s:HGroup>
+							<s:Label text="RFV" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="Chronic Back Pain" styleName="smallText" />
+						</s:HGroup>
+						<s:Line xFrom="0" xTo="160" left="20">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9E9E9E" weight="1"/>
+							</s:stroke>
+						</s:Line>
+						<s:HGroup>
+							<s:Label text="Phone" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="(999) 999-9999" styleName="smallText" />
+						</s:HGroup>
+						<s:HGroup>
+							<s:Label text="Address" textAlign="right" width="59" styleName="smallTextBold" />
+							<s:Label text="{'The New York Clinic\n99 Main St.\nNew York, NY 11111'}" styleName="smallText" />
+						</s:HGroup>
+						<s:Line xFrom="0" xTo="160" left="20">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9E9E9E" weight="1"/>
+							</s:stroke>
+						</s:Line>
+						<s:Label text="Message Team 1" textAlign="center" width="100%" styleName="smallTextBlue" />
+						<s:HGroup horizontalAlign="center" width="100%" paddingTop="15">
+							<s:Button label="- Cancel Appointment" height="24" styleName="buttonText" />
+						</s:HGroup>
+						<s:Spacer height="100%" />
+						<!--<mx:Button label="Add Event" click="{eventForm.visible=true;}" enabled="{eventForm.currentDate != null}" />
+						<mx:Button y="420" x="10" label="data set 1" click="setAvailable('set1')"/>
+						<mx:Button y="420" x="100" label="data set 2" click="setAvailable('set2')"/>
+						<comViews:EventForm id="eventForm" hour="{CommonUtils.hour}" meridiem="{CommonUtils.meridiem}" mins="{CommonUtils.mins}" currentDate="{CommonUtils.currentDate}" description="{CommonUtils.description}" visible="{eventForm.currentDate != null}" includeInLayout="{eventForm.currentDate != null}">
+						</comViews:EventForm>-->
+					</s:VGroup>
+				</s:HGroup>
+			</s:BorderContainer>	
+		</s:VGroup>
+		
+		<!-- IMMUNIZATIONS -->
+		<s:VGroup includeIn="modImmunizations" width="976" paddingTop="10">
+			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState='loggedIn';" buttonMode="true" />
+				<s:Label text="Immunizations" styleName="profileFormTitle" paddingLeft="13" />
+				<s:Label text="▼" fontSize="12" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
+				<s:Label text="You have" fontStyle="italic" fontSize="14" color="0xFFFFFF" paddingLeft="30" paddingTop="4" />
+				<s:Label id="lblImmunizationsNumber" text="{immunizationsDueNumber}" fontStyle="italic" fontWeight="bold" fontSize="14" color="0xFF931E" paddingTop="4" />
+				<s:Label text="immunizations due or due soon." fontStyle="italic" fontSize="14" color="0xFFFFFF" paddingTop="4" />
+				<s:Spacer width="100%" />
+				<s:HGroup gap="-1">
+					<mx:TextInput id="immunizationssSearch" text="Search immunizations" fontSize="10" fontStyle="italic" color="0x999999" height="24" paddingTop="5" click="{immunizationssSearch.text=''}" />
+					<s:Button icon="@Embed('images/btnSearchIcon.png')" width="24" height="24" chromeColor="0xB3B3B3" left="-4" />
+				</s:HGroup>	
+			</s:HGroup>
+			<s:BorderContainer borderColor="0xBDBCBC" cornerRadius="4" backgroundColor="0x4A4A49" width="976" height="630">
+				<s:layout>
+					<s:HorizontalLayout horizontalAlign="center" />
+				</s:layout>
+				<s:HGroup gap="0">
+					<s:BorderContainer width="796" height="100%" borderColor="0xBDBCBC" borderAlpha="0" backgroundColor="0X3C3C3B">
+						<s:layout>
+							<s:VerticalLayout />
+						</s:layout>
+						
+						<s:BorderContainer height="37" width="100%" borderVisible="false" backgroundColor="0x706F6F">
+							<s:layout>
+								<s:HorizontalLayout paddingTop="6" paddingLeft="6" paddingRight="6" />
+							</s:layout>
+							
+							<s:VGroup paddingTop="3">
+								<s:CheckBox id="checkImmunizationsRequired" label="Required Only" color="0xFFFFFF" fontFamily="Myriad" fontSize="11" click="checkImmunizationsRequired_clickHandler(event)" />
+							</s:VGroup>
+							
+							
+							<s:Spacer width="100%" />
+							
+							<s:HGroup fontFamily="Myriad" color="0xFFFFFF" gap="0" paddingTop="1">
+								<s:Label text="Time Range:" paddingTop="5" />
+								<mx:LinkButton id="btnImm1m" label="1m" click="handleImmDateRange('1m')" />
+								<mx:LinkButton id="btnImm3m" label="3m" click="handleImmDateRange('3m')" />
+								<mx:LinkButton id="btnImm1y" label="1y" click="handleImmDateRange('1y')" />
+								<mx:LinkButton id="btnImm3y" label="3y" click="handleImmDateRange('3y')" />
+								<mx:LinkButton id="btnImm5y" label="5y" click="handleImmDateRange('5y')" />
+								<mx:LinkButton id="btnImm10y" label="10y" click="handleImmDateRange('10y')" />
+								<mx:LinkButton id="btnImmAll" label="All" />
+								<mx:LinkButton id="btnImmCustom" label="Custom" />
+							</s:HGroup>
+							
+							<s:HGroup gap="0">
+								<s:Button id="btnImmunizationsChart" width="29" height="24" icon="@Embed('images/btnImmunizationsChart.png')" click="switchImmunizationsView(0)" chromeColor="0xFF931E" />
+								<s:Button id="btnImmunizationsList" width="29" height="24" icon="@Embed('images/btnCalendarList.png')" click="switchImmunizationsView(1)" chromeColor="0xB3B3B3" />
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<mx:ViewStack id="viewsImmunization" width="100%" height="100%">
+							<s:NavigatorContent width="100%">
+								<s:layout>
+									<s:VerticalLayout />
+								</s:layout>
+								
+								<mx:PlotChart width="100%" height="230" dataProvider="{immunizationsData}" showDataTips="true" backgroundElements="{bgeImmunizations}" creationComplete="immunizationsSetMinMax()" itemClick="showImmunizationDetails(event)" dataTipFunction="dataTipsImmunizations" >
+									<mx:annotationElements>
+										<mx:CartesianDataCanvas id="canvas" includeInRanges="true"/>
+									</mx:annotationElements>
+									<mx:horizontalAxisRenderers>
+										<mx:AxisRenderer id="hAxisRendImmunizations" axis="{hAxisImmunizations}" fontSize="10" tickPlacement="none">
+											<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
+										</mx:AxisRenderer>
+									</mx:horizontalAxisRenderers>
+									<mx:verticalAxisRenderers>
+										<mx:AxisRenderer id="vAxisRendImmunizations" axis="{vAxisImmunizations}" tickPlacement="none" minorTickPlacement="none" labelAlign="bottom"> <!--labelAlign="bottom"-->
+											<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
+											<mx:labelRenderer>
+												<fx:Component>
+													<mx:Label toolTip="{this.myTip}" verticalCenter="-10">
+														<fx:Script><![CDATA[
+															[Bindable]
+															private var myTip:String;
+															
+															override public function set data(value:Object):void{
+																//myTip = outerDocument.immunizationsData[value.value].description;		//this is buggy... it should match the immunizationsCategory number... fix...
+																text = value.text;
+															}
+														]]></fx:Script>
+													</mx:Label>
+												</fx:Component>
+											</mx:labelRenderer>
+											
+										</mx:AxisRenderer>
+									</mx:verticalAxisRenderers>
+									
+									<mx:horizontalAxis>
+										<mx:DateTimeAxis id="hAxisImmunizations" labelFunction="lblHAxisImmunizations" />
+									</mx:horizontalAxis>
+									
+									<!--LINEAR AXIS-->
+									<mx:verticalAxis>
+										<mx:LinearAxis id="vAxisImmunizations" interval="1" maximum="{immunizationsCategories.length}" labelFunction="lblVAxisImmunizations" />
+									</mx:verticalAxis>
+									
+									<!--CATEGORY AXIS-->
+									<!--<mx:verticalAxis>
+									<mx:CategoryAxis id="vAxisImmunizations" dataProvider="{immunizationsCategories}" />
+									</mx:verticalAxis>--> <!-- categoryField="name" --> <!--dataFunction="catFunc"--> <!--labelFunction="lblVAxisImmunizations"-->
+									
+									<mx:series>
+										<mx:PlotSeries xField="date" yField="order" displayName="Immunization" itemRenderer="mx.charts.renderers.CircleItemRenderer" fillFunction="immunizationsFillFunction" selectable="true" /> <!--yField="name"-->
+									</mx:series>
+								</mx:PlotChart>
+								
+								<mx:Legend direction="horizontal" fontFamily="Myriad" color="0xFFFFFF" paddingLeft="118">
+									<mx:LegendItem label="Due" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsDue}" />
+									<mx:LegendItem label="Due within 1 month" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsDue1Month}" />
+									<mx:LegendItem label="Addressed Today for Immunizations Have Been Given" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsToday}" />
+									<mx:LegendItem label="Completed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsCompleted}" />
+								</mx:Legend>
+								
+								<s:VGroup paddingLeft="118" paddingTop="15">
+									<mx:DataGrid id="immunizationsDetails" visible="false" dataProvider="{immunizationItemDrillDown}"
+												 width="537" rowCount="8" sortableColumns="false"
+												 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x286982"
+												 color="0xFFFFFF" fontFamily="Myriad" fontSize="9" verticalAlign="middle"
+												 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="28" headerStyleName="dataGridHeader"
+												 rowHeight="27" horizontalGridLines="false" selectable="false" showEffect="WipeDown">
+										<mx:columns> 
+											<mx:DataGridColumn dataField="label1" headerText="Details" /> 
+											<mx:DataGridColumn dataField="data1" headerText="" /> 
+											<mx:DataGridColumn headerText="" width="3" /> 
+											<mx:DataGridColumn dataField="label2" headerText="Details"/> 
+											<mx:DataGridColumn dataField="data2" headerText="" /> 
+										</mx:columns> 
+									</mx:DataGrid>
+								</s:VGroup>
+								
+							</s:NavigatorContent>
+							<s:NavigatorContent height="100%">
+								<mx:DataGrid id="immunizationsList" dataProvider="{immunizationsData}"
+											 width="100%" height="100%"
+											 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x286982"
+											 color="0xFFFFFF" fontFamily="Myriad" fontSize="9" verticalAlign="middle"
+											 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="28" headerStyleName="dataGridHeader"
+											 borderVisible="false" rowHeight="27" horizontalGridLines="false">
+									<mx:columns> 
+										<mx:DataGridColumn dataField="name" headerText="Immunization" width="180" paddingLeft="13">
+											<mx:itemRenderer>
+												<fx:Component>
+													<mx:HBox width="100%" horizontalGap="0">
+														<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{outerDocument.myImmunizationsFillFunction(data.completed,data.date)}" />
+														<mx:Label text="{data.name}">
+															<fx:Script>		
+																<![CDATA[
+																	/**
+																	 * This function is necessary to be able to display the tooltip, since we're in an itemRenderer and the DataGridColumn's "showDataTips=true" won't do
+																	 * http://flexonblog.wordpress.com/2008/07/09/tooltip-for-datagrid-column-elements/
+																	 */
+																	override public function set data(value:Object):void {
+																		super.data = value;
+																		this.toolTip = data.description;
+																		super.invalidateDisplayList();
+																	}
+																]]>
+															</fx:Script>
+														</mx:Label>
+													</mx:HBox>
+												</fx:Component>
+											</mx:itemRenderer>
+										</mx:DataGridColumn> 
+										<mx:DataGridColumn dataField="date" headerText="Date Given" /> 
+										<mx:DataGridColumn dataField="details" labelFunction="lblImmunizationDetailsNextDue" headerText="Next Due"/> 
+										<mx:DataGridColumn dataField="details" labelFunction="lblImmunizationDetailsSeries" headerText="Series"/> 
+										<mx:DataGridColumn dataField="details" labelFunction="lblImmunizationDetailsExpires" headerText="Expires"/> 
+										<mx:DataGridColumn dataField="details" labelFunction="lblImmunizationDetailsLastEdit" headerText="Last Edit"/> 
+										<mx:DataGridColumn dataField="groups" headerText="Groups"/> 
+										<mx:DataGridColumn dataField="comments" headerText="Comments"/> 
+									</mx:columns> 
+								</mx:DataGrid>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+						
+					</s:BorderContainer>
+					<s:Line xFrom="0" yFrom="0" xTo="0" yTo="628">
+						<s:stroke>
+							<s:SolidColorStroke color="#BDBDBC"/>
+						</s:stroke>
+					</s:Line>
+					<s:VGroup width="166" height="100%">
+						<s:Label text="Allergies" styleName="subtitles" textAlign="center" width="100%" paddingTop="15" />
+						<s:Label text="{'• Latex (Do Not Use, Not Screened)\n• Natural Rubber (Do Not Use, Not Screened)\n• Aspirin'}" styleName="smallText" paddingLeft="9" paddingTop="12" width="100%" />
+					</s:VGroup>
+				</s:HGroup>
+			</s:BorderContainer>
+		</s:VGroup>		
+		
+	</s:VGroup>
+</s:Application>

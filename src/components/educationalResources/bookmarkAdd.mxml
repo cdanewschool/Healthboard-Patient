@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="320" height="161"
+			   close="PopUpManager.removePopUp(this);" skinClass="skins.general.myHeaderlessTitleWindow" color="0x000000">
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import spark.components.TextInput;
+			
+			[Bindable] public var bookmarkLabel:String;
+			
+			private function editBookmark():void {
+				if(bookmarkName.text != bookmarkLabel) parentApplication.erBookmarks.getItemAt(0).label = bookmarkName.text;
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function removeBookmark():void {
+				parentApplication.erBookmarks.removeItemAt(0);
+				parentApplication.erBookmark0.visible = parentApplication.erBookmark0.includeInLayout = true;
+				parentApplication.erBookmark1.visible = parentApplication.erBookmark1.includeInLayout = false;
+				parentApplication.arrBookmarkIndices.shift();
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="16" paddingBottom="11" paddingLeft="15" paddingRight="11" />
+	</s:layout>
+
+	<s:Label text="Bookmark Added!" fontWeight="bold" fontSize="14" color="0x4D4D4D" />
+	
+	<s:Label text="Name:" paddingTop="13" paddingBottom="-2" />
+	<s:TextInput id="bookmarkName" width="293" height="24" text="{bookmarkLabel}" paddingLeft="8" />
+	
+	<s:HGroup paddingTop="13" paddingBottom="6">
+		<s:Line xFrom="0" xTo="291">
+			<s:stroke>
+				<s:SolidColorStroke color="0x4D4D4D" weight="1"/>
+			</s:stroke>
+		</s:Line>
+	</s:HGroup>
+	
+	<s:HGroup width="100%" horizontalAlign="right">
+		<s:Button label="Remove" click="removeBookmark()" styleName="buttonText" height="24" />
+		<s:Button label="Done" click="editBookmark()" styleName="orangeButton" fontSize="11" height="24" width="50" />
+	</s:HGroup>
+	
+</s:TitleWindow>

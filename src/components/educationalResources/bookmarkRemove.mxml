@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="385" height="121"
+			   close="PopUpManager.removePopUp(this);" skinClass="skins.general.myHeaderlessTitleWindow" color="0x000000">
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TextInput;
+			
+			private function removeBookmark():void {
+				parentApplication.erBookmarks.removeItemAt(parentApplication.arrBookmarkIndices.indexOf(parentApplication.viewsEducationalResources.selectedIndex));
+				parentApplication.erBookmark0.visible = parentApplication.erBookmark0.includeInLayout = true;
+				parentApplication.erBookmark1.visible = parentApplication.erBookmark1.includeInLayout = false;
+				parentApplication.arrBookmarkIndices.splice(parentApplication.arrBookmarkIndices.indexOf(parentApplication.viewsEducationalResources.selectedIndex),1);
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="11" paddingBottom="11" paddingLeft="13" paddingRight="11" />
+	</s:layout>
+
+	<s:Label text="Are you sure you want to remove this bookmark?" fontWeight="bold" fontSize="16" color="0x4D4D4D" />
+	
+	<s:Label text="You cannot undo this action" paddingTop="13" paddingBottom="18" />
+	
+	<s:HGroup width="100%" horizontalAlign="center">
+		<s:Button label="Remove this item" click="removeBookmark()" styleName="buttonText" height="24" />
+		<s:Button label="Do not remove this item" click="PopUpManager.removePopUp(this);" styleName="buttonText" height="24" />
+	</s:HGroup>
+	
+</s:TitleWindow>

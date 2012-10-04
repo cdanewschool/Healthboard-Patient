@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<immunizations>
+	<immunization date="04/08/2012" name="Yellow Fever" order="0.5" completed="false" groups="" comments="" required="true" description="The Yellow Fever vaccine is a vaccine used against yellow fever. Yellow fever vaccination certificate is issued for 10 years but becomes valid only after 10 days of vaccination.
+
+ATC Code: J07BD45">
+		<details label1="Date" data1="04/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="06/01/2031" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+	<immunization date="04/08/2012" name="Tetanus & Diphteria" order="1.5" completed="false" groups="" comments="" required="false" description="The Tetanus & Diphteria vaccine is a vaccine used against diphteria and tetanus. The usual course of childhood immunization is five doses between 2 months and 15 years. For adults, separate combination vaccines are used that adjust the relative concentrations of their components.
+
+ATC Code: J07BD72">
+		<details label1="Date" data1="04/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="03/01/2023" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+	<immunization date="02/08/2012" name="Polio" order="2.5" completed="true" groups="" comments="polio" required="true" description="Two polio vaccines are used throughout the world to combat poliomyelitis (or polio). The first was developed in 1952; it consists of an injected dose of inactivated (dead) poliovirus. An oral vaccine was developed in 1957 using attenuated poliovirus.
+
+ATC Code: J07BD03">
+		<details label1="Date" data1="02/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+	<immunization date="02/08/2012" name="MMR" order="2.5" completed="false" groups="" comments="" required="false" description="The MMR vaccine is an immunization shot against Measles, Mumps, and Rubella.
+
+ATC Code: J07BD52">
+		<details label1="Date" data1="02/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="05/01/2011" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+	<immunization date="03/08/2012" name="Influenza" order="3.5" completed="false" groups="" comments="" required="true" description="The influenza vaccine, also known as flu shot, is an annual vaccine to protect against the highly variable influenza virus.
+
+ATC Code: J07BD95">
+		<details label1="Date" data1="03/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="07/21/2012" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+	<immunization date="03/08/2012" name="Hepatitis A" order="4.5" completed="false" groups="" comments="" required="true" description="The Hepatitis A vaccine is a vaccine against the hepatitis A virus. The vaccine protects against the virus in more than 95% of cases and provides protection from the virus for at least ten years.
+
+ATC Code: J07BD78">
+		<details label1="Date" data1="03/08/2012" label2="Last Edit" data2="" />
+		<details label1="Series" data1="1" label2="DEERS ack" data2="" />
+		<details label1="Size/Result" data1="" label2="MTF Code" data2="9000" />
+		<details label1="Mfg" data1="TRS" label2="Route" data2="Unknown" />
+		<details label1="Lot Nbr" data1="Transcribed" label2="Site" data2="Unknown" />
+		<details label1="Next Due" data1="07/21/2012" label2="Dosage" data2="" />
+		<details label1="Exempt" data1="None" label2="Vaccine ID" data2="37" />
+		<details label1="Expires" data1="" label2="VIS Version" data2="" />
+	</immunization>
+</immunizations>
