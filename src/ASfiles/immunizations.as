@@ -21,21 +21,26 @@ import mx.rpc.events.ResultEvent;
 
 import spark.events.IndexChangeEvent;
 
+import styles.ChartStyles;
+
+import util.ChartLabelFunctions;
+import util.DateFormatters;
+
 private function immunizationsFillFunction(element:ChartItem, index:Number):IFill {
-	var c:SolidColor = colorImmunizationsDue1Month	//yellow
+	var c:SolidColor = chartStyles.colorImmunizationsDue1Month	//yellow
 	var item:PlotSeriesItem = PlotSeriesItem(element);
 	var immunizationDate:Date = new Date(item.xValue);		//new Date(item.xValue.substr(6),item.xValue.substr(0,2)-1,item.xValue.substr(3,2));
 	var todayWithTime:Date = new Date();
 	var today:Date = new Date(todayWithTime.getFullYear(),todayWithTime.getMonth(),todayWithTime.getDate());
 	
 	if(item.item.completed == true) {
-		c = colorImmunizationsCompleted;		//gray
+		c = chartStyles.colorImmunizationsCompleted;		//gray
 	}
 	else if(immunizationDate.getTime() == today.getTime()) {
-		c = colorImmunizationsToday;		//green
+		c = chartStyles.colorImmunizationsToday;		//green
 	}
 	else if(immunizationDate.getTime() < today.getTime()) {
-		c = colorImmunizationsDue;		//red
+		c = chartStyles.colorImmunizationsDue;		//red
 	}
 	
 	return c;
@@ -46,19 +51,19 @@ private function immunizationsFillFunction(element:ChartItem, index:Number):IFil
  * The preceding one couldn't be used in this case, since the required parameters for that function weren't available in the itemRenderer component.
  */
 public function myImmunizationsFillFunction(completed:Boolean, immunizationDateString:String):SolidColor {
-	var c:SolidColor = colorImmunizationsDue1Month	//yellow
+	var c:SolidColor = chartStyles.colorImmunizationsDue1Month	//yellow
 	var immunizationDate:Date = new Date(immunizationDateString);		//new Date(immunizationDateString.substr(6),Number(immunizationDateString.substr(0,2))-1,immunizationDateString.substr(3,2));
 	var todayWithTime:Date = new Date();
 	var today:Date = new Date(todayWithTime.getFullYear(),todayWithTime.getMonth(),todayWithTime.getDate());
 	
 	if(completed == true) {
-		c = colorImmunizationsCompleted;		//gray
+		c = chartStyles.colorImmunizationsCompleted;		//gray
 	}
 	else if(immunizationDate.getTime() == today.getTime()) {
-		c = colorImmunizationsToday;		//green
+		c = chartStyles.colorImmunizationsToday;		//green
 	}
 	else if(immunizationDate.getTime() < today.getTime()) {
-		c = colorImmunizationsDue;		//red
+		c = chartStyles.colorImmunizationsDue;		//red
 	}
 	
 	return c;
@@ -92,9 +97,9 @@ private function immunizationsSetMinMax():void {
 	hAxisImmunizations.minimum = minDate;	//new Date( "Oct 1 2010 01:03:54 AM");
 	hAxisImmunizations.maximum = maxDate;	//new Date( "Oct 1 2011 01:03:54 AM");
 	
-	canvas.lineStyle(3,0x00ADEE,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
-	canvas.moveTo(dateFormatterToday.format(new Date()),'Anthrax');		//canvas.moveTo(dateFormatterToday.format(new Date()),immunizationsCategories.length);
-	canvas.lineTo(dateFormatterToday.format(new Date()),'Yellow Fever');	//canvas.lineTo(dateFormatterToday.format(new Date()),0.05);
+	chartStyles.canvas.lineStyle(3,0x00ADEE,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
+	chartStyles.canvas.moveTo(DateFormatters.dateFormatterToday.format(new Date()),'Anthrax');		//canvas.moveTo(dateFormatterToday.format(new Date()),immunizationsCategories.length);
+	chartStyles.canvas.lineTo(DateFormatters.dateFormatterToday.format(new Date()),'Yellow Fever');	//canvas.lineTo(dateFormatterToday.format(new Date()),0.05);
 	
 	/*canvas.lineStyle(1,0xFFFFFF,0.3,true,LineScaleMode.NORMAL,CapsStyle.ROUND,JointStyle.MITER,2);
 	//canvas.moveTo(dateFormatterToday.format(new Date("Sep 30 2010 01:03:54 AM")),'Influenza');
@@ -111,50 +116,50 @@ private function handleImmDateRange(range:String):void {
 	if(range == '1m') {
 		minDate = new Date( "Jun 28 2012 01:03:54 AM");		//"Feb 28 2012 01:03:54 AM"
 		maxDate = new Date( "Aug 4 2012 01:03:54 AM");		//"Apr 4 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartMonth;
-		immVerticalGridLine.alpha = 0;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartMonth;
+		chartStyles.immVerticalGridLine.alpha = 0;
 		btnImm3m.selected = btnImm1y.selected = btnImm3y.selected = btnImm5y.selected = btnImm10y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == '3m') {
 		minDate = new Date( "Apr 28 2012 01:03:54 AM");		//"Jan 31 2012 01:03:54 AM"
 		maxDate = new Date( "Aug 7 2012 01:03:54 AM");		//"May 31 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartMonth;
-		immVerticalGridLine.alpha = 0;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartMonth;
+		chartStyles.immVerticalGridLine.alpha = 0;
 		btnImm1m.selected = btnImm1y.selected = btnImm3y.selected = btnImm5y.selected = btnImm10y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == '1y') {
 		minDate = new Date( "Dec 14 2011 01:03:54 AM");		//"Jul 14 2011 01:03:54 AM"
 		maxDate = new Date( "Dec 14 2012 01:03:54 AM");		//"Jul 14 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartMonth;
-		immVerticalGridLine.alpha = 0;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartMonth;
+		chartStyles.immVerticalGridLine.alpha = 0;
 		btnImm1m.selected = btnImm3m.selected = btnImm3y.selected = btnImm5y.selected = btnImm10y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == '3y') {
 		minDate = new Date( "Dec 4 2009 01:03:54 AM");		//"Sep 4 2009 01:03:54 AM"
 		maxDate = new Date( "Feb 4 2013 01:03:54 AM");		//"Sep 4 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartYear;
-		immVerticalGridLine.alpha = 0.3;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartYear;
+		chartStyles.immVerticalGridLine.alpha = 0.3;
 		btnImm1m.selected = btnImm3m.selected = btnImm1y.selected = btnImm5y.selected = btnImm10y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == '5y') {
 		minDate = new Date( "Dec 4 2007 01:03:54 AM");		//"Jul 1 2007 01:03:54 AM"
 		maxDate = new Date( "Mar 4 2013 01:03:54 AM");		//"Jul 1 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartYear;
-		immVerticalGridLine.alpha = 0.3;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartYear;
+		chartStyles.immVerticalGridLine.alpha = 0.3;
 		btnImm1m.selected = btnImm3m.selected = btnImm1y.selected = btnImm3y.selected = btnImm10y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == '10y') {
 		minDate = new Date( "Nov 4 2002 01:03:54 AM");		//"Aug 1 2002 01:03:54 AM"
 		maxDate = new Date( "Apr 4 2013 01:03:54 AM");		//"Aug 1 2012 01:03:54 AM"
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartYear;
-		immVerticalGridLine.alpha = 0.3;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartYear;
+		chartStyles.immVerticalGridLine.alpha = 0.3;
 		btnImm1m.selected = btnImm3y.selected = btnImm1y.selected = btnImm3y.selected = btnImm5y.selected = btnImmAll.selected = btnImmCustom.selected = false;
 	}
 	else if(range == 'all') {
 		minDate = new Date( "Nov 4 2002 01:03:54 AM");
 		maxDate = new Date( "Apr 4 2013 01:03:54 AM");
-		hAxisImmunizations.labelFunction = lblHAxisPlotChartYear;
-		immVerticalGridLine.alpha = 0.3;
+		hAxisImmunizations.labelFunction = ChartLabelFunctions.lblHAxisPlotChartYear;
+		chartStyles.immVerticalGridLine.alpha = 0.3;
 		btnImm1m.selected = btnImm3y.selected = btnImm1y.selected = btnImm3y.selected = btnImm5y.selected = btnImm10y.selected = btnImmCustom.selected = false;
 	}
 	hAxisImmunizations.minimum = minDate;

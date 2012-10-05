@@ -1,17 +1,37 @@
+import ASclasses.Constants;
+import ASclasses.PatientConstants;
+
 import components.home.preferencesWindow;
 
-import external.*;
+import controllers.MainController;
+import controllers.MedicalRecordsController;
+import controllers.MedicationsController;
 
+import events.ApplicationDataEvent;
+import events.ApplicationEvent;
+import events.RecommendationEvent;
+
+import external.*;
+import external.TabBarPlus.plus.TabBarPlus;
+import external.TabBarPlus.plus.TabPlus;
+import external.TabBarPlus.plus.tabskins.TabBarPlusSkin;
+
+import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 
 import flashx.textLayout.compose.TextLineRecycler;
 
+import models.ApplicationModel;
+
+import mx.collections.IList;
 import mx.controls.Alert;
+import mx.controls.TabBar;
 import mx.core.DragSource;
 import mx.core.IFlexDisplayObject;
 import mx.core.IUIComponent;
 import mx.events.DataGridEvent;
 import mx.events.DragEvent;
+import mx.events.ListEvent;
 import mx.events.ValidationResultEvent;
 import mx.managers.DragManager;
 import mx.managers.PopUpManager;
@@ -20,7 +40,9 @@ import spark.components.Image;
 import spark.events.IndexChangeEvent;
 import spark.filters.DropShadowFilter;
 
-[Bindable] public var viewMode:String = "loggedIn";	//Button View = "loggedIn", Widget View = "widgetView" (to match the state names).
+import styles.ChartStyles;
+
+[Bindable] public var viewMode:String = Constants.STATE_LOGGED_IN;
 
 //this.stage.displayState = StageDisplayState.FULL_SCREEN;
 /* public function updateBreadcrumb(action:String):void {
@@ -40,6 +62,53 @@ btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarke
 [Bindable] public var fullname:String;
 [Bindable] private var registeredUserID:String = "thisValueWillBeReplaced";
 [Bindable] private var registeredPassword:String = "thisValueWillBeReplaced";
+[Bindable] public var chartStyles:ChartStyles;
+
+private var controller:MainController;
+private var medicalRecordsController:MedicalRecordsController;
+private var medicationsController:MedicationsController;
+
+protected function init():void
+{
+	AppProperties.getInstance().controller = controller = new MainController();
+	
+	var model:ApplicationModel = new ApplicationModel();
+	model.chartStyles = chartStyles = new ChartStyles();
+	controller.model = model;
+	
+	medicalRecordsController = controller.medicalRecordsController;
+	medicationsController = controller.medicationsController;
+	
+	chartStyles = new ChartStyles();
+	
+	this.addEventListener( ApplicationEvent.NAVIGATE, onNavigate );
+	this.addEventListener( RecommendationEvent.HANDLE, onHandleRecommendation );
+	this.addEventListener( ApplicationDataEvent.LOAD, onLoadDataRequest );
+	this.addEventListener( TabPlus.CLOSE_TAB_EVENT, onTabClose );
+}
+
+private function onLoadDataRequest(event:ApplicationDataEvent):void
+{
+	if( event.data === Constants.MEDICATIONS 
+		&& !controller.medicationsController.model.dataLoaded )
+	{
+		medicationsXMLdata.send();
+	}
+	else if( event.data === Constants.MEDICAL_RECORDS
+		&& !controller.medicalRecordsController.model.dataLoaded )
+	{
+		medicalRecordsXMLdata.send();
+	}
+}
+
+protected function onNavigate( event:ApplicationEvent ):void
+{
+	if( event.data == 0 )
+	{
+		this.currentState = Constants.STATE_LOGGED_IN;
+	}
+}
+
 protected function btnLogin_clickHandler(event:MouseEvent):void {
 	if(userID.text == 'pipi' || (userID.text == 'piim' && password.text == 'password') || (userID.text == 'james' && password.text == 'archer') || (userID.text == 'melissa' && password.text == 'archer') || (userID.text == 'tiffany' && password.text == 'janeway') || (userID.text == 'robert' && password.text == 'janeway') || (userID.text == 'albert' && password.text == 'sisko') || (userID.text == 'doris' && password.text == 'sisko') || (userID.text == registeredUserID && password.text == registeredPassword)) {
 		this.currentState=viewMode;
@@ -229,4 +298,62 @@ public function falsifyWidget(widget:String):void {
 	else if(widget == 'modExercise') widgetExerciseOpen = false;
 	else if(widget == 'modMedications') widgetMedicationsOpen = false;
 	else if(widget == 'modNutrition') widgetNutritionOpen = false;
+}
+
+protected function onHandleRecommendation( event:RecommendationEvent ):void 
+{
+	if( event.data == 'Gentle Chair Yoga Class' ) 
+	{
+		this.currentState = 'modCalendar';
+		
+		if( shouldAddInitialAppointments ) this.onApplicationStart();
+		
+		requestClasses('yogaGentle');
+	}
+	else if( event.data == 'Nutrition Workshop') 
+	{
+		this.currentState = 'modCalendar';
+		
+		if(shouldAddInitialAppointments) onApplicationStart();
+		
+		requestClasses('hLifeWeight');
+	}
+}
+
+protected function onTabClose( event:ListEvent ):void
+{
+	if( TabBarPlus( event.target.owner).dataProvider is IList )
+	{
+		var dataProvider:IList = TabBarPlus( event.target.owner).dataProvider as IList;
+		var index:int = event.rowIndex;
+		
+		if( dataProvider == viewStackMessages ) 
+		{
+			//	this array will hold the index values of each "NEW" message in arrOpenTabs. Its purpose is to know which "NEW" message we're closing (if it is in fact a new message)
+			var arrNewMessagesInOpenTabs:Array = new Array(); 
+			
+			for(var i:uint = 0; i < arrOpenTabs.length; i++) 
+			{
+				if( arrOpenTabs[i] == "NEW") arrNewMessagesInOpenTabs.push(i);
+			}
+			
+			if( arrOpenTabs[index-1] == "NEW" ) 
+				 arrNewMessages.splice( arrNewMessagesInOpenTabs.indexOf(index-1), 1 );
+			
+			arrOpenTabs.splice(index-1,1);
+			viewStackMessages.selectedIndex--;
+		}
+		else if( this.currentState == "modMedications" ) 
+		{
+			arrOpenTabsME.splice(index-1,1);
+		}
+		else if( this.currentState == "modImmunizations" ) 
+		{
+			arrOpenTabsIM.splice(index-1,1);
+		}
+	}
+	else 
+	{
+		trace("Bad data provider");
+	}
 }

@@ -109,12 +109,12 @@ public function filterProvidersForWidget():void {
 
 public function exercisePlotFillFunction(element:ChartItem, index:Number):IFill {
 	var item:PlotSeriesItem = PlotSeriesItem(element);
-	return (item.item.type == 'provider') ? colorVitalSignsProvider : colorVitalSignsPatient;
+	return (item.item.type == 'provider') ? chartStyles.colorVitalSignsProvider : chartStyles.colorVitalSignsPatient;
 }
 
 public function exerciseLineFillFunction(element:ChartItem, index:Number):IFill {
 	var item:LineSeriesItem = LineSeriesItem(element);
-	return (item.item.type == 'provider') ? colorVitalSignsProvider : colorVitalSignsPatient;
+	return (item.item.type == 'provider') ? chartStyles.colorVitalSignsProvider : chartStyles.colorVitalSignsPatient;
 }
 
 private function displayExerciseData(e:ChartItemEvent):void {

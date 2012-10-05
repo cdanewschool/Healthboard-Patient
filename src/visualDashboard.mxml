@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
-			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="600" width="100%" height="100%"
-			   skinClass="skins.general.backgroundGradient"
-			   xmlns:components="components.*"
-			   xmlns:fxg="components.fxg.*"
-			   xmlns:ns="external.calendar.mxml_views.*"
-			   xmlns:views="external.calendar.classes.views.*"
-			   xmlns:calendar="external.com.flexcalendar.components.calendar.*"
-			   xmlns:containers="external.SuperTabNavigator.com.dougmccune.containers.*"
-			   xmlns:controls="external.SuperTabNavigator.com.dougmccune.controls.*"
-			   xmlns:home="components.home.*"
-			   xmlns:plus="external.TabBarPlus.plus.*"
-			   xmlns:radarchart="fr.kapit.radarchart.*" xmlns:amcharts="http://www.amcharts.com/com_internal"
-			   xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
-			   xmlns="*"
-			   fontFamily="myMyriad" xmlns:general="components.general.*" xmlns:ASclasses="ASclasses.*"
-			   xmlns:autocomplete="external.flashcommander.components.*"
-			   initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" creationComplete="init()">	<!-- http://stackoverflow.com/questions/5670979/flex-spark-itemrenderer-labels-disappear-when-large-redraws-occur -->
-	
+<s:Application 
+	xmlns:ASclasses="ASclasses.*"
+	xmlns:autocomplete="external.flashcommander.components.*"
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:components="components.*"
+	xmlns:fxg="components.fxg.*"
+	xmlns:ns="external.calendar.mxml_views.*"
+	xmlns:views="external.calendar.classes.views.*"
+	xmlns:calendar="external.com.flexcalendar.components.calendar.*"
+	xmlns:containers="external.SuperTabNavigator.com.dougmccune.containers.*"
+	xmlns:controls="external.SuperTabNavigator.com.dougmccune.controls.*"
+	xmlns:home="components.home.*"
+	xmlns:plus="external.TabBarPlus.plus.*"
+	xmlns:radarchart="fr.kapit.radarchart.*" xmlns:amcharts="http://www.amcharts.com/com_internal"
+	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
+	xmlns:general="components.general.*" 
+	xmlns="*" xmlns:modules="modules.*"
+	minWidth="1024" minHeight="600" width="100%" height="100%"
+	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
+	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
+	creationComplete="init()">	<!-- http://stackoverflow.com/questions/5670979/flex-spark-itemrenderer-labels-disappear-when-large-redraws-occur -->
+
+	<!--	external actionscript includes 	-->
 	<fx:Script source="ASfiles/home.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/home.as" />
 	<fx:Script source="ASfiles/appointments.as" />
@@ -27,8 +32,8 @@
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/immunizations.as" />
 	<fx:Script source="ASfiles/messages.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/messages.as" />
-	<fx:Script source="ASfiles/medicalRecords.as" />
-	<fx:Script source="../../visualDashboardShared/sharedASfiles/medicalRecords.as" />
+	<!--<fx:Script source="ASfiles/medicalRecords.as" />
+	<fx:Script source="../../visualDashboardShared/sharedASfiles/medicalRecords.as" />-->
 	<fx:Script source="ASfiles/medications.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/medications.as" />
 	<fx:Script source="ASfiles/vitalSigns.as" />
@@ -41,119 +46,19 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<fx:Array id="bgeImmunizations">
-			<mx:GridLines gridDirection="both">
-				<mx:horizontalStroke>
-					<mx:SolidColorStroke alpha="0" />
-				</mx:horizontalStroke>
-				<mx:verticalStroke>
-					<s:SolidColorStroke id="immVerticalGridLine" alpha="0" color="0xFFFFFF" />
-				</mx:verticalStroke>
-				<mx:horizontalAlternateFill>
-					<mx:SolidColor color="0x303030" />
-				</mx:horizontalAlternateFill>
-			</mx:GridLines>
-			<mx:CartesianDataCanvas id="canvas" />
-		</fx:Array>
-		
-		<fx:Array id="bgeMedicalRecords">
-			<mx:GridLines gridDirection="both">
-				<mx:horizontalStroke>
-					<mx:SolidColorStroke alpha="0" color="0xFFFFFF" />
-				</mx:horizontalStroke>
-				<mx:verticalStroke>
-					<s:SolidColorStroke id="medRecVerticalGridLine" alpha="0" color="0xFFFFFF" />
-				</mx:verticalStroke>
-				<mx:horizontalAlternateFill>
-					<mx:SolidColor color="{myMedRecHorizontalAlternateFill}" />
-				</mx:horizontalAlternateFill>
-				<mx:horizontalFill>
-					<s:SolidColor color="{myMedRecHorizontalFill}" />
-				</mx:horizontalFill>
-			</mx:GridLines>
-		</fx:Array>
-		
-		<fx:Array id="bgeMedications">
-			<mx:GridLines gridDirection="both" >
-				<mx:horizontalStroke>
-					<mx:SolidColorStroke alpha="0" color="0xFFFFFF" />
-				</mx:horizontalStroke>
-				<mx:verticalStroke>
-					<s:SolidColorStroke id="medicationsVerticalGridLine" alpha="0" color="0xFFFFFF" />
-				</mx:verticalStroke>
-				<mx:horizontalAlternateFill>
-					<mx:SolidColor color="{myHorizontalAlternateFill}" />
-				</mx:horizontalAlternateFill>
-				<mx:horizontalFill>
-					<s:SolidColor color="{myHorizontalFill}" />
-				</mx:horizontalFill>
-			</mx:GridLines>
-			<mx:CartesianDataCanvas id="canvasMed" />
-		</fx:Array>
-		
-		<fx:Array id="bgeMedicationsWidget">
-			<mx:GridLines gridDirection="both" >
-				<mx:horizontalStroke>
-					<mx:SolidColorStroke alpha="0.1" color="0xB3B3B3" />
-				</mx:horizontalStroke>
-				<mx:verticalStroke>
-					<s:SolidColorStroke id="medicationsVerticalGridLine2" weight="2" alpha="0.4" color="0x86888A" />
-				</mx:verticalStroke>
-			</mx:GridLines>
-			<mx:CartesianDataCanvas id="canvasMedWidget" />
-		</fx:Array>
-		
-		<mx:DateFormatter id="dateFormatterDay" formatString="EEE, MMM D"/><!--MMM D, YY-->
-		<mx:DateFormatter id="dateFormatter" formatString="MMM YY"/>
-		<mx:DateFormatter id="dateFormatterYear" formatString="YYYY"/>
-		<mx:DateFormatter id="dateFormatterToday" />
-		<mx:DateFormatter id="dateFormatterDayOnly" formatString="EEE"/><!-- for Meds widget -->
 		
 		<mx:HTTPService id="immunizationsXMLdata"
 						url="data/immunizations.xml"
 						result="immunizationsResultHandler(event)" />
 		
 		<mx:HTTPService id="medicalRecordsXMLdata"
-						url="data/medicalRecords.xml"
-						result="medicalRecordsResultHandler(event)" />
+						url="../../visualDashboardShared/data/medicalRecords.xml"
+						result="AppProperties.getInstance().controller.medicalRecordsController.dataResultHandler(event)" />
 		
 		<mx:HTTPService id="medicationsXMLdata"
 						url="data/medications.xml"
-						result="medicationsResultHandler(event)" />
+						result="AppProperties.getInstance().controller.medicationsController.dataResultHandler(event)" />
 		
-		<mx:HTTPService id="medicationsXMLdataForWidget"
-						url="data/medications.xml"
-						result="medicationsResultHandlerForWidget(event)" />
-		
-		<s:SolidColor id="colorImmunizationsDue" color="0xF40000" />
-		<s:SolidColor id="colorImmunizationsDue1Month" color="0xFCEE21" />
-		<s:SolidColor id="colorImmunizationsToday" color="0x39B54A" />
-		<s:SolidColor id="colorImmunizationsCompleted" color="0xC0CED2" />
-		
-		<s:SolidColor id="colorMedicalRecordsOutpatient" color="0x71B2D1" /><!--also used for Medication's "Prescription Drugs"-->
-		<s:SolidColor id="colorMedicalRecordsInpatient" color="0xDC9D00" /><!--also used for Medication's "Supplements"-->
-		<s:SolidColor id="colorMedicationsOverTheCounterDrugs" color="0xE5B0B5" />
-		<s:SolidColor id="colorMedicationsHerbalMedicines" color="0x9CB40D" />
-		<s:SolidColor id="colorMedicationsPast" color="0x646464" />
-		
-		<s:SolidColor id="colorVitalSignsProvider" color="0x3C69B4" />
-		<s:SolidColor id="colorVitalSignsPatient" color="0xD78C73" />
-		<s:SolidColor id="colorVitalSignsWidgetBlack" color="0x000000" />
-		
-		<s:SolidColor id="colorExerciseUntrackable" color="0x717070" />
-		
-		<s:SolidColor id="colorNutritionGrains" color="0xCC9966" />
-		<s:SolidColor id="colorNutritionVegetables" color="0x669966" />
-		<s:SolidColor id="colorNutritionFruits" color="0xCC6666" />
-		<s:SolidColor id="colorNutritionDairy" color="0x6699CC" />
-		<s:SolidColor id="colorNutritionProteins" color="0x996699" />
-		<s:SolidColor id="colorNutritionFats" color="0xFFB293" />
-		<s:SolidColor id="colorNutritionSweets" color="0xCCCC99" />
-		
-		<s:SolidColorStroke id="whiteStroke" color="0xFFFFFF" />
-		<s:SolidColorStroke id="grayStroke" color="0xC8C8C8" />
-		
-		<s:SolidColor id="colorExerciseGraySlider" color="0x999999" />
 		
 		<fx:Array id="bge">
 		</fx:Array>
@@ -174,10 +79,6 @@
 		<fx:Array id="exerciseMileRunBackground">
 			<s:Image source="@Embed('images/exerciseMileRunBG.png')" width="817" height="352" />
 		</fx:Array>
-		
-		<!--<fx:Array id="nutritionJournalBGE">
-		<mx:GridLines gridDirection="vertical" alpha=".6" />
-		</fx:Array>-->
 		
 		<fx:Array id="bgeNutMonthlyCalories">
 			<mx:GridLines gridDirection="vertical" alpha=".7" />
@@ -200,13 +101,12 @@
 		<s:Sine id="sineEasing"
 				easeInFraction="0.1"/>
 		
-		<!--<net:FileReference id="fileReference" />-->
-		
 	</fx:Declarations>
 	
 	<fx:Style source="css/styles.css" />
 	<fx:Style source="external/calendar/styles/skin.css"/>
 	
+	<!--	application states	-->
 	<s:states>
 		<s:State name="default" />
 		<s:State name="createAccount" />
@@ -504,7 +404,7 @@
 			<s:TileGroup id="buttonsTileGroup" requestedColumnCount="5" horizontalGap="42" verticalGap="46" clipAndEnableScrolling="true">
 				<mx:Button id="buttonMessages" upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" click="{this.currentState='modMessages';}" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
 				<mx:Button id="buttonAppointments" upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="{this.currentState='modCalendar'; if(shouldAddInitialAppointments) onApplicationStart();}" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
-				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="{if(!wasMedicalRecordsDataLoaded) medicalRecordsXMLdata.send(); this.currentState='modMedicalRecords';}" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
+				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="{if(!medicalRecordsController.model.dataLoaded) medicalRecordsXMLdata.send(); this.currentState='modMedicalRecords';}" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
 				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{if(!wasImmunizationDataLoaded) immunizationsXMLdata.send(); this.currentState='modImmunizations';}" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
 				<mx:Button id="buttonVitalSigns" upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" click="{this.currentState='modVitalSigns'}" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
 				<mx:Button id="buttonExercise" upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" click="{this.currentState='modExercise'}" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
@@ -633,12 +533,12 @@
 								<enhancedtitlewindow:layout>
 									<s:VerticalLayout paddingLeft="13" paddingTop="3" paddingRight="10" paddingBottom="12" />
 								</enhancedtitlewindow:layout>
-								<mx:LinkButton id="btnMedRecWidget" label="Physical Examination · Sep 16, 2011" color="0xFBB03B" fontSize="16" fontWeight="bold" textRollOverColor="0xFBB03B" textSelectedColor="0xFBB03B" skin="{null}" rollOver="{btnMedRecWidget.styleName='linkBtnUnderline';}" rollOut="btnMedRecWidget.styleName='linkBtn';" paddingLeft="-3" click="{if(!wasMedicalRecordsDataLoaded) medicalRecordsXMLdata.send(); this.currentState='modMedicalRecords';}" />
+								<mx:LinkButton id="btnMedRecWidget" label="Physical Examination · Sep 16, 2011" color="0xFBB03B" fontSize="16" fontWeight="bold" textRollOverColor="0xFBB03B" textSelectedColor="0xFBB03B" skin="{null}" rollOver="{btnMedRecWidget.styleName='linkBtnUnderline';}" rollOut="btnMedRecWidget.styleName='linkBtn';" paddingLeft="-3" click="{if(!medicalRecordsController.model.dataLoaded) medicalRecordsXMLdata.send(); this.currentState='modMedicalRecords';}" />
 								<s:Label fontSize="12" text="Dr. Gregory Berg" paddingTop="-7" paddingBottom="12" />
 								<s:Label fontSize="12" text="Start the Physical Rehabilitation regimen we spoke about. Our Gentle Chair Yoga class would be beneficial if you find the time." width="280" lineHeight="16" />
 								<s:HGroup>
 									<s:Label text="Recommendation:" paddingTop="4" />
-									<mx:LinkButton id="btnNextStepsRecommendation2" label="Gentle Chair Yoga Class" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsRecommendation2.styleName='linkBtnUnderline';}" rollOut="btnNextStepsRecommendation2.styleName='linkBtn';" click="{handleRecommendation('Gentle Chair Yoga Class')}" />
+									<mx:LinkButton id="btnNextStepsRecommendation2" label="Gentle Chair Yoga Class" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsRecommendation2.styleName='linkBtnUnderline';}" rollOut="btnNextStepsRecommendation2.styleName='linkBtn';" click="{dispatchEvent( new RecommendationEvent( RecommendationEvent.HANDLE, true, false, 'Gentle Chair Yoga Class' ))}" />
 								</s:HGroup>
 							</enhancedtitlewindow:EnhancedTitleWindow>
 							<enhancedtitlewindow:EnhancedTitleWindow id="widgetEducationalResources" width="305" title="Educational Resources" collapsible="true" headerClickable="false" module="modEducationalResources" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" visible="{widgetEducationalResourcesOpen}" includeInLayout="{widgetEducationalResourcesOpen}">
@@ -679,12 +579,12 @@
 							</enhancedtitlewindow:EnhancedTitleWindow>
 						</s:VGroup>
 						<s:VGroup gap="17">
-							<enhancedtitlewindow:EnhancedTitleWindow id="widgetMedications" width="633" title="Medications" collapsible="true" headerClickable="false" module="modMedications" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" creationComplete="{if(!wasMedicationDataLoaded) medicationsXMLdataForWidget.send();}" visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}">
+							<enhancedtitlewindow:EnhancedTitleWindow id="widgetMedications" width="633" title="Medications" collapsible="true" headerClickable="false" module="modMedications" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" creationComplete="{if(!medicationsController.model.dataLoaded) medicationsXMLdata.send();}" visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}">
 								<enhancedtitlewindow:layout>
 									<s:VerticalLayout paddingLeft="10" paddingTop="8" paddingBottom="2"/>
 								</enhancedtitlewindow:layout>
 								<mx:PlotChart id="plotMedicationsWidget" dataProvider="{medicationsData}" width="100%" 
-											  backgroundElements="{bgeMedicationsWidget}" click="{if(!wasMedicationDataLoaded) medicationsXMLdata.send(); this.currentState = 'modMedications'}" buttonMode="true"
+											  backgroundElements="{chartStyles.bgeMedicationsWidget}" click="{if(!wasMedicationDataLoaded) medicationsXMLdata.send(); this.currentState = 'modMedications'}" buttonMode="true"
 											  creationComplete="medicationsSetMinMaxWidget();" height="181"><!-- height="403" (replaced by medications.as: plotMedications.height= medicationsCategories.length * 34 + 29;) paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 									<mx:horizontalAxisRenderers>
 										<mx:AxisRenderer id="hAxisRendMedicationsWidget" axis="{hAxisMedicationsWidget}" tickPlacement="none" minorTickLength="3" minorTickPlacement="outside">
@@ -737,7 +637,7 @@
 									</mx:verticalAxisRenderers>
 									
 									<mx:horizontalAxis>
-										<mx:DateTimeAxis id="hAxisMedicationsWidget" labelFunction="lblHAxisPlotChartDayOnly" displayLocalTime="true" minorTickInterval="12" minorTickUnits="hours" />
+										<mx:DateTimeAxis id="hAxisMedicationsWidget" labelFunction="ChartLabelFunctions.lblHAxisPlotChartDayOnly" displayLocalTime="true" minorTickInterval="12" minorTickUnits="hours" />
 									</mx:horizontalAxis>
 									
 									<mx:verticalAxis>
@@ -749,15 +649,15 @@
 									</mx:verticalAxis> <!-- categoryField="name" --> <!--dataFunction="catFunc"--> <!--labelFunction="lblVAxisImmunizations"-->
 									
 									<mx:series>
-										<mx:PlotSeries xField="date" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="ASclasses.MyMedicationsCustomRenderer" radius="5" stroke="{whiteStroke}" />
-										<mx:PlotSeries xField="dateAN" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="5" stroke="{whiteStroke}" />
+										<mx:PlotSeries xField="date" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="ASclasses.MyMedicationsCustomRenderer" radius="5" stroke="{chartStyles.whiteStroke}" />
+										<mx:PlotSeries xField="dateAN" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="5" stroke="{chartStyles.whiteStroke}" />
 										<mx:PlotSeries xField="dateX" yField="name" visible="false" />	<!-- this invisible point exists only so we can create the blue stripe -->
 									</mx:series>
 								</mx:PlotChart>
 							</enhancedtitlewindow:EnhancedTitleWindow>
 							<s:HGroup gap="22">
 								<s:VGroup gap="17">
-									<enhancedtitlewindow:EnhancedTitleWindow id="widgetNutrition" width="305" title="Nutrition" subtitle="{dateFormatterDay.format(new Date())}" collapsible="true" headerClickable="false" module="modNutrition" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}">
+									<enhancedtitlewindow:EnhancedTitleWindow id="widgetNutrition" width="305" title="Nutrition" subtitle="{DateFormatters.dateFormatterDay.format(new Date())}" collapsible="true" headerClickable="false" module="modNutrition" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}">
 										<enhancedtitlewindow:layout>
 											<s:HorizontalLayout paddingLeft="10" gap="0"/>
 										</enhancedtitlewindow:layout>
@@ -928,7 +828,7 @@
 																					<s:SolidColorStroke color="0x86888A" weight="2" alpha=".4" />
 																				</mx:lineStroke>
 																			</mx:LineSeries>
-																			<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="ASclasses.MyCircleItemRenderer" radius="4" adjustedRadius="4" fill="{outerDocument.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
+																			<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="ASclasses.MyCircleItemRenderer" radius="4" adjustedRadius="4" fill="{outerDocument.chartStyles.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
 																				<mx:lineStroke>
 																					<s:SolidColorStroke color="0xFFFFFF" weight="2" />
 																				</mx:lineStroke>
@@ -941,7 +841,7 @@
 																					<s:SolidColorStroke color="0x86888A" weight="2" alpha=".4" />
 																				</mx:lineStroke>
 																			</mx:LineSeries>
-																			<mx:LineSeries id="myLineSeries2" yField="value2" xField="date" includeInLayout="{data.chartType == 'double'}" visible="{data.chartType == 'double'}" itemRenderer="ASclasses.MyCircleItemRenderer" radius="4" adjustedRadius="4" fill="{outerDocument.colorVitalSignsWidgetBlack}"><!--form="curve" -->
+																			<mx:LineSeries id="myLineSeries2" yField="value2" xField="date" includeInLayout="{data.chartType == 'double'}" visible="{data.chartType == 'double'}" itemRenderer="ASclasses.MyCircleItemRenderer" radius="4" adjustedRadius="4" fill="{outerDocument.chartStyles.colorVitalSignsWidgetBlack}"><!--form="curve" -->
 																				<mx:lineStroke>
 																					<s:SolidColorStroke color="0xFFFFFF" weight="2" />
 																				</mx:lineStroke>
@@ -1162,7 +1062,7 @@
 																									<s:SolidColorStroke color="0xFAFDFF" weight="2" alpha="0.4" />
 																								</mx:lineStroke>
 																							</mx:LineSeries>
-																							<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="ASclasses.MyCircleItemRendererExercise" radius="4" adjustedRadius="4" fill="{outerDocument.outerDocument.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
+																							<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="ASclasses.MyCircleItemRendererExercise" radius="4" adjustedRadius="4" fill="{outerDocument.outerDocument.chartStyles.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
 																								<mx:lineStroke>
 																									<s:SolidColorStroke color="0xFFFFFF" weight="2" />
 																								</mx:lineStroke>
@@ -1725,7 +1625,7 @@
 										</s:Line>
 									</s:HGroup>
 									
-									<mx:PlotChart id="plotImmunizations" width="100%" height="456" dataProvider="{immunizationsData}" showDataTips="true" backgroundElements="{bgeImmunizations}" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;"
+									<mx:PlotChart id="plotImmunizations" width="100%" height="456" dataProvider="{immunizationsData}" showDataTips="true" backgroundElements="{chartStyles.bgeImmunizations}" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;"
 												  creationComplete="immunizationsSetMinMax(); applyCustomDataTipsImm();" itemClick="showImmunizationDetails(event)" dataTipFunction="dataTipsImmunizations" paddingLeft="7">
 										<mx:horizontalAxisRenderers>
 											<mx:AxisRenderer id="hAxisRendImmunizations" axis="{hAxisImmunizations}" tickPlacement="cross" tickLength="4">
@@ -1791,7 +1691,7 @@
 										</mx:verticalAxisRenderers>-->
 										
 										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="hAxisImmunizations" labelFunction="lblHAxisPlotChartMonth" />
+											<mx:DateTimeAxis id="hAxisImmunizations" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 										</mx:horizontalAxis>
 										
 										<mx:verticalAxis>
@@ -1808,10 +1708,10 @@
 									</mx:PlotChart>
 									
 									<mx:Legend direction="horizontal" color="0xFFFFFF" paddingLeft="118" fontFamily="myMyriadNoCFF">
-										<mx:LegendItem label="Due" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsDue}" />
-										<mx:LegendItem label="Due within 1 month" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsDue1Month}" />
-										<mx:LegendItem label="Addressed Today for Immunizations Have Been Given" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsToday}" />
-										<mx:LegendItem label="Completed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{colorImmunizationsCompleted}" />
+										<mx:LegendItem label="Due" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsDue}" />
+										<mx:LegendItem label="Due within 1 month" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsDue1Month}" />
+										<mx:LegendItem label="Addressed Today for Immunizations Have Been Given" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsToday}" />
+										<mx:LegendItem label="Completed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsCompleted}" />
 									</mx:Legend>
 									
 									<!--<s:VGroup paddingLeft="118" paddingTop="15">-->
@@ -1959,7 +1859,9 @@
 				</s:VGroup>
 				
 				<s:Group creationComplete="bar_initializeHandler()">
-					<mx:ViewStack id="viewStackMessages" borderColor="0xBDBCBC" cornerRadius="2" backgroundColor="0x4A4A49" width="825" height="606" borderVisible="true" borderStyle="solid" x="0" y="22" creationPolicy="all"><!--change="updateBreadcrumb('messages')" -->
+					<mx:ViewStack 
+						id="viewStackMessages" 
+						borderColor="0xBDBCBC" cornerRadius="2" backgroundColor="0x4A4A49" width="825" height="606" borderVisible="true" borderStyle="solid" x="0" y="22" creationPolicy="all"><!--change="updateBreadcrumb('messages')" -->
 						<s:NavigatorContent id="mainBox" label="Inbox">
 							<s:layout>
 								<s:VerticalLayout gap="0" />
@@ -2134,308 +2036,7 @@
 		</s:VGroup>
 		
 		<!--MEDICAL RECORDS-->
-		<s:VGroup includeIn="modMedicalRecords" width="976" paddingTop="10" creationComplete="{handleIfFromAppts();}">
-			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=viewMode;" buttonMode="true" />
-				<s:Label text="Medical Records" styleName="whiteBoldTitle" paddingLeft="13" />
-				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
-				<s:Label text="You have" styleName="moduleSubtitleItalic" paddingLeft="30" />
-				<s:Label id="lblMedicalRecordsNumber" text="1" styleName="moduleSubtitleItalic moduleSubtitleNumber" /> <!--text="{immunizationsDueNumber}"--><!--text="{(getUnreadMessagesCount() == '') ? 'no' : getUnreadMessagesCount().substr(2,1)}"-->
-				<s:Label text="new medical record." styleName="moduleSubtitleItalic" />
-				<s:Spacer width="100%" />
-				<s:HGroup gap="-1">
-					<s:TextInput id="medicalRecordsSearch" text="Search medical records" fontSize="10" fontStyle="italic" color="0x999999" height="24" paddingTop="5" click="{if(medicalRecordsSearch.text == 'Search medical records') medicalRecordsSearch.text=''}" change="searchFilterMedRed()" />
-					<s:Button styleName="searchButtonIcon" width="24" height="24" />
-				</s:HGroup>	
-			</s:HGroup>
-			
-			<s:Group creationComplete="{tabsMedicalRecords.setTabClosePolicy(0, false);}"><!--tabBarMedRedInitializeHandler()-->
-				<mx:ViewStack id="viewStackMedicalRecords" borderColor="0xBDBCBC" cornerRadius="2" backgroundColor="0x4A4A49" borderVisible="true" borderStyle="solid" x="0" y="22"><!--change="updateBreadcrumb('medicalRecords')"-->
-					<s:NavigatorContent label="Service History"><!--id="mainBox"-->
-						<s:layout>
-							<s:VerticalLayout gap="0" />
-						</s:layout>
-						<s:BorderContainer height="37" width="100%" backgroundColor="0x706F6F">
-							<s:layout>
-								<s:HorizontalLayout verticalAlign="middle" paddingRight="6" paddingLeft="8"/>
-							</s:layout>
-							
-							<s:Button label="Print" height="24" styleName="buttonText" />
-							<s:Button label="Export" height="24" styleName="buttonText" />
-							
-							<s:Spacer width="100%" />
-							<s:Label id="lblSearchResultsMedRec" visible="false" paddingTop="2" color="0xFFFFFF" fontWeight="bold" maxWidth="260" maxDisplayedLines="1" />
-							<mx:LinkButton id="btnClearSearchMedRec" label="(Clear)" visible="false" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" paddingLeft="-5" paddingRight="-8" click="clearSearchMedRec()" rollOver="btnClearSearchMedRec.styleName='linkBtnUnderline';" rollOut="btnClearSearchMedRec.styleName='linkBtn';" />
-							<s:Spacer width="100%" />
-							
-							<s:HGroup color="0xFFFFFF" gap="0" paddingTop="1">
-								<s:Label text="Time Range:" paddingTop="6" />
-								<general:customLinkButton id="btnMed1d" label="1d" click="handleMedRecDateRange('1d')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMed1w" label="1w" click="handleMedRecDateRange('1w')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMed1m" label="1m" click="handleMedRecDateRange('1m')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMed3m" label="3m" click="handleMedRecDateRange('3m')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMed1y" label="1y" click="handleMedRecDateRange('1y')" toggle="true" selected="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMed3y" label="3y" click="handleMedRecDateRange('3y')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMedAll" label="All" click="handleMedRecDateRange('all')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-								<general:customLinkButton id="btnMedCustom" label="Custom" />
-							</s:HGroup>
-							
-							<s:HGroup gap="0">
-								<s:Button id="btnMedicalRecordsChart" width="29" height="24" icon="@Embed('images/btnImmunizationsChart.png')" chromeColor="0xFF931E" click="switchMedicalRecordsView(0)" />
-								<s:Button id="btnMedicalRecordsList" width="29" height="24" icon="@Embed('images/btnCalendarList.png')" styleName="buttonText" click="switchMedicalRecordsView(1)" />
-							</s:HGroup>					
-						</s:BorderContainer>
-						<s:Line xFrom="0" xTo="974">
-							<s:stroke>
-								<s:SolidColorStroke color="#3F3E3D"/>
-							</s:stroke>
-						</s:Line>
-						
-						<mx:ViewStack id="viewsMedicalRecords" width="100%" height="374" creationPolicy="all">
-							<s:NavigatorContent width="100%">
-								<s:layout>
-									<s:VerticalLayout />
-								</s:layout>
-								
-								<s:HGroup id="medRecDGHeader" styleName="dataGridHeaderAlternative" verticalAlign="middle" paddingTop="-1" paddingLeft="42">
-									<s:Label text="Type of Service" paddingTop="1" />
-									<s:Line yFrom="0" yTo="31">
-										<s:stroke>
-											<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3"/>
-										</s:stroke>
-									</s:Line>
-									<s:Label text="Date" paddingTop="1" />
-								</s:HGroup>
-								
-								<s:HGroup id="medRecDGLine" paddingLeft="104" paddingTop="-7" paddingBottom="-7"><!--bottom = -6, left = -2 (without ticks)-->
-									<s:Line xFrom="0" xTo="870"><!-- xTo=976 (without ticks)-->
-										<s:stroke>
-											<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" />
-										</s:stroke>
-									</s:Line>
-								</s:HGroup>
-								
-								<s:HGroup width="100%" gap="0">
-									<mx:Tree id="myTreeMedRec" dataProvider="{medicalRecordsCategoriesTree}" labelField="category"
-											 width="130"
-											 verticalScrollPolicy="off" horizontalScrollPolicy="off"
-											 selectable="false"
-											 itemRenderer="ASclasses.MyTreeItemRendererMedRec"
-											 contentBackgroundAlpha="0" color="0xBED63A" fontWeight="bold" alternatingItemColors="[0x4A4A49,0x303030]"
-											 rowHeight="28"
-											 defaultLeafIcon="{null}" folderClosedIcon="{null}" folderOpenIcon="{null}"
-											 itemOpen="filterMedRecFromTree()" itemClose="filterMedRecFromTree()" />
-									
-									<mx:PlotChart id="plotMedicalRecords" width="100%"
-												  dataProvider="{medicalRecordsData}" showDataTips="true" backgroundElements="{bgeMedicalRecords}"
-												  paddingLeft="-4" dataTipFunction="dataTipsMedicalRecords" creationComplete="applyCustomDataTips(); medicalRecordsSetMinMax();" itemClick="showServiceDetails(event)"><!--height="300"-->
-										<mx:horizontalAxisRenderers>
-											<mx:AxisRenderer id="hAxisRendMedicalRecords" axis="{hAxisMedicalRecords}" tickPlacement="none">
-												<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
-											</mx:AxisRenderer>
-										</mx:horizontalAxisRenderers>
-										<!--		<mx:verticalAxisRenderers>
-										<mx:AxisRenderer id="vAxisRendMedicalRecords" axis="{vAxisMedicalRecords}" tickPlacement="outside" tickLength="104" minorTickPlacement="inside" minorTickLength="870" labelGap="-104"> 
-										<mx:tickStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:tickStroke>
-										<mx:minorTickStroke><s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:minorTickStroke>
-										<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>-->
-										<!--http://help.adobe.com/en_US/flex/using/WS02f7d8d4857b1677355f601a126b41ed60e-8000.html-->
-										<!--				<mx:labelRenderer>
-										<fx:Component>
-										<mx:Label toolTip="{this.myTip}" color="{this.myColor}" fontWeight="{this.myWeight}" fontStyle="{this.myStyle}">
-										<fx:Script><![CDATA[
-										[Bindable] private var myTip:String;
-										[Bindable] private var myColor:uint;
-										[Bindable] private var myWeight:String;
-										[Bindable] private var myStyle:String;
-										
-										override public function set data(value:Object):void{
-										if(value == null)
-										return;
-										myTip = value.text;
-										text = value.text;
-										/*var length:int = value.text.toString().length;
-										if (length > 20) {
-										text = value.text.toString().substr(0, 20) + "...";
-										} else {
-										text = value.text;
-										}*/
-										//text = value.text.toString().length > 20 ? value.text.toString().substr(0, 20) + "..." : value.text;
-										
-										if(value.text == "Visits" || value.text == "Diagnostic Studies" || value.text == "Surgeries" || value.text == "Procedures") {
-										myColor = 0xAEDEE4;
-										//myWeight = "bold";
-										//text = "> " + value.text;
-										//myStyle = "italic";
-										if(value.text == "Visits" || value.text == "Diagnostic Studies") text += ":";
-										}
-										else {
-										myColor = 0xFFFFFF;
-										//myWeight = "normal";
-										//text = value.text;
-										//myStyle = "normal";
-										}
-										}
-										]]></fx:Script>
-										</mx:Label>	
-										
-										</fx:Component>
-										</mx:labelRenderer>
-										
-										
-										-->			
-										<!--			<mx:labelRenderer>
-										<fx:Component>
-										<mx:Label toolTip="{this.myTip}">
-										<fx:Script><![CDATA[
-										[Bindable] private var myTip:String;
-										
-										override public function set data(value:Object):void{
-										myTip = outerDocument.getLabelDataTip(value.value);		//myTip = outerDocument.immunizationsData[value.value].description;		//this is buggy... it should match the immunizationsCategory number... fix...
-										text = value.text;
-										}
-										]]></fx:Script>
-										</mx:Label>
-										</fx:Component>
-										</mx:labelRenderer>-->
-										<!--			
-										</mx:AxisRenderer>
-										</mx:verticalAxisRenderers>-->
-										
-										<!--ADDING THIS AXIS RENDERER ONLY SO WE CAN HAVE THE HORIZONTAL LINES IN THE CHART (ie minorTicks)-->
-										<mx:verticalAxisRenderers>
-											<mx:AxisRenderer id="vAxisRendMedicalRecords" axis="{vAxisMedicalRecords}" tickPlacement="none" minorTickPlacement="inside" minorTickLength="845" showLabels="false"> <!--labelAlign="bottom"-->
-												<mx:minorTickStroke><s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:minorTickStroke>
-												<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".1" /></mx:axisStroke>
-											</mx:AxisRenderer>
-										</mx:verticalAxisRenderers>
-										
-										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="hAxisMedicalRecords" labelFunction="lblHAxisPlotChartMonth" />
-										</mx:horizontalAxis>
-										
-										<mx:verticalAxis>
-											<!--LINEAR AXIS-->
-											<!--<mx:LinearAxis id="vAxisMedicalRecords" interval="1" maximum="{immunizationsCategories.length}" labelFunction="lblVAxisImmunizations" />-->
-											
-											<!--CATEGORY AXIS-->
-											<mx:CategoryAxis id="vAxisMedicalRecords" dataProvider="{medicalRecordsCategories}" /><!---->
-										</mx:verticalAxis> <!-- categoryField="name" --> <!--dataFunction="catFunc"--> <!--labelFunction="lblVAxisImmunizations"-->
-										
-										<mx:series>
-											<mx:PlotSeries xField="date" yField="name" displayName="Medical Record" fillFunction="medicalRecordsFillFunction" itemRenderer="mx.charts.renderers.BoxItemRenderer" radius="6" selectable="true" stroke="{whiteStroke}" /> <!--yField="order"--><!--itemRenderer="mx.charts.renderers.CircleItemRenderer" -->
-											<mx:PlotSeries xField="inpdate" yField="name" displayName="Medical Record" fillFunction="medicalRecordsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" selectable="true" stroke="{whiteStroke}" />
-										</mx:series>
-									</mx:PlotChart>
-								</s:HGroup>
-								
-								<mx:Legend id="legendMedicalRecords" direction="horizontal" color="0xFFFFFF" paddingLeft="131" fontFamily="myMyriadNoCFF">
-									<mx:LegendItem label="Outpatient Services" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicalRecordsOutpatient}"  stroke="{whiteStroke}" />
-									<mx:LegendItem label="Inpatient Services" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicalRecordsInpatient}" stroke="{whiteStroke}" />
-								</mx:Legend>
-								
-								<mx:Text id="lblNoMedicalRecords1" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
-										 htmlText="{'There are no matching search results for the requested search.&lt;br&gt;Please make sure all words are spelled correctly, or try different keywords.'}" />
-								
-							</s:NavigatorContent>
-							<s:NavigatorContent height="100%">
-								<!--I (WAS) adding the defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer" because without it, it's not displaying the text... See http://help.adobe.com/en_US/flex/using/WSda78ed3a750d6b8f-26a13bbf123c441239d-8000.html fpr details -->
-								<mx:DataGrid id="medicalRecordsList" dataProvider="{medicalRecordsDataGrid}" fontFamily="myMyriadNoCFF"
-											 width="100%" height="100%"
-											 itemClick="showServiceDetailsDG(event)"
-											 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x00ADEE"
-											 color="0xFFFFFF" fontSize="10" verticalAlign="middle"
-											 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="30" paddingTop="6" headerStyleName="dataGridHeader"
-											 borderVisible="false" rowHeight="27" horizontalGridLines="false"><!--defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer"-->
-									<mx:columns> 
-										<mx:DataGridColumn dataField="date" headerText="Date of Service" paddingLeft="5" labelFunction="lblMedicalRecordsDate" />
-										<mx:DataGridColumn dataField="name" headerText="Type of Service" width="180" paddingLeft="5" />
-										<mx:DataGridColumn dataField="reason" headerText="Reason for Visit" paddingLeft="5" /> <!--labelFunction="lblImmunizationDetailsNextDue" -->
-										<mx:DataGridColumn dataField="provider" headerText="Provider" paddingLeft="5" />
-										<mx:DataGridColumn dataField="classification" headerText="Classification" paddingLeft="5" />
-										<mx:DataGridColumn dataField="nextSteps" headerText="Next Steps" paddingLeft="5" labelFunction="lblMedicalRecordsNextSteps" />
-									</mx:columns> 
-								</mx:DataGrid>
-								
-								<mx:Text id="lblNoMedicalRecords2" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
-										 htmlText="{'There are no matching search results for the requested search.&lt;br&gt;Please make sure all words are spelled correctly, or try different keywords.'}" />
-							</s:NavigatorContent>
-						</mx:ViewStack>
-						
-					</s:NavigatorContent>
-				</mx:ViewStack>
-				<plus:TabBarPlus id="tabsMedicalRecords" gap="6" cornerRadius="4" styleName="messagesTabs" closePolicy="always" dataProvider="{viewStackMedicalRecords}" change="tabsMedicalRecordsChangeHandler(event)" />
-			</s:Group>
-			
-			<s:HGroup id="medicalRecordsBottomBoxes" paddingTop="17" gap="23">
-				<s:BorderContainer width="294" height="173" backgroundColor="0x3C3C3B" borderColor="0xBDBDBC" cornerRadius="3" fontSize="13">
-					<s:layout>
-						<s:VerticalLayout paddingLeft="23" paddingTop="17" gap="18" />
-					</s:layout>
-					<s:Label text="Total Service Usage" styleName="greenBoldText" />
-					<s:HGroup gap="16">
-						<s:Label id="lblMedRecOutpatient" width="40" textAlign="right" styleName="orangeStandout" />
-						<!--<mx:Text htmlText="{'Outpatient Services\n&lt;i&gt;in the past year&lt;/i&gt;'}" />-->
-						<s:VGroup gap="3" paddingTop="3">
-							<s:Label text="Outpatient Services" color="#FFFFFF" />
-							<s:Label text="in the past year" fontStyle="italic" color="#CCCCCC" />
-						</s:VGroup>
-					</s:HGroup>
-					<s:HGroup gap="16" paddingTop="10">
-						<s:Label id="lblMedRecDiagnostic" width="40" textAlign="right" styleName="orangeStandout" />
-						<s:VGroup gap="3" paddingTop="3">
-							<s:Label text="Diagnostic Services" color="#FFFFFF" />
-							<s:Label text="in the past year" fontStyle="italic" color="#CCCCCC" />
-						</s:VGroup>
-					</s:HGroup>
-				</s:BorderContainer>
-				<s:BorderContainer width="659" maxHeight="173" backgroundColor="0x3C3C3B" borderColor="0xBDBDBC" cornerRadius="3">
-					<s:layout>
-						<s:VerticalLayout paddingTop="17" />
-					</s:layout>
-					<s:HGroup width="100%" paddingRight="7" paddingTop="-1" paddingLeft="23" paddingBottom="6">
-						<s:Label text="My Next Steps" styleName="greenBoldText" paddingTop="1" />
-						<s:Spacer width="100%" />
-						<mx:LinkButton id="btnNextStepsHistory" label="History" click="showNextStepsHistory()" fontSize="11" paddingTop="-6" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsHistory.styleName='linkBtnUnderline';}" rollOut="btnNextStepsHistory.styleName='linkBtn';" />
-					</s:HGroup>
-					<mx:DataGrid id="dgMedRecNextSteps" dataProvider="{medicalRecordsNextSteps}" width="100%" height="100%" fontSize="12" color="0xEDEDED" selectable="false" headerHeight="0" borderVisible="false" rowHeight="64" verticalGridLines="false" horizontalGridLines="false" alternatingItemColors="[0x303030,0x3C3C3B]">
-						<mx:columns>
-							<mx:DataGridColumn dataField="task" paddingLeft="23" width="530">
-								<mx:itemRenderer>
-									<fx:Component>		
-										<mx:HBox paddingTop="8">
-											<s:Label text="•" fontSize="6" paddingTop="2" />
-											<mx:VBox verticalGap="3"><!--no vgap when fontFamily="myMyriadNoCFF"-->
-												<s:Label text="{data.task}" width="420" lineHeight="16" />
-												<mx:HBox visible="{data.recommendation != ''}" includeInLayout="{data.recommendation != ''}">
-													<s:Label text="Recommendation:" paddingTop="4" /><!--paddingTop was 2 when fontFamily="myMyriadNoCFF"-->
-													<mx:LinkButton id="btnNextStepsRecommendation" label="{data.recommendation}" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsRecommendation.styleName='linkBtnUnderline';}" rollOut="btnNextStepsRecommendation.styleName='linkBtn';" click="{outerDocument.handleRecommendation(data.recommendation)}" />
-												</mx:HBox>
-											</mx:VBox>
-										</mx:HBox>
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							<mx:DataGridColumn dataField="completed">
-								<mx:itemRenderer>
-									<fx:Component>		
-										<mx:HBox paddingTop="13" horizontalGap="-2" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-											<mx:VBox paddingTop="2">
-												<s:Image source="@Embed('images/checkmarkNextSteps.png')" toolTip="Completed" visible="{data.completed}" />
-											</mx:VBox>
-											<mx:VBox verticalGap="1" paddingTop="-2"><!--vgap was 3, no paddingTop-->
-												<mx:LinkButton id="btnNextStepsMarkCompleted" label="{data.completed ? 'Unmark completed' : 'Mark completed'}" paddingTop="-5" color="0xAEDEE4" click="{data.completed = !data.completed}" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsMarkCompleted.styleName='linkBtnUnderline';}" rollOut="btnNextStepsMarkCompleted.styleName='linkBtn';" />
-												<mx:LinkButton id="btnNextStepsDelete" label="Remove" color="0xAEDEE4" textRollOverColor="0xAEDEE4" click="{outerDocument.medicalRecordsNextSteps.removeItemAt(outerDocument.medicalRecordsNextSteps.getItemIndex(data))}" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnNextStepsDelete.styleName='linkBtnUnderline';}" rollOut="btnNextStepsDelete.styleName='linkBtn';" />
-											</mx:VBox>
-										</mx:HBox>
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-						</mx:columns>
-					</mx:DataGrid>
-				</s:BorderContainer>
-			</s:HGroup>
-		</s:VGroup>
+		<modules:MedicalRecordsModule includeIn="modMedicalRecords" width="976" paddingTop="10" selectedAppointmentIndex="{monthView.selectedApptMedRecIndex}" />
 		
 		<!--MEDICATIONS-->
 		<s:VGroup includeIn="modMedications" width="976" paddingTop="10" creationComplete="showMedTip();">
@@ -2542,7 +2143,7 @@
 												 itemOpen="filterMedsFromTreeNew()" itemClose="filterMedsFromTreeNew()" />
 										
 										<mx:PlotChart id="plotMedications" dataProvider="{medicationsData}" width="100%" 
-													  backgroundElements="{bgeMedications}" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;"
+													  backgroundElements="{chartStyles.bgeMedications}" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;"
 													  paddingLeft="-44" showDataTips="true" dataTipFunction="dataTipsMedicationsNew" itemClick="updateIntake(event)" creationComplete="medicationsSetMinMax(); applyCustomDataTipsMedi();" dataTipMode="single"><!-- height="403" (replaced by medications.as: plotMedications.height= medicationsCategories.length * 34 + 29;) paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 											<mx:horizontalAxisRenderers>
 												<mx:AxisRenderer id="hAxisRendMedications" axis="{hAxisMedications}" tickPlacement="cross" tickLength="4" minorTickLength="3" minorTickPlacement="outside">
@@ -2605,7 +2206,7 @@
 											</mx:verticalAxisRenderers>
 											
 											<mx:horizontalAxis>
-												<mx:DateTimeAxis id="hAxisMedications" labelFunction="lblHAxisPlotChartDay" displayLocalTime="true" minorTickInterval="12" minorTickUnits="hours" />
+												<mx:DateTimeAxis id="hAxisMedications" labelFunction="ChartLabelFunctions.lblHAxisPlotChartDay" displayLocalTime="true" minorTickInterval="12" minorTickUnits="hours" />
 											</mx:horizontalAxis>
 											
 											<mx:verticalAxis>
@@ -2621,8 +2222,8 @@
 												<mx:PlotSeries xField="dateO" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.TriangleItemRenderer" radius="6" selectable="true" stroke="{whiteStroke}" />
 												<mx:PlotSeries xField="dateS" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" selectable="true" stroke="{whiteStroke}" />
 												<mx:PlotSeries xField="dateH" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.DiamondItemRenderer" radius="7.5" selectable="true" stroke="{whiteStroke}" />-->
-												<mx:PlotSeries xField="date" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="ASclasses.MyMedicationsCustomRenderer" radius="6" selectable="true" stroke="{whiteStroke}" />
-												<mx:PlotSeries xField="dateAN" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" selectable="true" stroke="{whiteStroke}" />
+												<mx:PlotSeries xField="date" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="ASclasses.MyMedicationsCustomRenderer" radius="6" selectable="true" stroke="{chartStyles.whiteStroke}" />
+												<mx:PlotSeries xField="dateAN" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" selectable="true" stroke="{chartStyles.whiteStroke}" />
 												<mx:PlotSeries xField="dateX" yField="name" visible="false" />	<!-- this invisible point exists only so we can create the blue stripe -->
 												<!--<mx:PlotSeries xField="datePpast" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.BoxItemRenderer" radius="3" selectable="true" stroke="{grayStroke}" />
 												<mx:PlotSeries xField="dateOpast" yField="name" displayName="Medication" fillFunction="medicationsFillFunction" itemRenderer="mx.charts.renderers.TriangleItemRenderer" radius="3" selectable="true" stroke="{grayStroke}" />
@@ -2639,12 +2240,12 @@
 										<mx:LegendItem label="Over-The-Counter Drugs" legendMarkerRenderer="mx.charts.renderers.TriangleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicationsOverTheCounterDrugs}" stroke="{whiteStroke}" />
 										<mx:LegendItem label="Supplements" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicalRecordsInpatient}"  stroke="{whiteStroke}" />
 										<mx:LegendItem label="Herbal Medicines" legendMarkerRenderer="mx.charts.renderers.DiamondItemRenderer" markerAspectRatio="1" markerHeight="15" markerWidth="15" fill="{colorMedicationsHerbalMedicines}" stroke="{whiteStroke}" />-->
-										<mx:LegendItem label="Scheduled" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicalRecordsOutpatient}"  stroke="{whiteStroke}" />
-										<mx:LegendItem label="As needed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicalRecordsInpatient}"  stroke="{whiteStroke}" />
+										<mx:LegendItem label="Scheduled" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorMedicalRecordsOutpatient}"  stroke="{chartStyles.whiteStroke}" />
+										<mx:LegendItem label="As needed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorMedicalRecordsInpatient}"  stroke="{chartStyles.whiteStroke}" />
 										<mx:LegendItem label="Overdose/underdose" legendMarkerRenderer="@Embed(source='images/medIconOverdoseGrayBG.png')" markerAspectRatio="1" markerWidth="16" markerHeight="14" />
 									</mx:Legend>
 									<mx:Legend color="0xFFFFFF" paddingLeft="155" fontFamily="myMyriadNoCFF" paddingTop="-10">
-										<mx:LegendItem label="Not Taken" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorMedicationsPast}" stroke="{whiteStroke}" />
+										<mx:LegendItem label="Not Taken" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorMedicationsPast}" stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									
 								</s:NavigatorContent>
@@ -2818,8 +2419,8 @@
 									</s:Line>
 									<s:Label text="Goal" />
 									<mx:Legend id="legendVitalSigns" direction="horizontal" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingRight="14" paddingLeft="15" paddingTop="4">
-										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
-										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsProvider}" stroke="{whiteStroke}" />
+										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
+										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsProvider}" stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									<!-- -->
 								</s:HGroup>
@@ -2921,6 +2522,7 @@
 																import mx.charts.events.ChartItemEvent;
 																import mx.controls.Alert;
 																import mx.events.FlexEvent;
+																
 																override public function set data(value:Object):void {
 																	super.data = value;
 																	if (value.hasOwnProperty("chart")) {
@@ -3062,11 +2664,11 @@
 																		  showDataTips="true" dataTipFunction="dataTipsVitalSignsComments" creationComplete="applyCustomDataTipsVitalSigns()" itemClick="viewVitalsComments(event)"><!--dataTipFunction="dataTipsMedicationsNew" itemClick="updateIntake(event)" creationComplete="medicationsSetMinMax(); applyCustomDataTipsMedi();" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;" paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 																
 																<mx:series>
-																	<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
+																	<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
 																	<mx:LineSeries yField="expectation" xField="datePatient" itemRenderer="{null}" interactive="false">
 																		<mx:lineStroke><s:SolidColorStroke color="0xBCBCBD" weight="1" /></mx:lineStroke>
 																	</mx:LineSeries>
-																	<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.colorVitalSignsPatient}" />
+																	<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsPatient}" />
 																</mx:series>
 																
 																<mx:horizontalAxis>
@@ -3291,11 +2893,11 @@
 									</s:Line>
 									<s:Label text="Goal" />
 									<mx:Legend id="legendVitalSignsIndividual" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="15" paddingTop="6">
-										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									<!--I'm putting these two legend items in two separate legends, because when I put them in one, they get messed up when I close and reopen the module (they appear on top of each other instead of next to ech other)-->
 									<mx:Legend id="legendVitalSignsIndividual2" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingRight="14" paddingTop="6">
-										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsProvider}" stroke="{whiteStroke}" />
+										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsProvider}" stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									<s:Label text="Reference:" paddingLeft="1" paddingRight="-5" />
 									<s:HGroup paddingTop="-3">
@@ -3335,7 +2937,7 @@
 										</mx:LineSeries>
 									</mx:series>
 									<mx:horizontalAxis>
-										<mx:DateTimeAxis id="vitalXaxis" minimum="{weightChartMin}" maximum="{weightChartMax}" labelFunction="lblHAxisPlotChartMonth" />
+										<mx:DateTimeAxis id="vitalXaxis" minimum="{weightChartMin}" maximum="{weightChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 									</mx:horizontalAxis>
 									<mx:horizontalAxisRenderers>
 										<mx:AxisRenderer axis="{vitalXaxis}" tickPlacement="inside" color="0xFFFFFF" />
@@ -3429,11 +3031,11 @@
 									</s:Line>
 									<s:Label text="Diastolic" paddingRight="15" />
 									<mx:Legend id="legendVitalSignsIndividualPressure" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="15" paddingTop="6">
-										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+										<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									<!--I'm putting these two legend items in two separate legends, because when I put them in one, they get messed up when I close and reopen the module (they appear on top of each other instead of next to ech other)-->
 									<mx:Legend id="legendVitalSignsIndividualPressure2" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingRight="14" paddingTop="6">
-										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsProvider}" stroke="{whiteStroke}" />
+										<mx:LegendItem label="Provider Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsProvider}" stroke="{chartStyles.whiteStroke}" />
 									</mx:Legend>
 									<s:Label text="Reference:" paddingLeft="1" paddingRight="-5" />
 									<s:HGroup paddingTop="-3">
@@ -3489,7 +3091,7 @@
 										</mx:LineSeries>
 									</mx:series>
 									<mx:horizontalAxis>
-										<mx:DateTimeAxis id="vitalPressureXaxis" minimum="{bloodPressureChartMin}" maximum="{bloodPressureChartMax}" labelFunction="lblHAxisPlotChartMonth" />
+										<mx:DateTimeAxis id="vitalPressureXaxis" minimum="{bloodPressureChartMin}" maximum="{bloodPressureChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 									</mx:horizontalAxis>
 									<mx:horizontalAxisRenderers>
 										<mx:AxisRenderer axis="{vitalPressureXaxis}" tickPlacement="inside" color="0xFFFFFF" />
@@ -5232,8 +4834,8 @@
 												  dataProvider="{exerciseData}" itemRollOver="displayExerciseData(event)"><!--itemClick="viewVitalsComments(event)"--><!--itemClick="updateIntake(event)" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;" -->
 										
 										<mx:series>
-											<mx:PlotSeries id="exPlotSeriesPatient" xField="datePatient" yField="series" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" fill="{colorExerciseGraySlider}" /><!-- here I didn't set itemRenderer="ASclasses.MyCircleItemRendererExSlider" because the last icon is from the "provider" instead of the "patient", so it's unnecessary to set the last icon's color here... But if users were able to add exercise records dynamically, then I should set this...-->
-											<mx:PlotSeries id="exPlotSeriesProvider" xField="dateProvider" yField="series" itemRenderer="ASclasses.MyBoxItemRendererExSlider" radius="5" fill="{colorExerciseGraySlider}"/>
+											<mx:PlotSeries id="exPlotSeriesPatient" xField="datePatient" yField="series" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="6" fill="{chartStyles.colorExerciseGraySlider}" /><!-- here I didn't set itemRenderer="ASclasses.MyCircleItemRendererExSlider" because the last icon is from the "provider" instead of the "patient", so it's unnecessary to set the last icon's color here... But if users were able to add exercise records dynamically, then I should set this...-->
+											<mx:PlotSeries id="exPlotSeriesProvider" xField="dateProvider" yField="series" itemRenderer="ASclasses.MyBoxItemRendererExSlider" radius="5" fill="{chartStyles.colorExerciseGraySlider}"/>
 											<mx:LineSeries yField="expectation" xField="dateProvider" itemRenderer="{null}" interactive="false">
 												<mx:lineStroke><s:SolidColorStroke color="0xBCBCBD" weight="1" /></mx:lineStroke>
 											</mx:LineSeries>
@@ -5509,8 +5111,8 @@
 										</s:Line>
 										<s:Label text="Passing Score" />
 										<mx:Legend id="legendExercise" direction="horizontal" color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingRight="14" paddingLeft="15" paddingTop="4">
-											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
-											<mx:LegendItem label="PRT Test Results" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsProvider}" stroke="{whiteStroke}" />
+											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
+											<mx:LegendItem label="PRT Test Results" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsProvider}" stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 										<!-- -->
 									</s:HGroup>
@@ -5795,11 +5397,11 @@
 										</s:Line>
 										<s:Label text="Passing Score" />
 										<mx:Legend color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="15" paddingTop="6">
-											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 										<!--I'm putting these two legend items in two separate legends, because when I put them in one, they get messed up when I close and reopen the module (they appear on top of each other instead of next to ech other)-->
 										<mx:Legend color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingRight="14" paddingTop="6">
-											<mx:LegendItem label="PRT Test Results" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsProvider}" stroke="{whiteStroke}" />
+											<mx:LegendItem label="PRT Test Results" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsProvider}" stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 										<s:Label text="Reference:" paddingLeft="1" paddingRight="-5" />
 										<s:HGroup paddingTop="-3">
@@ -5838,7 +5440,7 @@
 											</mx:LineSeries>
 										</mx:series>
 										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="vitalXaxisRun" minimum="{weightChartMin}" maximum="{weightChartMax}" labelFunction="lblHAxisPlotChartMonth" />
+											<mx:DateTimeAxis id="vitalXaxisRun" minimum="{weightChartMin}" maximum="{weightChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 										</mx:horizontalAxis>
 										<mx:horizontalAxisRenderers>
 											<mx:AxisRenderer axis="{vitalXaxisRun}" tickPlacement="inside" color="0xFFFFFF" />
@@ -5920,7 +5522,7 @@
 										</s:Line>
 										<s:Label text="Goal" paddingRight="10" />
 										<mx:Legend color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="11" paddingTop="6" paddingRight="9">
-											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 									</s:HGroup>
 									<s:Line xFrom="0" xTo="816">
@@ -6061,11 +5663,11 @@
 																			  showDataTips="true" dataTipFunction="dataTipsVitalSignsComments" creationComplete="applyCustomDataTipsVitalSigns()" itemClick="viewExercisesComments(event)"><!--dataTipFunction="dataTipsMedicationsNew" itemClick="updateIntake(event)" creationComplete="medicationsSetMinMax(); applyCustomDataTipsMedi();" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;" paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 																	
 																	<mx:series>
-																		<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
+																		<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
 																		<mx:LineSeries yField="expectation" xField="datePatient" itemRenderer="{null}" interactive="false">
 																			<mx:lineStroke><s:SolidColorStroke color="0xBCBCBD" weight="1" /></mx:lineStroke>
 																		</mx:LineSeries>
-																		<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.colorVitalSignsPatient}" />
+																		<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsPatient}" />
 																	</mx:series>
 																	
 																	<mx:horizontalAxis>
@@ -6210,7 +5812,7 @@
 										</s:Line>
 										<s:Label text="Goal" paddingRight="10" />
 										<mx:Legend color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="15" paddingTop="6">
-											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 										<s:Label text="Data:" paddingLeft="1" paddingRight="-5" />
 										<s:HGroup paddingTop="-3">
@@ -6254,7 +5856,7 @@
 											</mx:LineSeries>
 										</mx:series>
 										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="exXaxisRunWalk" minimum="{runWalkChartMin}" maximum="{runWalkChartMax}" labelFunction="lblHAxisPlotChartMonth" />
+											<mx:DateTimeAxis id="exXaxisRunWalk" minimum="{runWalkChartMin}" maximum="{runWalkChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 										</mx:horizontalAxis>
 										<mx:horizontalAxisRenderers>
 											<mx:AxisRenderer axis="{exXaxisRunWalk}" tickPlacement="inside" color="0xFFFFFF" />
@@ -6383,7 +5985,7 @@
 										</s:Line>
 										<s:Label text="Goal" paddingRight="10" />
 										<mx:Legend color="0xFFFFFF" fontFamily="myMyriadNoCFF" verticalAlign="bottom" paddingLeft="11" paddingTop="6" paddingRight="9">
-											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{colorVitalSignsPatient}"  stroke="{whiteStroke}" />
+											<mx:LegendItem label="Patient Entry" fontSize="12" fontWeight="normal" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" markerHeight="12" markerWidth="12" fill="{chartStyles.colorVitalSignsPatient}"  stroke="{chartStyles.whiteStroke}" />
 										</mx:Legend>
 									</s:HGroup>
 									<s:Line xFrom="0" xTo="816">
@@ -6532,7 +6134,7 @@
 																		<mx:LineSeries xField="date" yField="expectation" itemRenderer="{null}" interactive="false">
 																			<mx:lineStroke><s:SolidColorStroke color="0xBCBCBD" weight="1" /></mx:lineStroke>
 																		</mx:LineSeries>
-																		<mx:PlotSeries xField="date" yField="yvalue" itemRenderer="@Embed(source='images/exerciseUntrackableIcon.png')" radius="8" fill="{outerDocument.colorExerciseUntrackable}" />
+																		<mx:PlotSeries xField="date" yField="yvalue" itemRenderer="@Embed(source='images/exerciseUntrackableIcon.png')" radius="8" fill="{outerDocument.chartStyles.colorExerciseUntrackable}" />
 																	</mx:series>
 																	
 																	<mx:horizontalAxis>
@@ -6555,11 +6157,11 @@
 																			  backgroundElements="{bge}"
 																			  showDataTips="true" dataTipFunction="dataTipsVitalSignsComments" creationComplete="applyCustomDataTipsVitalSigns()" itemClick="viewExercisesComments(event)"><!--dataTipFunction="dataTipsMedicationsNew" itemClick="updateIntake(event)" creationComplete="medicationsSetMinMax(); applyCustomDataTipsMedi();" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;" paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 																	<mx:series>
-																		<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
+																		<mx:PlotSeries xField="dateProvider" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentProvider.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsProvider}" /><!--displayName="Medication" fillFunction="medicationsFillFunction" selectable="true" stroke="{whiteStroke}"-->
 																		<mx:LineSeries yField="expectation" xField="datePatient" itemRenderer="{null}" interactive="false">
 																			<mx:lineStroke><s:SolidColorStroke color="0xBCBCBD" weight="1" /></mx:lineStroke>
 																		</mx:LineSeries>
-																		<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.colorVitalSignsPatient}" />
+																		<mx:PlotSeries xField="datePatient" yField="type" itemRenderer="@Embed(source='images/vitalSignsCommentPatient.png')" radius="8" fill="{outerDocument.chartStyles.colorVitalSignsPatient}" />
 																	</mx:series>
 																	
 																	<mx:horizontalAxis>
@@ -6933,49 +6535,49 @@
 								</s:HGroup>
 								<s:Label text="My Goal is to:" />
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionGrains}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionGrains}" />
 									<s:Label text="Grains:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="7-8" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionVegetables}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionVegetables}" />
 									<s:Label text="Vegetables:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="4-5" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionFruits}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionFruits}" />
 									<s:Label text="Fruits:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="4-5" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionDairy}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionDairy}" />
 									<s:Label text="Low-fat or fat-free dairy:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="2-3" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionProteins}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionProteins}" />
 									<s:Label text="Meat, poultry and fish:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="2 or less" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionProteins}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionProteins}" />
 									<s:Label text="Nuts, seeds &amp; dry beans:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="4-5" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="servings per week" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionFats}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionFats}" />
 									<s:Label text="Fats and oils:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="2-3" fontStyle="italic" color="0xFF931E" paddingRight="-4" />
 									<s:Label text="daily servings" />
 								</s:HGroup>
 								<s:HGroup verticalAlign="middle">
-									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{colorNutritionSweets}" />
+									<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.BoxItemRenderer" markerHeight="8" markerWidth="8" fill="{chartStyles.colorNutritionSweets}" />
 									<s:Label text="Sweets:" fontWeight="bold" paddingLeft="-12" />
 									<s:Label text="limit to" />
 									<s:Label text="less than 5" fontStyle="italic" color="0xFF931E" paddingRight="-4" paddingLeft="-3" />

@@ -36,7 +36,7 @@ public function get10digitDate(date:String):String {
 public function vitalSignsFillFunction(element:ChartItem, index:Number):IFill {
 	var item:LineSeriesItem = LineSeriesItem(element);
 	//if(item.currentState == 'rollOver') return colorImmunizationsDue;
-	return (item.item.type == 'provider') ? colorVitalSignsProvider : colorVitalSignsPatient;
+	return (item.item.type == 'provider') ? chartStyles.colorVitalSignsProvider : chartStyles.colorVitalSignsPatient;
 }
 
 private function recordVitals():void {
