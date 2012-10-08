@@ -1,6 +1,6 @@
 import ASclasses.MyCustomDataTip;
 
-import components.immunizations.ImmunizationDetails;
+import popups.ImmunizationDetails;
 
 import flash.display.CapsStyle;
 import flash.display.JointStyle;

@@ -3,6 +3,7 @@ import ASclasses.PatientConstants;
 
 import components.home.preferencesWindow;
 
+import controllers.ImmunizationsController;
 import controllers.MainController;
 import controllers.MedicalRecordsController;
 import controllers.MedicationsController;
@@ -65,6 +66,7 @@ btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarke
 [Bindable] public var chartStyles:ChartStyles;
 
 private var controller:MainController;
+private var immunizationsController:ImmunizationsController;
 private var medicalRecordsController:MedicalRecordsController;
 private var medicationsController:MedicationsController;
 
@@ -76,12 +78,14 @@ protected function init():void
 	model.chartStyles = chartStyles = new ChartStyles();
 	controller.model = model;
 	
+	immunizationsController = controller.immunizationsController;
 	medicalRecordsController = controller.medicalRecordsController;
 	medicationsController = controller.medicationsController;
 	
 	chartStyles = new ChartStyles();
 	
 	this.addEventListener( ApplicationEvent.NAVIGATE, onNavigate );
+	this.addEventListener( ApplicationEvent.SET_STATE, onSetState );
 	this.addEventListener( RecommendationEvent.HANDLE, onHandleRecommendation );
 	this.addEventListener( ApplicationDataEvent.LOAD, onLoadDataRequest );
 	this.addEventListener( TabPlus.CLOSE_TAB_EVENT, onTabClose );
@@ -107,6 +111,11 @@ protected function onNavigate( event:ApplicationEvent ):void
 	{
 		this.currentState = Constants.STATE_LOGGED_IN;
 	}
+}
+
+protected function onSetState( event:ApplicationEvent ):void
+{
+	this.currentState = event.data;
 }
 
 protected function btnLogin_clickHandler(event:MouseEvent):void {
@@ -349,7 +358,7 @@ protected function onTabClose( event:ListEvent ):void
 		}
 		else if( this.currentState == "modImmunizations" ) 
 		{
-			arrOpenTabsIM.splice(index-1,1);
+			immunizationsController.model.openTabs.splice(index-1,1);
 		}
 	}
 	else 

@@ -8,6 +8,8 @@ package controllers
 		{
 			super();
 			
+			exerciseController = new PatientExerciseController();
+			immunizationsController = new PatientImmunizationsController();
 			medicalRecordsController = new PatientMedicalRecordsController();
 			medicationsController = new PatientMedicationsController();
 		}

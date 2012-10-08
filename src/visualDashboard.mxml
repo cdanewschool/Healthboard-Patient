@@ -21,15 +21,21 @@
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	creationComplete="init()">	<!-- http://stackoverflow.com/questions/5670979/flex-spark-itemrenderer-labels-disappear-when-large-redraws-occur -->
+	creationComplete="init()" xmlns:models="models.*">
+	<fx:Script>
+		<![CDATA[
+			import util.DateFormatters;
+		]]>
+	</fx:Script>
+	<!-- http://stackoverflow.com/questions/5670979/flex-spark-itemrenderer-labels-disappear-when-large-redraws-occur -->
 
 	<!--	external actionscript includes 	-->
 	<fx:Script source="ASfiles/home.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/home.as" />
 	<fx:Script source="ASfiles/appointments.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/appointments.as" />
-	<fx:Script source="ASfiles/immunizations.as" />
-	<fx:Script source="../../visualDashboardShared/sharedASfiles/immunizations.as" />
+	<!--<fx:Script source="ASfiles/immunizations.as" />
+	<fx:Script source="../../visualDashboardShared/sharedASfiles/immunizations.as" />-->
 	<fx:Script source="ASfiles/messages.as" />
 	<fx:Script source="../../visualDashboardShared/sharedASfiles/messages.as" />
 	<!--<fx:Script source="ASfiles/medicalRecords.as" />
@@ -49,7 +55,7 @@
 		
 		<mx:HTTPService id="immunizationsXMLdata"
 						url="data/immunizations.xml"
-						result="immunizationsResultHandler(event)" />
+						result="AppProperties.getInstance().controller.immunizationsController.dataResultHandler(event)" />
 		
 		<mx:HTTPService id="medicalRecordsXMLdata"
 						url="../../visualDashboardShared/data/medicalRecords.xml"
@@ -405,7 +411,7 @@
 				<mx:Button id="buttonMessages" upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" click="{this.currentState='modMessages';}" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
 				<mx:Button id="buttonAppointments" upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="{this.currentState='modCalendar'; if(shouldAddInitialAppointments) onApplicationStart();}" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
 				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="{if(!medicalRecordsController.model.dataLoaded) medicalRecordsXMLdata.send(); this.currentState='modMedicalRecords';}" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
-				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{if(!wasImmunizationDataLoaded) immunizationsXMLdata.send(); this.currentState='modImmunizations';}" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
+				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{if(!immunizationsController.model.dataLoaded) immunizationsXMLdata.send(); this.currentState='modImmunizations';}" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
 				<mx:Button id="buttonVitalSigns" upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" click="{this.currentState='modVitalSigns'}" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
 				<mx:Button id="buttonExercise" upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" click="{this.currentState='modExercise'}" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
 				<mx:Button id="buttonNutrition" upSkin="@Embed('images/nutrition.png')" overSkin="@Embed('images/nutrition_over.png')" downSkin="@Embed('images/nutrition_down.png')" click="{this.currentState='modNutrition'}" mouseMove="buttonViewMoveHandler(event,imgNutrition)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonNutrition)" />
@@ -497,7 +503,7 @@
 									<s:VerticalLayout paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="20"/>
 								</enhancedtitlewindow:layout>
 								<mx:DataGrid buttonMode="true"
-											 width="100%" itemClick="if(!wasImmunizationDataLoaded) immunizationsXMLdata.send(); this.currentState='modImmunizations';"
+											 width="100%" itemClick="if(!immunizationsController.model.dataLoaded) immunizationsXMLdata.send(); this.currentState='modImmunizations';"
 											 color="0xFFFFFF" verticalAlign="middle"
 											 selectable="false"
 											 headerHeight="0"
@@ -1526,313 +1532,7 @@
 		</s:VGroup>
 		
 		<!-- IMMUNIZATIONS -->
-		<s:VGroup includeIn="modImmunizations" width="976" paddingTop="10">
-			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=viewMode;" buttonMode="true" />
-				<s:Label text="Immunizations" styleName="whiteBoldTitle" paddingLeft="13" />
-				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingLeft="5" />
-				<s:VGroup paddingLeft="30" paddingTop="10">
-					<s:HGroup>
-						<s:Label text="You have" styleName="moduleSubtitleItalic" />
-						<s:Label id="lblImmunizationsNumber" text="{immunizationsDueNumber}" styleName="moduleSubtitleItalic moduleSubtitleNumber" paddingTop="4" />
-						<s:Label text="immunizations due or due soon." styleName="moduleSubtitleItalic" />
-					</s:HGroup>
-					<s:HGroup fontSize="11" fontWeight="bold" paddingTop="-8">
-						<s:Label color="0xFFFFFF" text="Learn more about Immunizations:" paddingTop="6" />
-						<mx:LinkButton id="btnLinkER" label="Educational Resources" color="0xFF931E" textRollOverColor="0xFF931E" textSelectedColor="0xFF931E" fontStyle="italic" skin="{null}" paddingLeft="-5" rollOver="{btnLinkER.styleName='linkBtnUnderline';}" rollOut="btnLinkER.styleName='linkBtn';" click="this.currentState='modEducationalResources';" />
-					</s:HGroup>
-				</s:VGroup>
-				
-				<s:Spacer width="100%" />
-				<s:HGroup gap="-1">
-					<s:TextInput id="immunizationssSearch" text="Search immunizations" fontSize="10" fontStyle="italic" color="0x999999" height="24" paddingTop="5" click="{immunizationssSearch.text=''}" />
-					<s:Button styleName="searchButtonIcon" width="24" height="24" />
-				</s:HGroup>	
-			</s:HGroup>
-			
-			<s:Group creationComplete="{tabsImmunizations.setTabClosePolicy(0, false);}">
-				<mx:ViewStack id="viewStackImmunizations" borderColor="0xBDBCBC" cornerRadius="2" backgroundColor="0x4A4A49" borderVisible="true" borderStyle="solid" x="0" y="22">
-					<s:NavigatorContent label="Immunization History">
-						<s:layout>
-							<s:HorizontalLayout gap="0" />
-						</s:layout>
-						<s:VGroup gap="0" height="100%">
-							<s:BorderContainer height="37" width="100%" backgroundColor="0x706F6F">
-								<s:layout>
-									<s:HorizontalLayout verticalAlign="middle" horizontalAlign="right" paddingRight="6" paddingLeft="8" gap="7"/>
-								</s:layout>
-								
-								<!--<s:VGroup paddingTop="3">
-								<s:CheckBox id="checkImmunizationsRequired" label="Required Only" color="0xFFFFFF" fontSize="11" click="checkImmunizationsRequired_clickHandler(event)" />
-								</s:VGroup>-->
-								
-								<s:HGroup paddingLeft="100" paddingRight="5">
-									<s:Label text="View:" paddingTop="7" color="#FFFFFF" />
-									<s:DropDownList id="dropImmunizationsFilter" height="24" width="79" styleName="buttonText" selectedIndex="0" change="checkImmunizationsRequired_clickHandler(event)">
-										<s:dataProvider>
-											<s:ArrayList>
-												<fx:Object label="All" />
-												<fx:Object label="Required" />
-											</s:ArrayList>							
-										</s:dataProvider>
-									</s:DropDownList>
-								</s:HGroup>
-								
-								<s:HGroup color="0xFFFFFF" gap="0" paddingTop="1">
-									<s:Label text="Time Range:" paddingTop="6" />
-									<general:customLinkButton id="btnImm1m" label="1m" click="handleImmDateRange('1m')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImm3m" label="3m" click="handleImmDateRange('3m')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImm1y" label="1y" click="handleImmDateRange('1y')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" selected="true" />
-									<general:customLinkButton id="btnImm3y" label="3y" click="handleImmDateRange('3y')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImm5y" label="5y" click="handleImmDateRange('5y')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImm10y" label="10y" click="handleImmDateRange('10y')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImmAll" label="All" click="handleImmDateRange('all')" toggle="true" toggleBackgroundColor="0x4A4A49" skin="skins.general.MyLinkButtonSkin" />
-									<general:customLinkButton id="btnImmCustom" label="Custom" />
-								</s:HGroup>
-								
-								<s:HGroup gap="0">
-									<s:Button id="btnImmunizationsChart" width="29" height="24" icon="@Embed('images/btnImmunizationsChart.png')" click="switchImmunizationsView(0)" chromeColor="0xFF931E" />
-									<s:Button id="btnImmunizationsList" width="29" height="24" icon="@Embed('images/btnCalendarList.png')" click="switchImmunizationsView(1)" styleName="buttonText" />
-								</s:HGroup>
-							</s:BorderContainer>
-							<s:Line xFrom="0" xTo="792">
-								<s:stroke>
-									<s:SolidColorStroke color="#3F3E3D"/>
-								</s:stroke>
-							</s:Line>
-							
-							<mx:ViewStack id="viewsImmunization" width="100%" height="100%" creationPolicy="all">
-								<s:NavigatorContent width="100%">
-									<s:layout>
-										<s:VerticalLayout />
-									</s:layout>
-									
-									<s:HGroup styleName="dataGridHeaderAlternative" verticalAlign="middle" paddingLeft="36">
-										<s:Label text="Immunization" paddingTop="1" />
-										<s:Line yFrom="0" yTo="31">
-											<s:stroke>
-												<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3"/>
-											</s:stroke>
-										</s:Line>
-										<s:Label text="Date" paddingTop="1" />
-									</s:HGroup>
-									
-									<s:HGroup paddingLeft="117" paddingTop="-7" paddingBottom="-7">
-										<s:Line xFrom="0" xTo="678">
-											<s:stroke>
-												<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".6" />
-											</s:stroke>
-										</s:Line>
-									</s:HGroup>
-									
-									<mx:PlotChart id="plotImmunizations" width="100%" height="456" dataProvider="{immunizationsData}" showDataTips="true" backgroundElements="{chartStyles.bgeImmunizations}" itemRollOver="Mouse.cursor = MouseCursor.BUTTON;" itemRollOut="Mouse.cursor = MouseCursor.AUTO;"
-												  creationComplete="immunizationsSetMinMax(); applyCustomDataTipsImm();" itemClick="showImmunizationDetails(event)" dataTipFunction="dataTipsImmunizations" paddingLeft="7">
-										<mx:horizontalAxisRenderers>
-											<mx:AxisRenderer id="hAxisRendImmunizations" axis="{hAxisImmunizations}" tickPlacement="cross" tickLength="4">
-												<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
-												<mx:tickStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:tickStroke>
-											</mx:AxisRenderer>
-										</mx:horizontalAxisRenderers>
-										<mx:verticalAxisRenderers>
-											<mx:AxisRenderer id="vAxisRendImmunizations" axis="{vAxisImmunizations}" tickPlacement="outside" tickLength="117" minorTickPlacement="inside" minorTickLength="678" labelGap="-117">
-												<mx:tickStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:tickStroke>
-												<mx:minorTickStroke><s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:minorTickStroke>
-												<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
-												
-												<!--http://help.adobe.com/en_US/flex/using/WS02f7d8d4857b1677355f601a126b41ed60e-8000.html-->
-												<mx:labelRenderer>
-													<fx:Component>
-														<mx:LinkButton click="outerDocument.showImmunizationDetailsAxis(label)" toolTip="{this.myTip}" color="{this.myColor}" textRollOverColor="{this.myColor}" textSelectedColor="{this.myColor}" fontWeight="{this.myWeight}" fontStyle="{this.myStyle}" skin="{null}" rollOver="{if(this.myColor == 0xAEDEE4) this.styleName='linkBtnUnderline';}" rollOut="this.styleName='linkBtn';" paddingLeft="-3" paddingRight="2">
-															<fx:Script>
-																<![CDATA[
-																	[Bindable] private var myTip:String;
-																	[Bindable] private var myColor:uint;
-																	[Bindable] private var myWeight:String;
-																	[Bindable] private var myStyle:String;
-																	
-																	override public function set data(value:Object):void{
-																		if(value == null) return;
-																		myTip = outerDocument.getLabelDataTip(value.value);		//myTip = outerDocument.immunizationsData[value.value].description;		//this is buggy... it should match the immunizationsCategory number... fix...		//value.text;
-																		label = value.text;		//text = value.text;
-																		//text = value.text.toString().length > 20 ? value.text.toString().substr(0, 20) + "..." : value.text;
-																		
-																		myColor = 0xAEDEE4;
-																	}
-																]]>
-															</fx:Script>
-														</mx:LinkButton>	
-														
-													</fx:Component>
-												</mx:labelRenderer>
-												
-											</mx:AxisRenderer>
-										</mx:verticalAxisRenderers>
-										
-										
-										<!--<mx:verticalAxisRenderers>
-										<mx:AxisRenderer id="vAxisRendImmunizations" axis="{vAxisImmunizations}" tickPlacement="none" minorTickPlacement="none" labelGap="0">
-										<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>
-										<mx:labelRenderer>
-										<fx:Component>
-										<mx:Label toolTip="{this.myTip}">
-										<fx:Script><![CDATA[
-										[Bindable] private var myTip:String;
-										
-										override public function set data(value:Object):void{
-										myTip = outerDocument.getLabelDataTip(value.value);		//myTip = outerDocument.immunizationsData[value.value].description;		//this is buggy... it should match the immunizationsCategory number... fix...
-										text = value.text;
-										}
-										]]></fx:Script>
-										</mx:Label>
-										</fx:Component>
-										</mx:labelRenderer>
-										
-										</mx:AxisRenderer>
-										</mx:verticalAxisRenderers>-->
-										
-										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="hAxisImmunizations" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
-										</mx:horizontalAxis>
-										
-										<mx:verticalAxis>
-											<!--LINEAR AXIS-->
-											<!--<mx:LinearAxis id="vAxisImmunizations" interval="1" maximum="{immunizationsCategories.length}" labelFunction="lblVAxisImmunizations" />-->
-											
-											<!--CATEGORY AXIS-->
-											<mx:CategoryAxis id="vAxisImmunizations" dataProvider="{immunizationsCategories}" />
-										</mx:verticalAxis> <!-- categoryField="name" --> <!--dataFunction="catFunc"--> <!--labelFunction="lblVAxisImmunizations"-->
-										
-										<mx:series>
-											<mx:PlotSeries xField="date" yField="name" displayName="Immunization" itemRenderer="mx.charts.renderers.CircleItemRenderer" fillFunction="immunizationsFillFunction" selectable="true" /> <!--yField="order"-->
-										</mx:series>
-									</mx:PlotChart>
-									
-									<mx:Legend direction="horizontal" color="0xFFFFFF" paddingLeft="118" fontFamily="myMyriadNoCFF">
-										<mx:LegendItem label="Due" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsDue}" />
-										<mx:LegendItem label="Due within 1 month" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsDue1Month}" />
-										<mx:LegendItem label="Addressed Today for Immunizations Have Been Given" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsToday}" />
-										<mx:LegendItem label="Completed" legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{chartStyles.colorImmunizationsCompleted}" />
-									</mx:Legend>
-									
-									<!--<s:VGroup paddingLeft="118" paddingTop="15">-->
-									<!--I (WAS) adding the defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer" because without it, it's not displaying the text... See http://help.adobe.com/en_US/flex/using/WSda78ed3a750d6b8f-26a13bbf123c441239d-8000.html fpr details -->
-									<!--Replaced the above with a "NoCFF" embedded font, cause otherwise it's freezing (only this chart when it's fed by the PlotChart)-->
-									<!--<mx:DataGrid id="immunizationsDetails" visible="false" dataProvider="{immunizationItemDrillDown}" fontFamily="myMyriadNoCFF"
-									width="537" rowCount="8" sortableColumns="false"
-									alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x00ADEE"
-									color="0xFFFFFF" fontSize="11" verticalAlign="middle"
-									headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="28" headerStyleName="dataGridHeader"
-									rowHeight="27" horizontalGridLines="false" selectable="false" showEffect="WipeDown">--><!--defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer"-->
-									<!--<mx:columns> 
-									<mx:DataGridColumn dataField="label1" headerText="Details" paddingLeft="5" /> 
-									<mx:DataGridColumn dataField="data1" headerText="" paddingLeft="5" /> 
-									<mx:DataGridColumn headerText="" width="3" /> 
-									<mx:DataGridColumn dataField="label2" headerText="Details" paddingLeft="5" /> 
-									<mx:DataGridColumn dataField="data2" headerText="" paddingLeft="5" /> 
-									</mx:columns> 
-									</mx:DataGrid>
-									</s:VGroup>-->
-									
-								</s:NavigatorContent>
-								<s:NavigatorContent height="100%">
-									<!--I (WAS) adding the defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer" because without it, it's not displaying the text... See http://help.adobe.com/en_US/flex/using/WSda78ed3a750d6b8f-26a13bbf123c441239d-8000.html fpr details -->
-									<mx:DataGrid id="immunizationsList" dataProvider="{immunizationsDataFiltered}" fontFamily="myMyriadNoCFF"
-												 width="100%" height="100%"
-												 alternatingItemColors="[0x303030,0x3c3c3b]" selectable="false"
-												 color="0xFFFFFF" fontSize="10" verticalAlign="middle"
-												 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerStyleName="dataGridHeaderAlternative" headerHeight="30" paddingTop="6"
-												 borderVisible="false" rowHeight="27" horizontalGridLines="false"><!--defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer" selectionColor="0x00ADEE" rollOverColor="0x00ADEE"-->
-										<mx:columns> 
-											<mx:DataGridColumn dataField="name" headerText="" width="39">
-												<mx:itemRenderer>
-													<fx:Component>
-														<mx:HBox width="100%" paddingLeft="11" horizontalScrollPolicy="off">
-															<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{outerDocument.myImmunizationsFillFunction(data.completed,data.date)}">
-																<fx:Script>
-																	<![CDATA[
-																		override public function set data(value:Object):void {
-																			super.data = value;
-																			this.toolTip = outerDocument.getStatus(data.completed,data.date);
-																			super.invalidateDisplayList();
-																		}
-																	]]>
-																</fx:Script>
-															</mx:LegendItem>
-														</mx:HBox>
-													</fx:Component>
-												</mx:itemRenderer>
-											</mx:DataGridColumn>
-											<mx:DataGridColumn dataField="name" headerText="Immunization" width="145" paddingLeft="13" fontFamily="myMyriad">
-												<mx:itemRenderer>
-													<fx:Component>
-														<!--<mx:HBox width="100%" horizontalGap="0">
-														<mx:LegendItem legendMarkerRenderer="mx.charts.renderers.CircleItemRenderer" markerAspectRatio="1" fill="{outerDocument.myImmunizationsFillFunction(data.completed,data.date)}" />
-														<mx:Label text="{data.name}">
-														<fx:Script>		
-														<![CDATA[
-														/**
-														* This function is necessary to be able to display the tooltip, since we're in an itemRenderer and the DataGridColumn's "showDataTips=true" won't do
-														* http://flexonblog.wordpress.com/2008/07/09/tooltip-for-datagrid-column-elements/
-														*/
-														override public function set data(value:Object):void {
-														super.data = value;
-														this.toolTip = data.description;
-														super.invalidateDisplayList();
-														}
-														]]>
-														</fx:Script>
-														</mx:Label>
-														</mx:HBox>-->
-														<mx:LinkButton click="outerDocument.showImmunizationDetailsAxis(label)" textAlign="left" toolTip="{this.myTip}" color="{this.myColor}" textRollOverColor="{this.myColor}" textSelectedColor="{this.myColor}" fontWeight="{this.myWeight}" fontStyle="{this.myStyle}" skin="{null}" rollOver="{if(this.myColor == 0xAEDEE4) this.styleName='linkBtnUnderline';}" rollOut="this.styleName='linkBtn';" fontFamily="myMyriad">
-															<fx:Script>
-																<![CDATA[
-																	[Bindable] private var myTip:String;
-																	[Bindable] private var myColor:uint;
-																	[Bindable] private var myWeight:String;
-																	[Bindable] private var myStyle:String;
-																	
-																	override public function set data(value:Object):void{
-																		if(value == null) return;
-																		myTip = value.description;		//myTip = outerDocument.immunizationsData[value.value].description;		//this is buggy... it should match the immunizationsCategory number... fix...		//value.text;
-																		label = value.name;		//text = value.text;
-																		//text = value.text.toString().length > 20 ? value.text.toString().substr(0, 20) + "..." : value.text;
-																		
-																		myColor = 0xAEDEE4;
-																	}
-																]]>
-															</fx:Script>
-														</mx:LinkButton>
-													</fx:Component>
-												</mx:itemRenderer>
-											</mx:DataGridColumn> 
-											<mx:DataGridColumn dataField="lastGiven" headerText="Date Given" paddingLeft="5" /> 
-											<mx:DataGridColumn dataField="lastGiven" labelFunction="lblImmunizationDetailsAge" headerText="Age" paddingLeft="5" width="58" /> 
-											<mx:DataGridColumn dataField="nextDue" headerText="Next Due" paddingLeft="5" /> 
-											<mx:DataGridColumn dataField="series" headerText="Series" paddingLeft="5" width="58" /> 
-											<mx:DataGridColumn dataField="expires" headerText="Expires" paddingLeft="5" /> 
-											<mx:DataGridColumn dataField="lastEdit" headerText="Last Edit" paddingLeft="5" />
-											<mx:DataGridColumn dataField="occupationalStatus" headerText="Occupational Status" paddingLeft="5" />
-										</mx:columns> 
-									</mx:DataGrid>
-								</s:NavigatorContent>
-							</mx:ViewStack>
-						</s:VGroup>
-						<s:Line xFrom="0" yFrom="0" xTo="0" yTo="628">
-							<s:stroke>
-								<s:SolidColorStroke color="#BDBDBC"/>
-							</s:stroke>
-						</s:Line>
-						<s:VGroup width="180" height="100%">
-							<s:Label text="Allergies" styleName="subtitles" textAlign="center" width="100%" paddingTop="15" />
-							<s:Label text="{'• Aspirin\n• Latex (Do Not Use, Not Screened)\n• Natural Rubber (Do Not Use, Not Screened)'}" styleName="smallText" paddingLeft="9" paddingTop="12" width="100%" />
-							<s:Label text="Exemption" styleName="subtitles" textAlign="center" width="100%" paddingTop="20" />
-							<s:Label text="There is no exemption from immunization for Reasons of Conscience" fontSize="11" fontStyle="italic" color="0x999999" paddingLeft="9" paddingTop="12" width="100%" />
-						</s:VGroup>
-					</s:NavigatorContent>	
-				</mx:ViewStack>
-				<plus:TabBarPlus id="tabsImmunizations" gap="6" cornerRadius="4" styleName="messagesTabs" closePolicy="always" dataProvider="{viewStackImmunizations}" />
-			</s:Group>
-		</s:VGroup>	
+		<modules:ImmunizationsModule includeIn="modImmunizations" width="976" paddingTop="10" />
 		
 		<!-- MESSAGES -->
 		<s:VGroup includeIn="modMessages" width="976" paddingTop="10">
