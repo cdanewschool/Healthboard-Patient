@@ -20,13 +20,13 @@ If we click the "Click to Request" orange button, then DataHolder.getInstance().
 (if they decide they don't want the next appointment to be automatically selected, you should 1) set selected = false, 2) remove monthView.populateRightColumn(DataHolder.getInstance().dataProvider[0]);, 3) restore the removeButton Boolean, and 4) set the rightColumn.visible = false)
 */
 
-import components.appointments.myAppointmentsWindow;
-import components.appointments.myClassesWindow;
+import popups.myAppointmentsWindow;
+import popups.myClassesWindow;
 
-import external.calendar.classes.events.CustomEvents;
-import external.calendar.classes.model.DataHolder;
-import external.calendar.classes.utils.CommonUtils;
-import external.calendar.classes.views.MonthView;
+import calendar.classes.events.CustomEvents;
+import calendar.classes.model.DataHolder;
+import calendar.classes.utils.CommonUtils;
+import calendar.classes.views.MonthView;
 
 import flash.events.MouseEvent;
 

@@ -4,9 +4,9 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="600" width="100%" height="100%"
 			   skinClass="skins.general.backgroundGradient"
 			   xmlns:components="components.*"
-			   xmlns:ns="external.calendar.mxml_views.*"
+			   xmlns:ns="calendar.mxml_views.*"
 			   xmlns:views="external.calendar.classes.views.*"
-			   xmlns:calendar="external.com.flexcalendar.components.calendar.*" xmlns:home="components.home.*" xmlns:fxg="components.fxg.*">
+			   xmlns:flexcalendar="external.com.flexcalendar.components.calendar.*" xmlns:home="components.home.*" xmlns:fxg="components.fxg.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -14,9 +14,10 @@
 			import external.calendar.classes.model.DataHolder;
 			import external.calendar.classes.utils.CommonUtils;
 			import external.calendar.classes.views.MonthView;
+			import external.calendar.mxml_views.hourCell;
 			
-			import components.appointments.myAppointmentsWindow;
-			import components.appointments.myClassesWindow;
+			import components.popups.myAppointmentsWindow;
+			import components.popups.myClassesWindow;
 			
 			import mx.charts.CategoryAxis;
 			import mx.charts.ChartItem;
@@ -36,8 +37,6 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.ObjectUtil;
 			import mx.utils.object_proxy;
-			
-			import external.calendar.mxml_views.hourCell;
 			
 			
 			/* Current date will be bound all views */
