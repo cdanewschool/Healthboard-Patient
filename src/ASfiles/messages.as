@@ -59,7 +59,7 @@ protected function bar_initializeHandler():void {
 		tabsMessages.selectedIndex = viewStackMessages.length - 2;
 	}
 	else if(howToHandleMessageTabs == "createApptsMessage") {
-		var recipient:uint = monthView.selectedApptType == "appointment" ? 1 : 2;
+		var recipient:uint = appointmentsModule.selectedApptType == "appointment" ? 1 : 2;
 		createNewMessage(recipient);
 		tabsMessages.selectedIndex = viewStackMessages.length - 2;
 	}

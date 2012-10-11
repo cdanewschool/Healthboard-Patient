@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<enhancedtitlewindow:EnhancedTitleWindow 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" 
+	creationComplete="init()">
+	
+	<fx:Script>
+		<![CDATA[
+			import ASclasses.Constants;
+			
+			import controllers.MedicationsController;
+			
+			import events.ApplicationDataEvent;
+			import events.ApplicationEvent;
+			
+			import models.modules.MedicationsModel;
+			
+			import styles.ChartStyles;
+			
+			import util.ChartLabelFunctions;
+			
+			[Bindable] private var controller:MedicationsController = AppProperties.getInstance().controller.medicationsController as MedicationsController;
+			[Bindable] public var model:MedicationsModel = controller.model as MedicationsModel;
+			[Bindable] private var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
+			
+			private function onClick():void
+			{
+				/*
+				var event:ApplicationDataEvent = new ApplicationDataEvent( ApplicationDataEvent.LOAD, true );
+				event.data = Constants.MEDICATIONS;
+				dispatchEvent( event );
+				*/
+				
+				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true );
+				event.data = Constants.MODULE_MEDICATIONS;
+				dispatchEvent( event );
+			}
+			
+			public function medicationsSetMinMaxWidget():void 
+			{
+				hAxisMedicationsWidget.minimum = model.minDate;
+				hAxisMedicationsWidget.maximum = model.maxDateWidget;
+				
+				chartStyles.canvasMedWidget.lineStyle(75,0x00ADEE,.2,true,LineScaleMode.NORMAL,CapsStyle.SQUARE,JointStyle.MITER,2);
+				chartStyles.canvasMedWidget.moveTo('06/16/2012 12:00:00 PM','Lisinopril (Prinivil/Zestril)');
+				chartStyles.canvasMedWidget.lineTo('06/16/2012 12:00:00 PM','Jiang Ya Pian');
+			}
+			
+			private function init():void
+			{
+			}
+		]]>
+	</fx:Script>
+		
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<enhancedtitlewindow:layout>
+		<s:VerticalLayout paddingLeft="10" paddingTop="8" paddingBottom="2"/>
+	</enhancedtitlewindow:layout>
+	
+	<mx:PlotChart 
+		id="plotMedicationsWidget" 
+		dataProvider="{model.medicationsData}" width="100%" 
+		backgroundElements="{chartStyles.bgeMedicationsWidget}" click="onClick()" buttonMode="true"
+		creationComplete="medicationsSetMinMaxWidget();" height="181"><!-- height="403" (replaced by medications.as: plotMedications.height= medicationsCategories.length * 34 + 29;) paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
+		
+		<mx:horizontalAxisRenderers>
+			
+			<mx:AxisRenderer id="hAxisRendMedicationsWidget" axis="{hAxisMedicationsWidget}" tickPlacement="none" minorTickLength="3" minorTickPlacement="outside">
+				<mx:axisStroke><mx:SolidColorStroke color="#B3B3B3" weight="1" alpha=".1" /></mx:axisStroke>
+				<mx:minorTickStroke><s:SolidColorStroke color="#B3B3B3" weight="1" alpha=".1" /></mx:minorTickStroke>
+			</mx:AxisRenderer>
+			
+		</mx:horizontalAxisRenderers>
+		
+		<!--<mx:verticalAxisRenderers>
+		<mx:AxisRenderer id="vAxisRendMedicationsWidget" axis="{vAxisMedicationsWidget}" tickPlacement="outside" tickLength="155" minorTickPlacement="inside" minorTickLength="637" labelGap="-155">
+		<mx:tickStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:tickStroke>
+		<mx:minorTickStroke><s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:minorTickStroke>
+		<mx:axisStroke><mx:SolidColorStroke color="#FFFFFF" weight="1" alpha=".3" /></mx:axisStroke>-->
+		<!--http://help.adobe.com/en_US/flex/using/WS02f7d8d4857b1677355f601a126b41ed60e-8000.html-->
+		<!--<mx:labelRenderer>
+		<fx:Component>
+		<mx:Label color="{this.myColor}" fontWeight="{this.myWeight}" fontStyle="{this.myStyle}">
+		<fx:Script><![CDATA[
+		[Bindable] private var myTip:String;
+		[Bindable] private var myColor:uint;
+		[Bindable] private var myWeight:String;
+		[Bindable] private var myStyle:String;
+		
+		override public function set data(value:Object):void{
+		if(value == null) return;
+		text = value.text;
+		
+		if(value.text == "Prescription Drugs" || value.text == "Over-The-Counter Drugs" || value.text == "Supplements" || value.text == "Herbal Medicines") {
+		myColor = 0xBED63A;
+		text += ":";
+		}
+		else {
+		myColor = 0xFFFFFF;
+		}
+		}
+		]]></fx:Script>
+		</mx:Label>	
+		
+		</fx:Component>
+		</mx:labelRenderer>
+		
+		</mx:AxisRenderer>
+		</mx:verticalAxisRenderers>-->
+		
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer id="vAxisRendMedicationsWidget" axis="{vAxisMedicationsWidget}" tickPlacement="outside" minorTickPlacement="none" tickLength="155" labelGap="-155"> 
+				<mx:tickStroke><mx:SolidColorStroke color="#B3B3B3" weight="1" alpha=".1" /></mx:tickStroke>
+				<mx:axisStroke><mx:SolidColorStroke color="#B3B3B3" weight="1" alpha=".1" /></mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:verticalAxisRenderers>
+		
+		<mx:horizontalAxis>
+			<mx:DateTimeAxis id="hAxisMedicationsWidget" labelFunction="ChartLabelFunctions.lblHAxisPlotChartDayOnly" displayLocalTime="true" minorTickInterval="12" minorTickUnits="hours" />
+		</mx:horizontalAxis>
+		
+		<mx:verticalAxis>
+			<!--LINEAR AXIS-->
+			<!--<mx:LinearAxis id="vAxisMedicalRecords" interval="1" maximum="{immunizationsCategories.length}" labelFunction="lblVAxisImmunizations" />-->
+			
+			<!--CATEGORY AXIS-->
+			<mx:CategoryAxis id="vAxisMedicationsWidget" dataProvider="{model.medicationsCategories}" />
+		</mx:verticalAxis> <!-- categoryField="name" --> <!--dataFunction="catFunc"--> <!--labelFunction="lblVAxisImmunizations"-->
+		
+		<mx:series>
+			<mx:PlotSeries xField="date" yField="name" displayName="Medication" fillFunction="controller.medicationsFillFunction" itemRenderer="ASclasses.MyMedicationsCustomRenderer" radius="5" stroke="{chartStyles.whiteStroke}" />
+			<mx:PlotSeries xField="dateAN" yField="name" displayName="Medication" fillFunction="controller.medicationsFillFunction" itemRenderer="mx.charts.renderers.CircleItemRenderer" radius="5" stroke="{chartStyles.whiteStroke}" />
+			<mx:PlotSeries xField="dateX" yField="name" visible="false" />	<!-- this invisible point exists only so we can create the blue stripe -->
+		</mx:series>
+		
+	</mx:PlotChart>
+	
+</enhancedtitlewindow:EnhancedTitleWindow>

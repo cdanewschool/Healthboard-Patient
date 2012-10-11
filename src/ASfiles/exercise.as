@@ -13,6 +13,8 @@ import mx.managers.PopUpManager;
 
 import spark.components.TitleWindow;
 
+import util.DateUtil;
+
 [Bindable] public var exerciseCurrentIndex:uint = 4;
 
 /*MOVED TO SHARED
@@ -211,12 +213,12 @@ private function runChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblExRunDiff.text = '(+' + String(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].value - 45) + ')';
 	lblExRunMin.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].min;
 	lblExRunSec.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].sec;
-	lblExRunDate.text = getDate(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].date);
+	lblExRunDate.text = DateUtil.formatDateFromString(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].date);
 	lblRunDiff.text = (event.hitData.chartItem.index == 0) ? '' : String(Math.abs(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].value));
 	lblRunDiffUnits.text = (event.hitData.chartItem.index == 0) ? '' : exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].value < 0 ? 'points down' : 'points up';
 	lblRunDiffSeconds.text = (event.hitData.chartItem.index == 0) ? '' : String(Math.abs(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].sec - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].sec));
 	lblRunDiffSecondsUnits.text = (event.hitData.chartItem.index == 0) ? '' : exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].value < 0 ? 'seconds slower' : 'seconds faster';
-	lblRunDatePrev.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + getDate(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].date);
+	lblRunDatePrev.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + DateUtil.formatDateFromString(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[event.hitData.chartItem.index - 1].date);
 	lblRunDiffUnits.visible = (event.hitData.chartItem.index != 0);
 	imgRunDiffPos.visible = imgRunDiffPos.includeInLayout = event.hitData.chartItem.index != 0 && lblRunDiffUnits.text == 'points up';
 	imgRunDiffNeg.visible = imgRunDiffNeg.includeInLayout = event.hitData.chartItem.index != 0 && lblRunDiffUnits.text == 'points down';
@@ -227,12 +229,12 @@ private function runChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblExRunDiff.text = '(+' + String(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].value - 45) + ')';
 	lblExRunMin.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].min;
 	lblExRunSec.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].sec;
-	lblExRunDate.text = getDate(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].date);
+	lblExRunDate.text = DateUtil.formatDateFromString(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].date);
 	lblRunDiff.text = String(Math.abs(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].value));
 	lblRunDiffUnits.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].value < 0 ? 'points down' : 'points up';
 	lblRunDiffSeconds.text = String(Math.abs(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].sec - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].sec));
 	lblRunDiffSecondsUnits.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].value - exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].value < 0 ? 'seconds slower' : 'seconds faster';
-	lblRunDatePrev.text = 'from ' + getDate(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].date);
+	lblRunDatePrev.text = 'from ' + DateUtil.formatDateFromString(exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 2].date);
 	lblRunDiffUnits.visible = true;
 	imgRunDiffPos.visible = imgRunDiffPos.includeInLayout = lblRunDiffUnits.text == 'points up';
 	imgRunDiffNeg.visible = imgRunDiffNeg.includeInLayout = lblRunDiffUnits.text == 'points down';
@@ -244,7 +246,7 @@ private function runWalkChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblExDuration.text = exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].value;
 	lblExSpeed.text = String(int((exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].miles / exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].value) * 60 * 10) / 10);
 	lblExCalories.text = String(Math.round(180 * .3 * exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].miles));
-	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = getDate(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].date);
+	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = DateUtil.formatDateFromString(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].date);
 	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
 }
 
@@ -253,7 +255,7 @@ private function runWalkChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblExDuration.text = exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].value;
 	lblExSpeed.text = String(int((exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].miles / exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].value) * 60 * 10) / 10);
 	lblExCalories.text = String(Math.round(180 * .3 * exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].miles));
-	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = getDate(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].date);
+	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = DateUtil.formatDateFromString(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].date);
 	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
 }
 

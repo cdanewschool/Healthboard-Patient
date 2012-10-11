@@ -14,14 +14,8 @@ import mx.managers.PopUpManager;
 
 import spark.components.TitleWindow;
 
-/*
-[Bindable] public var weightIndexOfLatest:uint = 5;
-[Bindable] public var bloodPressureIndexOfLatest:uint = 7;
-[Bindable] public var heartRateIndexOfLatest:uint = 5;
-[Bindable] public var respiratoryIndexOfLatest:uint = 4;
-[Bindable] public var temperatureIndexOfLatest:uint = 3;
-[Bindable] public var heightIndexOfLatest:uint = 1;
-*/
+import util.DateUtil;
+
 private function calcCommentsRowColor(item:Object, rowIndex:int, dataIndex:int, color:uint):uint {
 	if(item.chartType == "comments" || item.chartType == "untrackable") return 0x000000;
 	else return color;
@@ -62,9 +56,9 @@ private function switchVitalView(index:uint):void {
 
 private function weightChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblWeight.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index].value;
-	lblDate.text = lblDate2.text = getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index].date);
+	lblDate.text = lblDate2.text = DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index].date);
 	lblWeightDiff.text = (event.hitData.chartItem.index == 0) ? '' : String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index].value - arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index - 1].value);
-	lblDatePrev.text = lblDatePrev2.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index - 1].date);
+	lblDatePrev.text = lblDatePrev2.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index - 1].date);
 	lblWeightDiffUnits.visible = (event.hitData.chartItem.index != 0);
 	lblBMIDiffUnits.visible = (event.hitData.chartItem.index != 0);
 	imgWeightDiffPos.visible = imgWeightDiffPos.includeInLayout = Number(lblWeightDiff.text) < 0;
@@ -77,9 +71,9 @@ private function weightChartRolloverEventHandler(event:ChartItemEvent):void {
 }
 private function weightChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblWeight.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].value;
-	lblDate.text = lblDate2.text = getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].date);
+	lblDate.text = lblDate2.text = DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].date);
 	lblWeightDiff.text = String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].value - arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 2].value);
-	lblDatePrev.text = lblDatePrev2.text = 'from ' + getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 2].date);
+	lblDatePrev.text = lblDatePrev2.text = 'from ' + DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 2].date);
 	lblWeightDiffUnits.visible = lblBMIDiffUnits.visible = true;
 	imgWeightDiffPos.visible = imgWeightDiffPos.includeInLayout = Number(lblWeightDiff.text) < 0;
 	imgWeightDiffNeg.visible = imgWeightDiffNeg.includeInLayout = Number(lblWeightDiff.text) > 0;
@@ -93,10 +87,10 @@ private function weightChartRolloutEventHandler(event:ChartItemEvent):void {
 private function pressureChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblBloodPressure1.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].value;
 	lblBloodPressure2.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].value2;
-	lblDatePressure.text = getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].date);
+	lblDatePressure.text = DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].date);
 	lblSystolicDiff.text = (event.hitData.chartItem.index == 0) ? '' : String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].value - arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index - 1].value);
 	lblDiastolicDiff.text = (event.hitData.chartItem.index == 0) ? '' : String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index].value2 - arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index - 1].value2);
-	lblDatePressurePrev.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index - 1].date);
+	lblDatePressurePrev.text = (event.hitData.chartItem.index == 0) ? '' : 'from ' + DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[event.hitData.chartItem.index - 1].date);
 	lblPressureDiffUnits.visible = (event.hitData.chartItem.index != 0);
 	lblDiffDash.visible = (event.hitData.chartItem.index != 0);
 	imgSystolicDiffNeg.visible = imgSystolicDiffNeg.includeInLayout = Number(lblSystolicDiff.text) > 0;
@@ -109,10 +103,10 @@ private function pressureChartRolloverEventHandler(event:ChartItemEvent):void {
 private function pressureChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblBloodPressure1.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].value;
 	lblBloodPressure2.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].value2;
-	lblDatePressure.text = getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].date);
+	lblDatePressure.text = DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].date);
 	lblSystolicDiff.text = String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].value - arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 2].value);
 	lblDiastolicDiff.text = String(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].value2 - arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 2].value2);
-	lblDatePressurePrev.text = 'from ' + getDate(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 2].date);
+	lblDatePressurePrev.text = 'from ' + DateUtil.formatDateFromString(arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 2].date);
 	lblPressureDiffUnits.visible = lblDiffDash.visible = true;	
 	imgSystolicDiffNeg.visible = imgSystolicDiffNeg.includeInLayout = Number(lblSystolicDiff.text) > 0;
 	imgSystolicDiffPos.visible = imgSystolicDiffPos.includeInLayout = Number(lblSystolicDiff.text) < 0;
@@ -166,23 +160,23 @@ private function addTracker():void {
 //MOVE TO SHARED ONCE THE VITAL SIGNS MODULE IS CREATED IN THE PROVIDER PORTAL
 private function handleVitalsDateRange(range:String):void {
 	if(range == '1w') {
-		chartMin = new Date(today.getTime() - 1000*60*60*24*7);	//new Date(2012,8,18);
+		chartMin = new Date(controller.model.today.getTime() - 1000*60*60*24*7);	//new Date(2012,8,18);
 		btnVital1m.selected = btnVital3m.selected = btnVital1y.selected = btnVital3y.selected = btnVitalAll.selected = btnVitalCustom.selected = false;
 	}
 	else if(range == '1m') {
-		chartMin = new Date(today.getTime() - 1000*60*60*24*30);	//new Date(2012,7,25);
+		chartMin = new Date(controller.model.today.getTime() - 1000*60*60*24*30);	//new Date(2012,7,25);
 		btnVital1w.selected = btnVital3m.selected = btnVital1y.selected = btnVital3y.selected = btnVitalAll.selected = btnVitalCustom.selected = false;
 	}
 	else if(range == '3m') {
-		chartMin = new Date(today.getTime() - 1000*60*60*24*91);	//new Date(2012,5,25);
+		chartMin = new Date(controller.model.today.getTime() - 1000*60*60*24*91);	//new Date(2012,5,25);
 		btnVital1w.selected = btnVital1m.selected = btnVital1y.selected = btnVital3y.selected = btnVitalAll.selected = btnVitalCustom.selected = false;
 	}
 	else if(range == '1y') {
-		chartMin = new Date(today.getTime() - 1000*60*60*24*365.24);	//new Date(2011,8,25);
+		chartMin = new Date(controller.model.today.getTime() - 1000*60*60*24*365.24);	//new Date(2011,8,25);
 		btnVital1w.selected = btnVital1m.selected = btnVital3m.selected = btnVital3y.selected = btnVitalAll.selected = btnVitalCustom.selected = false;
 	}
 	else if(range == '3y') {
-		chartMin = new Date(today.getTime() - 1000*60*60*24*1095.73);	//new Date(2009,8,25);
+		chartMin = new Date(controller.model.today.getTime() - 1000*60*60*24*1095.73);	//new Date(2009,8,25);
 		btnVital1w.selected = btnVital1m.selected = btnVital3m.selected = btnVital1y.selected = btnVitalAll.selected = btnVitalCustom.selected = false;
 	}
 	else if(range == 'all') {

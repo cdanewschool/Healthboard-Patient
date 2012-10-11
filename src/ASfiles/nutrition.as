@@ -17,7 +17,10 @@ import mx.graphics.LinearGradient;
 import mx.graphics.SolidColor;
 import mx.managers.PopUpManager;
 
+import util.DateUtil;
+
 public static const millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+private var today:Date = new Date();	//TODO: replace with value on app model once this code is in it's own module
 private var currentDay:Date;
 private var thisSunday:Date = new Date(today.getTime() - today.getDay() * millisecondsPerDay);
 private var thisSaturday:Date = new Date(thisSunday.getTime() + 6 * millisecondsPerDay);
@@ -283,7 +286,7 @@ private function handleNutritionMealEntry():void {
 	if(nutComments.text != 'Enter when, where, and why you had the meal.' && nutComments.text != '') btnNutReadComment.visible = true;
 	
 	var now:Date = new Date();
-	arrNutritionFoodJournal.addItem({meal:dropDownNutritionMealType.selectedItem, portion:numPortion.value + ' ' + nutritionPortionTypes.selectedItem, ingredients:(nutritionFoodSearch.text != 'Search' && nutritionFoodSearch.text != '') ? nutritionFoodSearch.text : dropDownNutritionSavedMeal.selectedItem, calories:123, date:get10digitDate((now.getMonth()+1)+'/'+now.getDate()+'/'+now.getFullYear()), comments:(nutComments.text == 'Enter when, where, and why you had the meal.') ? '' : nutComments.text});
+	arrNutritionFoodJournal.addItem({meal:dropDownNutritionMealType.selectedItem, portion:numPortion.value + ' ' + nutritionPortionTypes.selectedItem, ingredients:(nutritionFoodSearch.text != 'Search' && nutritionFoodSearch.text != '') ? nutritionFoodSearch.text : dropDownNutritionSavedMeal.selectedItem, calories:123, date:get10digitDate((now.getMonth()+1)+'/'+now.DateUtil.formatDateFromString()+'/'+now.getFullYear()), comments:(nutComments.text == 'Enter when, where, and why you had the meal.') ? '' : nutComments.text});
 	nutritionJournal.rowCount++;
 	nutritionJournal.rowCount--;		//this is a quick trick to get nutritionJournal.rowCount to refresh
 	
@@ -398,7 +401,7 @@ private function handleNutritionDateRange(range:String):void {
 		btnNut1wk.selected = btnNut1mo.selected = btnNut3mo.selected = btnNutAll.selected = btnNutCustom.selected = false;
 		txtMyPlateSubtext.text = currentDayDiff == 0 ? "Today so far" : "This day";
 		showJournalPlate(currentDailyPlate);
-		showCurrentDay();	//nutJournalDate.text = getDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear());
+		showCurrentDay();	//nutJournalDate.text = DateUtil.formatDateFromString((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear());
 		lblWhatIHaveEaten.text = currentDayDiff == 0 ? "What I Have Eaten Today" : "What I Have Eaten This Day";
 	}
 	else if(range == '1wk') {
@@ -502,13 +505,13 @@ private function showJournalPlate(plate:uint):void {
 
 private function showCurrentDay():void {
 	currentDay = new Date(today.getTime() + currentDayDiff*millisecondsPerDay);
-	nutJournalDate.text = getDate((currentDay.getMonth()+1)+'/'+currentDay.getDate()+'/'+currentDay.getFullYear());
+	nutJournalDate.text = DateUtil.formatDateFromString((currentDay.getMonth()+1)+'/'+currentDay.DateUtil.formatDateFromString()+'/'+currentDay.getFullYear());
 }
 
 private function showCurrentWeek():void {
 	currentSunday = new Date(thisSunday.getTime() + currentWeekDiff * (7 * millisecondsPerDay));
 	currentSaturday = new Date(thisSaturday.getTime() + currentWeekDiff * (7 * millisecondsPerDay));
-	nutJournalDate.text = getDate((currentSunday.getMonth()+1)+'/'+currentSunday.getDate()+'/'+currentSunday.getFullYear()) + ' - ' + getDate((currentSaturday.getMonth()+1)+'/'+currentSaturday.getDate()+'/'+currentSaturday.getFullYear());
+	nutJournalDate.text = DateUtil.formatDateFromString((currentSunday.getMonth()+1)+'/'+currentSunday.DateUtil.formatDateFromString()+'/'+currentSunday.getFullYear()) + ' - ' + DateUtil.formatDateFromString((currentSaturday.getMonth()+1)+'/'+currentSaturday.DateUtil.formatDateFromString()+'/'+currentSaturday.getFullYear());
 }
 
 private function showCurrentMonth():void {

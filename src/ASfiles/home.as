@@ -2,7 +2,10 @@ import ASclasses.Constants;
 import ASclasses.PatientConstants;
 
 import components.home.preferencesWindow;
+import components.popups.myAppointmentsWindow;
+import components.popups.myClassesWindow;
 
+import controllers.AppointmentsController;
 import controllers.ImmunizationsController;
 import controllers.MainController;
 import controllers.MedicalRecordsController;
@@ -10,7 +13,10 @@ import controllers.MedicationsController;
 
 import events.ApplicationDataEvent;
 import events.ApplicationEvent;
-import events.RecommendationEvent;
+import events.AppointmentEvent;
+
+import util.ChartLabelFunctions;
+import util.DateUtil;
 
 import external.*;
 import external.TabBarPlus.plus.TabBarPlus;
@@ -23,6 +29,7 @@ import flash.events.MouseEvent;
 import flashx.textLayout.compose.TextLineRecycler;
 
 import models.ApplicationModel;
+import models.modules.AppointmentsModel;
 
 import mx.collections.IList;
 import mx.controls.Alert;
@@ -43,8 +50,6 @@ import spark.filters.DropShadowFilter;
 
 import styles.ChartStyles;
 
-[Bindable] public var viewMode:String = Constants.STATE_LOGGED_IN;
-
 //this.stage.displayState = StageDisplayState.FULL_SCREEN;
 /* public function updateBreadcrumb(action:String):void {
 if(action == 'messages') {
@@ -60,12 +65,10 @@ btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarke
 }
 } */
 
-[Bindable] public var fullname:String;
-[Bindable] private var registeredUserID:String = "thisValueWillBeReplaced";
-[Bindable] private var registeredPassword:String = "thisValueWillBeReplaced";
 [Bindable] public var chartStyles:ChartStyles;
+[Bindable] public var controller:MainController;
 
-private var controller:MainController;
+private var appointmentsController:AppointmentsController;
 private var immunizationsController:ImmunizationsController;
 private var medicalRecordsController:MedicalRecordsController;
 private var medicationsController:MedicationsController;
@@ -78,153 +81,13 @@ protected function init():void
 	model.chartStyles = chartStyles = new ChartStyles();
 	controller.model = model;
 	
+	appointmentsController = controller.appointmentsController;
 	immunizationsController = controller.immunizationsController;
 	medicalRecordsController = controller.medicalRecordsController;
 	medicationsController = controller.medicationsController;
 	
 	chartStyles = new ChartStyles();
-	
-	this.addEventListener( ApplicationEvent.NAVIGATE, onNavigate );
-	this.addEventListener( ApplicationEvent.SET_STATE, onSetState );
-	this.addEventListener( RecommendationEvent.HANDLE, onHandleRecommendation );
-	this.addEventListener( ApplicationDataEvent.LOAD, onLoadDataRequest );
-	this.addEventListener( TabPlus.CLOSE_TAB_EVENT, onTabClose );
 }
-
-private function onLoadDataRequest(event:ApplicationDataEvent):void
-{
-	if( event.data === Constants.MEDICATIONS 
-		&& !controller.medicationsController.model.dataLoaded )
-	{
-		medicationsXMLdata.send();
-	}
-	else if( event.data === Constants.MEDICAL_RECORDS
-		&& !controller.medicalRecordsController.model.dataLoaded )
-	{
-		medicalRecordsXMLdata.send();
-	}
-}
-
-protected function onNavigate( event:ApplicationEvent ):void
-{
-	if( event.data == 0 )
-	{
-		this.currentState = Constants.STATE_LOGGED_IN;
-	}
-}
-
-protected function onSetState( event:ApplicationEvent ):void
-{
-	this.currentState = event.data;
-}
-
-protected function btnLogin_clickHandler(event:MouseEvent):void {
-	if(userID.text == 'pipi' || (userID.text == 'piim' && password.text == 'password') || (userID.text == 'james' && password.text == 'archer') || (userID.text == 'melissa' && password.text == 'archer') || (userID.text == 'tiffany' && password.text == 'janeway') || (userID.text == 'robert' && password.text == 'janeway') || (userID.text == 'albert' && password.text == 'sisko') || (userID.text == 'doris' && password.text == 'sisko') || (userID.text == registeredUserID && password.text == registeredPassword)) {
-		this.currentState=viewMode;
-		
-		if(userID.text == 'pipi' || (userID.text == 'piim' && password.text == 'password')) fullname = "Isaac Goodman";
-		else if(userID.text == 'james' && password.text == 'archer') fullname = "James Archer";
-		else if(userID.text == 'melissa' && password.text == 'archer') fullname = "Melissa Archer";
-		else if(userID.text == 'tiffany' && password.text == 'janeway') fullname = "Tiffany Janeway";
-		else if(userID.text == 'robert' && password.text == 'janeway') fullname = "Robert Janeway";
-		else if(userID.text == 'albert' && password.text == 'sisko') fullname = "Albert Sisko";
-		else if(userID.text == 'doris' && password.text == 'sisko') fullname = "Doris Sisko";
-		//else, fullname will contain the name the user indicated at registration.
-		
-		clearValidationErrorsLogin();
-		bcLogin.height = 328;
-	}
-	else {
-		usernameValidator.validate('');		//here we are forcing the userID and password text fields to show red borders, by validating them as if they had empty values.
-		passwordValidator.validate('');
-		hgLoginFail.visible = hgLoginFail.includeInLayout = true;
-		bcLogin.height = 346;
-		//this.currentState='default';
-	}
-}
-
-//private var vResult:ValidationResultEvent;
-protected function createAccountHandler():void {
-	var isInputInvalid:Boolean = false;
-	
-	vResult = firstNameValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = lastNameValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = birthDateValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = ssnValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = userIDValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = emailValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = password2Validator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	vResult = passwordConfValidator.validate();
-	if(vResult.type == ValidationResultEvent.INVALID) isInputInvalid = true;
-	
-	if(password2.text != passwordConf.text) {
-		passwordConf.errorString = "Password was not confirmed correctly";
-		isInputInvalid = true;
-	}
-	
-	if(isInputInvalid) {
-		hgLoginFail.visible = hgLoginFail.includeInLayout = true;
-		bcLogin.height = 418;
-	}
-	else {
-		registeredUserID = userID2.text;
-		registeredPassword = password2.text;
-		fullname = titleCase(firstName.text.toLowerCase() + " " + lastName.text.toLowerCase());
-		
-		firstName.text = lastName.text = userID2.text = emailAddress.text = password2.text = passwordConf.text = "";
-		dateOfBirth.text = "MM/DD/YYYY";
-		ssn.text = '000-00-0000';
-		clearValidationErrors();
-		//bcLogin.height = 400;
-		
-		this.currentState = 'default';
-		Alert.show("You may now log in with the user ID and password you just selected","Login");
-	}
-}
-
-//http://www.parorrey.com/blog/flash-development/as3-convert-string-to-titlecase-in-flash-using-actionscript-function/
-//also called from myAddMedication2Window.mxml
-public function titleCase(txt:String):String {
-	txt = txt.split(" ").map(function(myElement:String, myIndex:int, myArr:Array):String {
-		return myElement.substr(0, 1).toLocaleUpperCase() + myElement.substr(1);
-	}).join(" ");
-	
-	return txt;
-}
-
-/* private function capitalize(str:String):String {
-return str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase();
-} */
-
-private function clearValidationErrors():void {
-	hgLoginFail.visible = hgLoginFail.includeInLayout = false; 
-	firstNameValidator.validate('dummy');	//these dummies clear all validation errors
-	lastNameValidator.validate('dummy');
-	birthDateValidator.validate('12/12/2012');
-	ssnValidator.validate('123-12-1234');
-	userIDValidator.validate('dummy');
-	emailValidator.validate('dummy@dummy.com');
-	password2Validator.validate('dummy2');
-	passwordConfValidator.validate('dummy2');
-}
-
-//private function clearValidationErrorsLogin():void... (SHARED)
-
-//private function forgotPasswordHandler():void... (SHARED)
 
 protected function dropDownView_changeHandler(event:IndexChangeEvent):void
 {
@@ -307,62 +170,4 @@ public function falsifyWidget(widget:String):void {
 	else if(widget == 'modExercise') widgetExerciseOpen = false;
 	else if(widget == 'modMedications') widgetMedicationsOpen = false;
 	else if(widget == 'modNutrition') widgetNutritionOpen = false;
-}
-
-protected function onHandleRecommendation( event:RecommendationEvent ):void 
-{
-	if( event.data == 'Gentle Chair Yoga Class' ) 
-	{
-		this.currentState = 'modCalendar';
-		
-		if( shouldAddInitialAppointments ) this.onApplicationStart();
-		
-		requestClasses('yogaGentle');
-	}
-	else if( event.data == 'Nutrition Workshop') 
-	{
-		this.currentState = 'modCalendar';
-		
-		if(shouldAddInitialAppointments) onApplicationStart();
-		
-		requestClasses('hLifeWeight');
-	}
-}
-
-protected function onTabClose( event:ListEvent ):void
-{
-	if( TabBarPlus( event.target.owner).dataProvider is IList )
-	{
-		var dataProvider:IList = TabBarPlus( event.target.owner).dataProvider as IList;
-		var index:int = event.rowIndex;
-		
-		if( dataProvider == viewStackMessages ) 
-		{
-			//	this array will hold the index values of each "NEW" message in arrOpenTabs. Its purpose is to know which "NEW" message we're closing (if it is in fact a new message)
-			var arrNewMessagesInOpenTabs:Array = new Array(); 
-			
-			for(var i:uint = 0; i < arrOpenTabs.length; i++) 
-			{
-				if( arrOpenTabs[i] == "NEW") arrNewMessagesInOpenTabs.push(i);
-			}
-			
-			if( arrOpenTabs[index-1] == "NEW" ) 
-				 arrNewMessages.splice( arrNewMessagesInOpenTabs.indexOf(index-1), 1 );
-			
-			arrOpenTabs.splice(index-1,1);
-			viewStackMessages.selectedIndex--;
-		}
-		else if( this.currentState == "modMedications" ) 
-		{
-			arrOpenTabsME.splice(index-1,1);
-		}
-		else if( this.currentState == "modImmunizations" ) 
-		{
-			immunizationsController.model.openTabs.splice(index-1,1);
-		}
-	}
-	else 
-	{
-		trace("Bad data provider");
-	}
 }
