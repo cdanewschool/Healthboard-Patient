@@ -286,7 +286,7 @@ private function handleNutritionMealEntry():void {
 	if(nutComments.text != 'Enter when, where, and why you had the meal.' && nutComments.text != '') btnNutReadComment.visible = true;
 	
 	var now:Date = new Date();
-	arrNutritionFoodJournal.addItem({meal:dropDownNutritionMealType.selectedItem, portion:numPortion.value + ' ' + nutritionPortionTypes.selectedItem, ingredients:(nutritionFoodSearch.text != 'Search' && nutritionFoodSearch.text != '') ? nutritionFoodSearch.text : dropDownNutritionSavedMeal.selectedItem, calories:123, date:get10digitDate((now.getMonth()+1)+'/'+now.DateUtil.formatDateFromString()+'/'+now.getFullYear()), comments:(nutComments.text == 'Enter when, where, and why you had the meal.') ? '' : nutComments.text});
+	arrNutritionFoodJournal.addItem({meal:dropDownNutritionMealType.selectedItem, portion:numPortion.value + ' ' + nutritionPortionTypes.selectedItem, ingredients:(nutritionFoodSearch.text != 'Search' && nutritionFoodSearch.text != '') ? nutritionFoodSearch.text : dropDownNutritionSavedMeal.selectedItem, calories:123, date:DateUtil.get10DigitDate((now.getMonth()+1)+'/'+now.DateUtil.formatDateFromString()+'/'+now.getFullYear()), comments:(nutComments.text == 'Enter when, where, and why you had the meal.') ? '' : nutComments.text});
 	nutritionJournal.rowCount++;
 	nutritionJournal.rowCount--;		//this is a quick trick to get nutritionJournal.rowCount to refresh
 	
@@ -390,10 +390,10 @@ private function downloadWorksheet():void {
 }
 
 [Bindable] public var arrNutritionFoodJournal:ArrayCollection = new ArrayCollection([
-	{meal:'Breakfast', portion:'1 piece', ingredients:'Spinach quiche', calories:342, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
-	{meal:'Dinner', portion:'1 plate', ingredients:'Spaghetti and meatballs', calories:450, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'I ate too much. Felt like I was having a heart attack!'}
-]);//{meal:'Breakfast', portion:'1 bowl', ingredients:'Cereal', calories:105, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
-//{meal:'Breakfast', portion:'2 slices', ingredients:'Canadian bacon', calories:85, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'Thin cut canadian bacon, lightly smoked.'},
+	{meal:'Breakfast', portion:'1 piece', ingredients:'Spinach quiche', calories:342, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
+	{meal:'Dinner', portion:'1 plate', ingredients:'Spaghetti and meatballs', calories:450, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'I ate too much. Felt like I was having a heart attack!'}
+]);//{meal:'Breakfast', portion:'1 bowl', ingredients:'Cereal', calories:105, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
+//{meal:'Breakfast', portion:'2 slices', ingredients:'Canadian bacon', calories:85, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'Thin cut canadian bacon, lightly smoked.'},
 
 private function handleNutritionDateRange(range:String):void {	
 	if(range == '1d') {
