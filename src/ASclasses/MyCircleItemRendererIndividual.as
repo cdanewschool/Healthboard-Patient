@@ -3,6 +3,9 @@ package ASclasses
 	import flash.display.Graphics;
 	import flash.geom.Rectangle;
 	
+	import models.modules.ExerciseModel;
+	import models.modules.VitalSignsModel;
+	
 	import mx.charts.ChartItem;
 	import mx.charts.chartClasses.GraphicsUtilities;
 	import mx.charts.renderers.CircleItemRenderer;
@@ -111,16 +114,20 @@ package ASclasses
 			if (fill) fill.begin(g, rcFill, null);
 			
 			var maxDate:String;
-			if(_data.item.vital == 'weight') maxDate = FlexGlobals.topLevelApplication.weightMax;
-			else if(_data.item.vital == 'bloodPressure') maxDate = FlexGlobals.topLevelApplication.bloodPressureMax;
-			else if(_data.item.vital == 'heartRate') maxDate = FlexGlobals.topLevelApplication.heartRateMax;
-			else if(_data.item.vital == 'respiratory') maxDate = FlexGlobals.topLevelApplication.respiratoryMax;
-			else if(_data.item.vital == 'temperature') maxDate = FlexGlobals.topLevelApplication.temperatureMax;
-			else if(_data.item.vital == 'height') maxDate = FlexGlobals.topLevelApplication.heightMax;
-			else if(_data.item.vital == 'comments') maxDate = FlexGlobals.topLevelApplication.commentsMax;
-			else if(_data.item.measure == 'mileRun') maxDate = FlexGlobals.topLevelApplication.mileRunMax;
-			else if(_data.item.measure == 'runWalk') maxDate = FlexGlobals.topLevelApplication.runWalkMax;
 			
+			var vitalSignsModel:VitalSignsModel = VitalSignsModel(AppProperties.getInstance().controller.vitalSignsController.model);
+			var exerciseModel:ExerciseModel = ExerciseModel(AppProperties.getInstance().controller.exerciseController.model);
+			
+			if(_data.item.vital == 'weight') maxDate = vitalSignsModel.weightMax;
+			else if(_data.item.vital == 'bloodPressure') maxDate = vitalSignsModel.bloodPressureMax;
+			else if(_data.item.vital == 'heartRate') maxDate = vitalSignsModel.heartRateMax;
+			else if(_data.item.vital == 'respiratory') maxDate = vitalSignsModel.respiratoryMax;
+			else if(_data.item.vital == 'temperature') maxDate = vitalSignsModel.temperatureMax;
+			else if(_data.item.vital == 'height') maxDate = vitalSignsModel.heightMax;
+			else if(_data.item.vital == 'comments') maxDate = vitalSignsModel.commentsMax;
+			else if(_data.item.measure == 'mileRun') maxDate = exerciseModel.mileRunMax;
+			else if(_data.item.measure == 'runWalk') maxDate = exerciseModel.runWalkMax;
+
 			if(_data.item.date != maxDate) {
 				g.drawEllipse(w - adjustedRadius,w - adjustedRadius,unscaledWidth - 2 * w + adjustedRadius * 2, unscaledHeight - 2 * w + adjustedRadius * 2);
 			}
