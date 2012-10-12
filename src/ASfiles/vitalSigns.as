@@ -1,6 +1,6 @@
-import components.vitalSigns.addTrackerWindow;
-import components.vitalSigns.editGoalWindow;
-import components.vitalSigns.recordVitalsWindow;
+import vitalsigns.addTrackerWindow;
+import vitalsigns.editGoalWindow;
+import vitalsigns.recordVitalsWindow;
 
 import mx.charts.ChartItem;
 import mx.charts.events.ChartItemEvent;
