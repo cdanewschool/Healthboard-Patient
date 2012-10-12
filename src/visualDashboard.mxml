@@ -96,7 +96,7 @@
 		<s:VerticalLayout horizontalAlign="center" />
 	</s:layout>
 	
-	<views1:LoginView width="1024" includeIn="default" authenticationSuccess="{currentState=controller.model.viewMode}" />
+	<views1:LoginView width="1024" includeIn="default" />
 	
 	<!--<mx:ApplicationControlBar id="dockedBar" includeIn="loggedIn" 
 	dock="true" width="1024" borderVisible="false" dropShadowVisible="false" height="38" paddingLeft="0" paddingRight="0" fillColors="[0x999999,0xB3B3B3]" fillAlphas="[1,0]" cornerRadius="0" borderAlpha="0">
@@ -3350,7 +3350,7 @@
 											</mx:LineSeries>
 										</mx:series>
 										<mx:horizontalAxis>
-											<mx:DateTimeAxis id="vitalXaxisRun" minimum="{ExerciseModel(controller.exerciseController).weightChartMin}" maximum="{ExerciseModel(controller.exerciseController).weightChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
+											<mx:DateTimeAxis id="vitalXaxisRun" minimum="{ExerciseModel(controller.exerciseController.model).weightChartMin}" maximum="{ExerciseModel(controller.exerciseController.model).weightChartMax}" labelFunction="ChartLabelFunctions.lblHAxisPlotChartMonth" />
 										</mx:horizontalAxis>
 										<mx:horizontalAxisRenderers>
 											<mx:AxisRenderer axis="{vitalXaxisRun}" tickPlacement="inside" color="0xFFFFFF" />
