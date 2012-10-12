@@ -88,7 +88,7 @@
 	<s:states>
 		<s:State name="default" />
 		<s:State name="loggedIn" />
-		<s:State name="widgetView" enterState="medicationsController.filterMedsFromWidget();" />
+		<s:State name="widgetView" />
 		<s:State name="modCalendar" />
 		<s:State name="modImmunizations" />
 		<s:State name="modMessages" />
@@ -105,7 +105,7 @@
 		<s:VerticalLayout horizontalAlign="center" />
 	</s:layout>
 	
-	<views1:LoginView width="1024" includeIn="default" authenticationSuccess="{currentState=Constants.STATE_LOGGED_IN}" />
+	<views1:LoginView width="1024" includeIn="default" authenticationSuccess="{currentState=controller.model.viewMode}" />
 	
 	<!--<mx:ApplicationControlBar id="dockedBar" includeIn="loggedIn" 
 	dock="true" width="1024" borderVisible="false" dropShadowVisible="false" height="38" paddingLeft="0" paddingRight="0" fillColors="[0x999999,0xB3B3B3]" fillAlphas="[1,0]" cornerRadius="0" borderAlpha="0">
@@ -150,7 +150,7 @@
 					</s:LinearGradient>
 				</s:backgroundFill>
 				
-				<s:VGroup paddingLeft="27" click="{currentState=Constants.STATE_LOGGED_IN}" buttonMode="{currentState!=Constants.STATE_LOGGED_IN}"><!--includeIn="loggedIn, widgetView, profile"-->
+				<s:VGroup paddingLeft="27" click="{currentState=controller.model.viewMode}" buttonMode="{currentState!=controller.model.viewMode}"><!--includeIn="loggedIn, widgetView, profile"-->
 					<fxg:healthBoardLogoGray />
 				</s:VGroup>
 				
@@ -1021,7 +1021,7 @@
 		<!-- MESSAGES -->
 		<s:VGroup includeIn="modMessages" width="976" paddingTop="10">
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=Constants.STATE_LOGGED_IN;" buttonMode="true" />
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Messages" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
 				<s:Label text="You have" styleName="moduleSubtitleItalic" paddingLeft="30" />
@@ -1223,12 +1223,12 @@
 		<modules:MedicalRecordsModule includeIn="modMedicalRecords" width="976" paddingTop="10" />
 		
 		<!--MEDICATIONS-->
-		<components:MedicationsModule includeIn="modMedications" width="976" paddingTop="10" />
+		<modules:MedicationsModule includeIn="modMedications" width="976" paddingTop="10" />
 		
 		<!-- VITAL SIGNS -->
 		<s:VGroup includeIn="modVitalSigns" width="976" paddingTop="10">
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=Constants.STATE_LOGGED_IN;" buttonMode="true" />
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Vital Signs" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
 				<s:Label text="You have no new measurements." styleName="moduleSubtitleItalic" paddingLeft="30" />
@@ -2015,7 +2015,7 @@
 		<!-- EDUCATIONAL RESOURCES -->
 		<s:VGroup includeIn="modEducationalResources" width="976" paddingTop="10" creationComplete="{stage.focus = null}">
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=Constants.STATE_LOGGED_IN;" buttonMode="true" />
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Educational Resources" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
 			</s:HGroup>
@@ -3652,7 +3652,7 @@
 		<!--EXERCISE-->
 		<s:VGroup includeIn="modExercise" width="976" paddingTop="10">
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=Constants.STATE_LOGGED_IN;" buttonMode="true" />
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Exercise" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
 				<s:Label text="You have" styleName="moduleSubtitleItalic" paddingLeft="30" />
@@ -5143,7 +5143,7 @@
 		<!--NUTRITION-->
 		<s:VGroup includeIn="modNutrition" width="976" paddingTop="10" initialize="updateNutritionDatesMonth('thisMonth');" creationComplete="showTip(); initFills();">
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
-				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=Constants.STATE_LOGGED_IN;" buttonMode="true" />
+				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Nutrition" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
 				<s:Label text="You have no new notifications" styleName="moduleSubtitleItalic" paddingLeft="30" />
