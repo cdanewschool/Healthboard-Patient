@@ -1,5 +1,5 @@
-import components.medications.medTips;
-import components.medications.myChartPopupWindow;
+import medications.medTips;
+import popups.myChartPopupWindow;
 import components.medications.myRequestRenewalWindow;
 
 import mx.charts.events.ChartItemEvent;
