@@ -3049,7 +3049,7 @@
 																	import ASclasses.MyCustomDataTip;
 																	
 																	import components.exercise.viewExercisesWindow;
-																	import components.vitalSigns.viewVitalsWindow;
+																	import components.vitalsigns.viewVitalsWindow;
 																	
 																	import mx.charts.HitData;
 																	import mx.charts.events.ChartItemEvent;
@@ -3461,7 +3461,7 @@
 																	
 																	import components.exercise.viewExercisesPAWindow;
 																	import components.exercise.viewExercisesWindow;
-																	import components.vitalSigns.viewVitalsWindow;
+																	import components.vitalsigns.viewVitalsWindow;
 																	
 																	import mx.charts.HitData;
 																	import mx.charts.events.ChartItemEvent;
