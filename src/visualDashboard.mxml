@@ -7548,10 +7548,10 @@
 										<mx:DataGrid id="nutritionJournal" dataProvider="{arrNutritionFoodJournal}" fontFamily="myMyriadNoCFF"
 													 width="100%" height="100%"
 													 borderVisible="false" rowCount="{arrNutritionFoodJournal.length}"
-													 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x00ADEE" rollOverColor="0x00ADEE"
-													 color="0xFFFFFF" fontSize="12" verticalAlign="middle" 
+													 alternatingItemColors="[0x303030,0x3c3c3b]" selectionColor="0x31535E" rollOverColor="0x31535E"
+													 color="0xFFFFFF" textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" fontSize="12" verticalAlign="middle" 
 													 headerBackgroundSkin="skins.general.CustomDataGridHeaderBackgroundSkin" headerSeparatorSkin="mx.skins.ProgrammaticSkin" headerHeight="27" paddingTop="4" headerStyleName="dataGridHeader"
-													 rowHeight="27" horizontalGridLines="false"><!--itemClick="showServiceDetailsDG(event)" defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer"-->
+													 rowHeight="27" horizontalGridLines="false" itemRollOver="onNutritionRollOver(event)" itemRollOut="nutritionRollOverRowIndex=-1"><!--itemClick="showServiceDetailsDG(event)" defaultDataGridItemRenderer="mx.controls.dataGridClasses.FTEDataGridItemRenderer"-->
 											<mx:columns> 
 												<mx:DataGridColumn dataField="meal" headerText="Meal" paddingLeft="5" width="70" />
 												<mx:DataGridColumn dataField="portion" headerText="Portion" width="63" paddingLeft="5" />
@@ -7586,8 +7586,8 @@
 																</fx:Script>
 																<mx:Label text="{data.ingredients}" fontSize="12" paddingTop="1" toolTip="{(data.ingredients == 'Spinach quiche') ? ' ' : ''}" toolTipCreate="{if(data.ingredients == 'Spinach quiche') outerDocument.createCustomTipJournal(event)}" color="{data.ingredients == 'Spinach quiche' ? 0xAEDEE4 : 0xFFFFFF}" />
 																<s:Spacer width="100%" />
-																<mx:LinkButton id="btnSave" label="Save" color="0x828282" textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}" paddingLeft="0" rollOver="{btnSave.styleName='linkBtnUnderline';}" rollOut="btnSave.styleName='linkBtn';" click="saveMealPrompt(event)" />
-																<s:VGroup paddingTop="7" paddingLeft="-7" paddingRight="7">
+																<mx:LinkButton id="btnSave" label="Save" color="0x828282" textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}" paddingLeft="0" rollOver="{btnSave.styleName='linkBtnUnderline';}" rollOut="btnSave.styleName='linkBtn';" click="saveMealPrompt(event)" visible="{outerDocument.arrNutritionFoodJournal.getItemIndex(data) == outerDocument.nutritionRollOverRowIndex}" />
+																<s:VGroup paddingTop="7" paddingLeft="-7" paddingRight="7" visible="{outerDocument.arrNutritionFoodJournal.getItemIndex(data) == outerDocument.nutritionRollOverRowIndex}">
 																	<s:Image source="@Embed('images/nutritionDelete.png')" toolTip="Delete" buttonMode="true" click="nutDeleteHandler(event)" />
 																</s:VGroup>
 															</mx:HBox>

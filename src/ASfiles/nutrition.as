@@ -12,6 +12,7 @@ import mx.charts.ChartItem;
 import mx.charts.series.items.BarSeriesItem;
 import mx.collections.ArrayCollection;
 import mx.collections.ArrayList;
+import mx.events.ListEvent;
 import mx.events.ToolTipEvent;
 import mx.graphics.GradientEntry;
 import mx.graphics.IFill;
@@ -561,4 +562,10 @@ private function showCurrentMonth():void {
 	adjustedCurrentMonthDiff = (today.getMonth() + currentMonthDiff < 0) ? 
 	currentMonth = (today.getMonth() + currentMonthDiff) % 12;
 	nutJournalDate.text = arrMonths[currentMonth] + ', ' + today.getFullYear();*/
+}
+
+[Bindable] public var nutritionRollOverRowIndex:int = -1;
+private function onNutritionRollOver(event:ListEvent):void
+{
+	nutritionRollOverRowIndex = event.rowIndex;
 }
