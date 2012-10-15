@@ -67,7 +67,7 @@ private function weightChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblBMIDiff.text = (event.hitData.chartItem.index == 0) ? '' : String(int((int(((arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index].value * 703) / Math.pow(arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data[arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data.length - 1].value, 2))*10)/10 - int(((arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[event.hitData.chartItem.index - 1].value * 703) / Math.pow(arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data[arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data.length - 1].value, 2))*10)/10)*10)/10);
 	imgBMIDiffPos.visible = imgBMIDiffPos.includeInLayout = Number(lblBMIDiff.text) < 0;
 	imgBMIDiffNeg.visible = imgBMIDiffNeg.includeInLayout = Number(lblBMIDiff.text) > 0;
-	myLineSeries.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
+	myLineSeries.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererOverIndividual));
 }
 private function weightChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblWeight.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].value;
@@ -81,7 +81,7 @@ private function weightChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblBMIDiff.text = String(int((int(((arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 1].value * 703) / Math.pow(arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data[arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data.length - 1].value, 2))*10)/10 - int(((arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Weight')).chart[0].data.length - 2].value * 703) / Math.pow(arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data[arrVitalSigns[vitalIndices.indexOf('Height')].chart[0].data.length - 2].value, 2))*10)/10)*10)/10);
 	imgBMIDiffPos.visible = imgBMIDiffPos.includeInLayout = Number(lblBMIDiff.text) < 0;
 	imgBMIDiffNeg.visible = imgBMIDiffNeg.includeInLayout = Number(lblBMIDiff.text) > 0;
-	myLineSeries.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
+	myLineSeries.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererIndividual));
 }
 
 private function pressureChartRolloverEventHandler(event:ChartItemEvent):void {
@@ -97,8 +97,8 @@ private function pressureChartRolloverEventHandler(event:ChartItemEvent):void {
 	imgSystolicDiffPos.visible = imgSystolicDiffPos.includeInLayout = Number(lblSystolicDiff.text) < 0;
 	imgDiastolicDiffNeg.visible = imgDiastolicDiffNeg.includeInLayout = Number(lblDiastolicDiff.text) > 0;
 	imgDiastolicDiffPos.visible = imgDiastolicDiffPos.includeInLayout = Number(lblDiastolicDiff.text) < 0;
-	myPressureLineSeries.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
-	myPressureLineSeries2.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
+	myPressureLineSeries.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererOverIndividual));
+	myPressureLineSeries2.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererOverIndividual));
 }
 private function pressureChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblBloodPressure1.text = arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data[arrVitalSigns.getItemAt(vitalIndices.indexOf('Blood pressure')).chart[0].data.length - 1].value;
@@ -112,8 +112,8 @@ private function pressureChartRolloutEventHandler(event:ChartItemEvent):void {
 	imgSystolicDiffPos.visible = imgSystolicDiffPos.includeInLayout = Number(lblSystolicDiff.text) < 0;
 	imgDiastolicDiffNeg.visible = imgDiastolicDiffNeg.includeInLayout = Number(lblDiastolicDiff.text) > 0;
 	imgDiastolicDiffPos.visible = imgDiastolicDiffPos.includeInLayout = Number(lblDiastolicDiff.text) < 0;
-	myPressureLineSeries.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
-	myPressureLineSeries2.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
+	myPressureLineSeries.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererIndividual));
+	myPressureLineSeries2.setStyle("itemRenderer",new ClassFactory(itemrenderers.MyCircleItemRendererIndividual));
 }
 
 private function vitalsWeightChangeReference():void {

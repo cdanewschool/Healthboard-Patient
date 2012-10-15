@@ -222,7 +222,7 @@ private function runChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblRunDiffUnits.visible = (event.hitData.chartItem.index != 0);
 	imgRunDiffPos.visible = imgRunDiffPos.includeInLayout = event.hitData.chartItem.index != 0 && lblRunDiffUnits.text == 'points up';
 	imgRunDiffNeg.visible = imgRunDiffNeg.includeInLayout = event.hitData.chartItem.index != 0 && lblRunDiffUnits.text == 'points down';
-	myLineSeriesRun.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
+	myLineSeriesRun.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.MyCircleItemRendererOverIndividual));
 }
 private function runChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblExRun.text = exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[exerciseDataByMeasure.getItemAt(exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data.length - 1].value;
@@ -238,7 +238,7 @@ private function runChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblRunDiffUnits.visible = true;
 	imgRunDiffPos.visible = imgRunDiffPos.includeInLayout = lblRunDiffUnits.text == 'points up';
 	imgRunDiffNeg.visible = imgRunDiffNeg.includeInLayout = lblRunDiffUnits.text == 'points down';
-	myLineSeriesRun.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
+	myLineSeriesRun.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.MyCircleItemRendererIndividual));
 }
 
 private function runWalkChartRolloverEventHandler(event:ChartItemEvent):void {
@@ -247,7 +247,7 @@ private function runWalkChartRolloverEventHandler(event:ChartItemEvent):void {
 	lblExSpeed.text = String(int((exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].miles / exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].value) * 60 * 10) / 10);
 	lblExCalories.text = String(Math.round(180 * .3 * exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].miles));
 	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = DateUtil.formatDateFromString(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[event.hitData.chartItem.index].date);
-	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererOverIndividual));
+	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.MyCircleItemRendererOverIndividual));
 }
 
 private function runWalkChartRolloutEventHandler(event:ChartItemEvent):void {
@@ -256,7 +256,7 @@ private function runWalkChartRolloutEventHandler(event:ChartItemEvent):void {
 	lblExSpeed.text = String(int((exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].miles / exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].value) * 60 * 10) / 10);
 	lblExCalories.text = String(Math.round(180 * .3 * exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].miles));
 	lblExDistanceDate.text = lblExDurationDate.text = lblExSpeedDate.text = lblExCaloriesDate.text = lblExHeartDate.text = lblExWeightDate.text = DateUtil.formatDateFromString(exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data[exerciseDataByMeasurePhysicianAssigned.getItemAt(exercisePAIndices.indexOf('Run / Walk')).chart[0].data.length - 1].date);
-	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(ASclasses.MyCircleItemRendererIndividual));
+	myLineSeriesRunWalk.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.MyCircleItemRendererIndividual));
 }
 
 
