@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <medicalRecords>
-	<medicalRecord inpdate="10/07/2011" name="Procedures" order="0.5" classification="Inpatient" reason="Colonscopy" provider="Dr. Berg"></medicalRecord>
+	<medicalRecord inpdate="10/07/2011" name="Procedures" order="0.5" classification="Inpatient" reason="Nasal Procedure" provider="Dr. Berg"></medicalRecord>
 	<medicalRecord inpdate="07/07/2011" name="Procedures" order="0.5" classification="Inpatient" reason="Nasal Procedure" provider="Dr. Berg"></medicalRecord>
 	<medicalRecord inpdate="10/07/2011" name="Surgeries" order="1.5" classification="Inpatient" reason="Appendectomy" provider="Dr. Berg"></medicalRecord>
 	<medicalRecord date="08/11/2011" name="Clinical Tests" order="2.5" classification="Outpatient" reason="Cardiac Stress Test" provider="Dr. Hammond"></medicalRecord>

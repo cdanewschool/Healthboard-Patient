@@ -290,10 +290,15 @@
 			<!-- RADIOLOGY -->
 			<s:VGroup id="vgRadiology" visible="false" includeInLayout="false">
 				<s:Label text="Attached Images" styleName="greenBoldText" paddingTop="13" paddingBottom="9" />
-				<s:HGroup id="hgImagesColonoscopy" gap="12">
+				<!--<s:HGroup id="hgImagesColonoscopy" gap="12">
 					<s:Image source="@Embed('images/medicalRecordsRadiology1.png')" />
 					<s:Image source="@Embed('images/medicalRecordsRadiology1.png')" rotation="180" />
 					<s:Image source="@Embed('images/medicalRecordsRadiology1.png')" rotation="180" />					
+				</s:HGroup>-->
+				<s:HGroup id="hgImagesColonoscopy" gap="12">
+					<s:Image source="@Embed('images/medicalRecordsMRI1.jpg')" />
+					<s:Image source="@Embed('images/medicalRecordsMRI2.jpg')" />
+					<s:Image source="@Embed('images/medicalRecordsMRI3.jpg')" />					
 				</s:HGroup>
 				<s:HGroup id="hgImagesNasal" gap="12" visible="false" includeInLayout="false">
 					<s:Image source="@Embed('images/medicalRecordsProcedure1.jpg')" />
@@ -314,15 +319,18 @@
 					</s:layout>
 					<s:HGroup>
 						<s:Label text="PREPROCEDURE DIAGNOSIS:" textDecoration="underline" />
-						<s:Label text="Colon cancer screening and rectal bleeding." />
+						<!--<s:Label text="Colon cancer screening and rectal bleeding." />-->
+						<s:Label text="Physical examination of  leg and back." />
 					</s:HGroup>
 					<s:VGroup>
 						<s:Label text="POSTPROCEDURE DIAGNOSES:" textDecoration="underline" />
-						<s:Label width="540" text="{'(1) Extensive diverticulosis throughout the colon.\n(2) Internal hemorrhoids - the cause of bleeding.\n(3) Ulceration of the sigmoid diverticulum. Differential diagnosis: Mild diverticulitis or aspirin-induced ulcer.\n(4) Multiple small rectal polyps.'}" />
+						<!--<s:Label width="540" text="{'(1) Extensive diverticulosis throughout the colon.\n(2) Internal hemorrhoids - the cause of bleeding.\n(3) Ulceration of the sigmoid diverticulum. Differential diagnosis: Mild diverticulitis or aspirin-induced ulcer.\n(4) Multiple small rectal polyps.'}" />-->
+						<s:Label width="540" text="{'(1) L5 nerve impingement from a herniated disc is observed.\n(2) This is causing weakness in the ankle.\n(3) This is also causing the pain may also radiate into the buttock.'}" />
 					</s:VGroup>
 					<s:HGroup>
 						<s:Label text="PROCEDURE PERFORMED:" textDecoration="underline" />
-						<s:Label text="Colonoscopy with snare polypectomy." />
+						<!--<s:Label text="Colonoscopy with snare polypectomy." />-->
+						<s:Label text="Magnetic Resonance Imaging (MRI)." />
 					</s:HGroup>
 					<s:HGroup>
 						<s:Label text="ENDOSCOPIST:" textDecoration="underline" />
