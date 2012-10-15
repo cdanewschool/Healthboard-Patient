@@ -290,15 +290,36 @@ private function switchExercisePerView(index:uint):void {
 }
 
 public function getGoalMinutes(points:uint):uint {
-	return points <= 58 ? 15 : 14;
+	if(points <= 52) return 15;
+	else if(points <= 63) return 14;
+	else if(points <= 68) return 13;
+	else if(points <= 73) return 12;
+	else if(points <= 82) return 11;
+	else if(points <= 95) return 10;
+	else return 9;
+	//return points <= 58 ? 15 : 14;
 }
 
 public function getGoalSeconds(points:uint):String {
-	return ((70-points)*5)%60 < 10 ? '0'+((70-points)*5)%60 : String(((70-points)*5)%60);
+	var arrSeconds:Array = new Array(30,27,24,21,18,15,10,05,55,50,45,42,39,36,33,30,25,15,05,55,45,30,15,05,55,45,30,15,05,55,45,35,30,25,20,15,10,05,55,50,45,40,35,25,20,15,12,09,06,03,00,57,54,51,48,45);
+	return arrSeconds[points-45] < 10 ? '0'+String(arrSeconds[points-45]) : String(arrSeconds[points-45]);
+	//return ((70-points)*5)%60 < 10 ? '0'+((70-points)*5)%60 : String(((70-points)*5)%60);
 }
 
 public function getTimeFromGoal(min:uint,sec:uint):uint {
-	var points:uint = (min == 14) ? 70 : 58;
-	points -= (sec/5);
+	var points:uint;
+	if(min == 9) points = 100;
+	else if(min == 10) points = 95;
+	else if(min == 11) points = 82;
+	else if(min == 12) points = 73;
+	else if(min == 13) points = 68;
+	else if(min == 14) points = 63;
+	else points = 52;
+	
+	points -= (sec/5);	//approximation
 	return points;
+	
+	/*var points:uint = (min == 14) ? 70 : 58;
+	points -= (sec/5);
+	return points;*/
 }

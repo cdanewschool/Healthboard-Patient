@@ -51,16 +51,16 @@
 	
 	<s:HGroup verticalAlign="middle" paddingTop="13" paddingBottom="-3">
 		<s:Label text="Please set a points target for your 1.5 Mile Run:" />
-		<s:TextInput id="txtGoalPoints" height="24" width="37" maxChars="2" text="{sliderGoalPoints.value}" change="{if(int(txtGoalPoints.text) >= 54 &amp;&amp; int(txtGoalPoints.text) &lt;= 70) sliderGoalPoints.value = int(txtGoalPoints.text)}" />
+		<s:TextInput id="txtGoalPoints" height="24" width="37" maxChars="2" text="{sliderGoalPoints.value}" change="{if(int(txtGoalPoints.text) >= 45 &amp;&amp; int(txtGoalPoints.text) &lt;= 100) sliderGoalPoints.value = int(txtGoalPoints.text)}" />
 		<s:Label text="points" />
 	</s:HGroup>
 	
 	<s:HGroup paddingLeft="-2">
 		<mx:HSlider id="sliderGoalPoints"
 					snapInterval="1"
-					labels="{[54,70]}" labelOffset="30"
-					minimum="54" maximum="70" value="{parentApplication.exerciseDataByMeasure.getItemAt(parentApplication.exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[0].target}"
-					showTrackHighlight="true" showDataTip="false" tickInterval="1" tickOffset="12" tickLength="2"
+					labels="{[45,100]}" labelOffset="30"
+					minimum="45" maximum="100" value="{parentApplication.exerciseDataByMeasure.getItemAt(parentApplication.exerciseIndices.indexOf('1.5 Mile Run')).chart[0].data[0].target}"
+					showTrackHighlight="true" showDataTip="false" tickInterval="5" tickOffset="12" tickLength="2"
 					width="357"
 					liveDragging="true" /><!--dataTipFormatFunction="getSliderLabel"change="rangeUpdateMixed();" -->
 	</s:HGroup>
@@ -69,18 +69,18 @@
 	
 	<s:HGroup verticalAlign="middle" paddingTop="13" paddingBottom="-3">
 		<s:Label text="Please set a time target for your 1.5 Mile Run:" />
-		<s:TextInput id="txtGoalMin" height="24" width="32" maxChars="2" text="{parentApplication.getGoalMinutes(sliderGoalPoints.value)}" change="{if(int(txtGoalMin.text) >= 14 &amp;&amp; int(txtGoalMin.text) &lt;= 15 &amp;&amp; int(txtGoalSec.text) >= 0 &amp;&amp; int(txtGoalSec.text) &lt; 60 &amp;&amp; txtGoalSec.text.length > 1) sliderGoalPoints.value = parentApplication.getTimeFromGoal(int(txtGoalMin.text),int(txtGoalSec.text))}" />
+		<s:TextInput id="txtGoalMin" height="24" width="32" maxChars="2" text="{parentApplication.getGoalMinutes(sliderGoalPoints.value)}" change="{if(int(txtGoalMin.text) >= 9 &amp;&amp; int(txtGoalMin.text) &lt;= 15 &amp;&amp; int(txtGoalSec.text) >= 0 &amp;&amp; int(txtGoalSec.text) &lt; 60 &amp;&amp; txtGoalSec.text.length > 1) sliderGoalPoints.value = parentApplication.getTimeFromGoal(int(txtGoalMin.text),int(txtGoalSec.text))}" /><!--change="{if(int(txtGoalMin.text) >= 14 &amp;&amp; int(txtGoalMin.text) &lt;= 15 &amp;&amp; int(txtGoalSec.text) >= 0 &amp;&amp; int(txtGoalSec.text) &lt; 60 &amp;&amp; txtGoalSec.text.length > 1) sliderGoalPoints.value = parentApplication.getTimeFromGoal(int(txtGoalMin.text),int(txtGoalSec.text))}"-->
 		<s:Label text="min." />
-		<s:TextInput id="txtGoalSec" height="24" width="32" maxChars="2" text="{parentApplication.getGoalSeconds(sliderGoalPoints.value)}" change="{if(int(txtGoalMin.text) >= 14 &amp;&amp; int(txtGoalMin.text) &lt;= 15 &amp;&amp; int(txtGoalSec.text) >= 0 &amp;&amp; int(txtGoalSec.text) &lt; 60 &amp;&amp; txtGoalSec.text.length > 1) sliderGoalPoints.value = parentApplication.getTimeFromGoal(int(txtGoalMin.text),int(txtGoalSec.text))}" />
+		<s:TextInput id="txtGoalSec" height="24" width="32" maxChars="2" text="{parentApplication.getGoalSeconds(sliderGoalPoints.value)}" change="{if(int(txtGoalMin.text) >= 9 &amp;&amp; int(txtGoalMin.text) &lt;= 15 &amp;&amp; int(txtGoalSec.text) >= 0 &amp;&amp; int(txtGoalSec.text) &lt; 60 &amp;&amp; txtGoalSec.text.length > 1) sliderGoalPoints.value = parentApplication.getTimeFromGoal(int(txtGoalMin.text),int(txtGoalSec.text))}" />
 		<s:Label text="sec." />
 	</s:HGroup>
 	
 	<s:HGroup paddingLeft="-2" paddingBottom="-2">
 		<mx:HSlider id="sliderGoalMin"
 					snapInterval="1"
-					labels="{['15:20','14:00']}" labelOffset="30"
-					minimum="54" maximum="70" value="{sliderGoalPoints.value}"
-					showTrackHighlight="true" showDataTip="false" tickInterval="1" tickOffset="12" tickLength="2"
+					labels="{['15:30','9:45']}" labelOffset="30"
+					minimum="45" maximum="100" value="{sliderGoalPoints.value}"
+					showTrackHighlight="true" showDataTip="false" tickInterval="5" tickOffset="12" tickLength="2"
 					width="357"
 					liveDragging="true" change="{sliderGoalPoints.value = sliderGoalMin.value;}" />
 	</s:HGroup>
