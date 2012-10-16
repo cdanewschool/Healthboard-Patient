@@ -25,16 +25,12 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import models.modules.ExerciseModel;
 			import models.modules.MedicationsModel;
 			
-			import util.DataGridFunctions;
 			import util.DateFormatters;
 		]]>
 	</fx:Script>
 	
-	<!-- http://stackoverflow.com/questions/5670979/flex-spark-itemrenderer-labels-disappear-when-large-redraws-occur -->
-
 	<!--	external actionscript includes 	-->
 	<fx:Script source="ASfiles/home.as" />
 	<fx:Script source="ASfiles/messages.as" />
@@ -56,7 +52,7 @@
 		<s:State name="modImmunizations" />
 		<s:State name="modMessages" />
 		<s:State name="modMedicalRecords" />
-		<s:State name="modMedications" enterState="if(this.medicationsController.model.dataLoaded &amp;&amp; MedicationsModel(medicationsController.model).medicationsData.filterFunction == medicationsController.filterMedicationsWidget) medicationsController.filterMedsFromStatus();" />
+		<s:State name="modMedications" />
 		<s:State name="modVitalSigns" />
 		<s:State name="modEducationalResources" />
 		<s:State name="modExercise" />
@@ -185,22 +181,35 @@
 		
 		<!-- HOME / WIDGET VIEW -->
 		<s:HGroup includeIn="widgetView" paddingTop="15">
+			
 			<s:Scroller id="widgetScroller" height="728" width="1024" horizontalScrollPolicy="off">
+				
 				<s:VGroup id="widgetContent">
+					
 					<s:HGroup gap="22" paddingTop="11" paddingLeft="32" minHeight="591">
+						
 						<s:VGroup gap="17">
+							
 							<!-- see http://blog.9mmedia.com/?p=535 -->
-							<enhancedtitlewindow:EnhancedTitleWindow id="widgetMessages" width="305" title="{'Messages (' + getUnreadMessagesCount().substr(2,1) + ')'}" collapsible="true" headerClickable="false" module="modMessages" showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" visible="{widgetMessagesOpen}" includeInLayout="{widgetMessagesOpen}">
+							<enhancedtitlewindow:EnhancedTitleWindow 
+								id="widgetMessages" width="305" title="{'Messages (' + getUnreadMessagesCount().substr(2,1) + ')'}" 
+								collapsible="true" headerClickable="false" module="modMessages" 
+								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
+								visible="{widgetMessagesOpen}" includeInLayout="{widgetMessagesOpen}">
+								
 								<enhancedtitlewindow:layout>
 									<s:VerticalLayout paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10"/>
 								</enhancedtitlewindow:layout>
-								<mx:DataGrid dataProvider="{acMessagesToDisplay}" creationComplete="showInboxMessages()" buttonMode="true"
-											 width="100%" itemClick="openMessage(event);"
-											 color="0xFFFFFF" verticalAlign="middle"
-											 selectable="false"
-											 headerHeight="0"
-											 borderVisible="false" verticalGridLines="false" horizontalGridLines="false" horizontalSeparatorSkin="{null}" alternatingItemColors="[0x3C3C3B,0x3C3C3B]"
-											 horizontalScrollPolicy="off" verticalScrollPolicy="off" rowCount="4" rowHeight="18">
+								
+								<mx:DataGrid 
+									dataProvider="{acMessagesToDisplay}" creationComplete="showInboxMessages()" buttonMode="true"
+									width="100%" itemClick="openMessage(event);"
+									color="0xFFFFFF" verticalAlign="middle"
+									selectable="false"
+									headerHeight="0"
+									borderVisible="false" verticalGridLines="false" horizontalGridLines="false" horizontalSeparatorSkin="{null}" alternatingItemColors="[0x3C3C3B,0x3C3C3B]"
+									horizontalScrollPolicy="off" verticalScrollPolicy="off" rowCount="4" rowHeight="18">
+									
 									<mx:columns>
 										<mx:DataGridColumn dataField="correspondent">
 											<mx:itemRenderer>
@@ -226,10 +235,12 @@
 										</mx:DataGridColumn>
 									</mx:columns>
 								</mx:DataGrid>
+								
 								<s:HGroup paddingLeft="20" paddingTop="-6" gap="2">
 									<s:Label fontSize="12" color="0x868686" text="{'...plus ' + (acMessagesToDisplay.length - 4) + ' more ' + (acMessagesToDisplay.length == 5 ? 'message.' : 'messages.')}" visible="{acMessagesToDisplay.length > 4}" includeInLayout="{acMessagesToDisplay.length > 4}" paddingTop="6" />
 									<mx:LinkButton id="btnWidgetAllMessages" label="View All »" fontSize="12" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnWidgetAllMessages.styleName='linkBtnUnderline';}" rollOut="btnWidgetAllMessages.styleName='linkBtn';" click="currentState='modMessages';" paddingLeft="-3" />
 								</s:HGroup>
+								
 							</enhancedtitlewindow:EnhancedTitleWindow>
 							
 							<widgets:AppointmentsWidget
@@ -271,10 +282,11 @@
 									
 									<widgets:NutritionWidget 
 										id="widgetNutrition" width="305" 
-										title="Nutrition" subtitle="{DateFormatters.dateFormatterDay.format(new Date())}" 
+										title="Nutrition" 
 										collapsible="true" headerClickable="false" module="modNutrition" 
 										showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
-										visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" />
+										visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" 
+										creationComplete="widgetNutrition.subtitle = DateFormatters.dateFormatterDay.format(new Date())" />
 									
 									<widgets:VitalSignsWidget
 										id="widgetVitalSigns" width="305" title="Vital Signs" 
@@ -298,18 +310,24 @@
 					</s:HGroup>
 					
 					<s:VGroup width="100%" horizontalAlign="right" paddingTop="{widgetLibraryOpen ? 0 : 106}">
+						
 						<mx:LinkButton id="btnWidgetTrigger" label="Widgets" icon="{widgetLibraryOpen ? widgetTriggerClose : widgetTriggerOpen}" labelPlacement="left" paddingRight="34" fontSize="12" color="0xFFFFFF" textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}" rollOver="{btnWidgetTrigger.styleName='linkBtnUnderline';}" rollOut="btnWidgetTrigger.styleName='linkBtn';" click="{widgetLibraryOpen = !widgetLibraryOpen; widgetContent.verticalScrollPosition = widgetContent.height + 100;}" />
+						
 						<s:BorderContainer width="1024" height="100" visible="{widgetLibraryOpen}" includeInLayout="{widgetLibraryOpen}" borderAlpha=".2" borderColor="0xF2F2F2">
+							
 							<s:layout>
 								<s:HorizontalLayout paddingTop="5" paddingLeft="55" gap="40" />
 							</s:layout>
+							
 							<s:backgroundFill>
 								<s:LinearGradient rotation="270">
 									<s:GradientEntry color="0x000000" alpha="1" ratio="0" />
 									<s:GradientEntry color="0x515151" alpha="1" ratio="1" /> <!--ratio="0.8834"-->
 								</s:LinearGradient>
 							</s:backgroundFill>
+							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetMessagesOpen}" includeInLayout="{widgetMessagesOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryMessages.png')" />
 									<s:Label text="Messages" fontSize="11" color="0xFFFFFF" />
@@ -319,6 +337,7 @@
 									<s:Label text="Messages" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryAppointments.png')" />
@@ -329,6 +348,7 @@
 									<s:Label text="Appointments" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetMedicalRecordsOpen}" includeInLayout="{widgetMedicalRecordsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryMedicalRecords.png')" />
@@ -339,6 +359,7 @@
 									<s:Label text="Medical Records" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetImmunizationsOpen}" includeInLayout="{widgetImmunizationsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryImmunizations.png')" />
@@ -349,6 +370,7 @@
 									<s:Label text="Immunizations" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetVitalSignsOpen}" includeInLayout="{widgetVitalSignsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryVitalSigns.png')" />
@@ -359,6 +381,7 @@
 									<s:Label text="Vital Signs" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetEducationalResourcesOpen}" includeInLayout="{widgetEducationalResourcesOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryEducationalResources.png')" />
@@ -369,6 +392,7 @@
 									<s:Label text="{'Educational\nResources'}" textAlign="center" lineHeight="11" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetExerciseOpen}" includeInLayout="{widgetExerciseOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryExercise.png')" />
@@ -379,6 +403,7 @@
 									<s:Label text="Exercise" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryMedications.png')" />
@@ -389,6 +414,7 @@
 									<s:Label text="Medications" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 							<s:HGroup>
 								<s:VGroup visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryNutrition.png')" />
@@ -399,10 +425,15 @@
 									<s:Label text="Nutrition" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
+							
 						</s:BorderContainer>
+						
 					</s:VGroup>
+					
 				</s:VGroup>
+				
 			</s:Scroller>
+			
 		</s:HGroup>
 		<!--<mx:Grid includeIn="widgetView" horizontalGap="33" verticalGap="18" horizontalAlign="center" width="100%" paddingTop="40">
 		<mx:GridRow>
@@ -499,9 +530,10 @@
 		
 		<!-- USER PROFILE SCREEN -->
 		<s:VGroup id="profile" paddingTop="35" width="100%" horizontalAlign="center" includeIn="profile">
-			<home:userProfileForm id="myProfileForm" skinClass="skins.general.myChromelessTitleWindow"
-								  width="980" height="681"
-								  title=" User Profile" backgroundColor="0x4A4A49" borderColor="0X898989" styleName="whiteBoldTitle" dropShadowVisible="false" chromeColor="#706F6F" />
+			<home:userProfileForm 
+				id="myProfileForm" skinClass="skins.general.myChromelessTitleWindow"
+				width="980" height="681"
+				title=" User Profile" backgroundColor="0x4A4A49" borderColor="0X898989" styleName="whiteBoldTitle" dropShadowVisible="false" chromeColor="#706F6F" />
 		</s:VGroup>
 		
 		<!-- CALENDAR -->
@@ -512,7 +544,9 @@
 		
 		<!-- MESSAGES -->
 		<s:VGroup includeIn="modMessages" width="976" paddingTop="10">
+			
 			<s:HGroup verticalAlign="middle" width="100%" paddingBottom="10">
+				
 				<s:Image source="@Embed('images/btnHome.png')" click="this.currentState=controller.model.viewMode;" buttonMode="true" />
 				<s:Label text="Messages" styleName="whiteBoldTitle" paddingLeft="13" />
 				<s:Label text="▼" fontSize="10" color="0xFFFFFF" paddingTop="4" paddingLeft="5" />
@@ -520,12 +554,16 @@
 				<s:Label id="lblMessagesNumber" text="{(getUnreadMessagesCount() == '') ? 'no' : getUnreadMessagesCount().substr(2,1)}" styleName="moduleSubtitleItalic moduleSubtitleNumber" /> <!--text="{immunizationsDueNumber}"-->
 				<s:Label text="new messages." styleName="moduleSubtitleItalic" />
 				<s:Spacer width="100%" />
+				
 				<s:HGroup gap="-1">
 					<s:TextInput id="messagesSearch" text="Search messages" fontSize="10" fontStyle="italic" color="0x999999" height="24" paddingTop="5" click="{if(messagesSearch.text == 'Search messages') messagesSearch.text=''}" change="searchFilter()" />
 					<s:Button styleName="searchButtonIcon" width="24" height="24" />
 				</s:HGroup>	
+				
 			</s:HGroup>
+			
 			<s:HGroup width="100%">
+				
 				<s:VGroup width="100%" paddingTop="15" paddingLeft="7" gap="7" styleName="whiteText13">
 					<s:Label text="MAILBOXES" styleName="greenBoldText" paddingLeft="-4" paddingBottom="3" />
 					<mx:LinkButton id="btnInbox" label="{'Inbox'+getUnreadMessagesCount()}" click="showInboxMessages()" styleName="messageFolderSelected" />
@@ -538,14 +576,19 @@
 					<mx:ViewStack 
 						id="viewStackMessages" 
 						borderColor="0xBDBCBC" cornerRadius="2" backgroundColor="0x4A4A49" width="825" height="606" borderVisible="true" borderStyle="solid" x="0" y="22" creationPolicy="all"><!--change="updateBreadcrumb('messages')" -->
+						
 						<s:NavigatorContent id="mainBox" label="Inbox">
+							
 							<s:layout>
 								<s:VerticalLayout gap="0" />
 							</s:layout>
+							
 							<s:BorderContainer height="37" width="100%" backgroundColor="0x706F6F">
+								
 								<s:layout>
 									<s:HorizontalLayout verticalAlign="middle" paddingLeft="10" paddingRight="9"/>
 								</s:layout>
+								
 								<s:Button label="Delete" styleName="buttonText" height="24" enabled="{currentMainBox != 'Trash' ? areButtonsEnabled : areTrashButtonsEnabled}" click="deleteMultiple()" />
 								<s:Button label="Mark Unread" styleName="buttonText" height="24" enabled="{currentMainBox != 'Trash' ? areButtonsEnabled : areTrashButtonsEnabled}" click="markUnread()" />
 								
@@ -553,11 +596,13 @@
 								
 								<s:Label text="{(dgMessages.dataProvider.length &lt;= 1 ? dgMessages.dataProvider.length : '1 - ' + dgMessages.dataProvider.length) + ' of ' + dgMessages.dataProvider.length}" color="0xFFFFFF" fontSize="11" />						
 							</s:BorderContainer>
+							
 							<s:Line xFrom="0" xTo="822">
 								<s:stroke>
 									<s:SolidColorStroke color="#3F3E3D"/>
 								</s:stroke>
 							</s:Line>
+							
 							<s:HGroup width="100%" color="0xFFFFFF" fontSize="11" height="31" verticalAlign="middle" paddingLeft="13" paddingRight="19" paddingTop="-1">
 								<s:Label text="Select:" paddingTop="2" />
 								<mx:LinkButton id="btnSelectAll" label="All" enabled="{areOptionsEnabled}" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" paddingLeft="-5" paddingRight="-8" click="{select('all')}" rollOver="{if(areOptionsEnabled) btnSelectAll.styleName='linkBtnUnderline';}" rollOut="btnSelectAll.styleName='linkBtn';" />
@@ -582,18 +627,22 @@
 									</mx:ArrayCollection>
 								</s:DropDownList>
 							</s:HGroup>
+							
 							<s:Line xFrom="0" xTo="822">
 								<s:stroke>
 									<s:SolidColorStroke color="#7C7C7C"/>
 								</s:stroke>
 							</s:Line>
-							<ASclasses:RowColorDataGrid id="dgMessages" rowColorFunction="calcRowColor" dataProvider="{acMessagesToDisplay}" creationComplete="showInboxMessages()" buttonMode="true"
-														itemClick="dgMessages_itemClickHandler(event)"
-														width="100%" height="100%"
-														color="0xFFFFFF" verticalAlign="middle"
-														selectable="false"
-														headerHeight="0"
-														borderVisible="false" rowHeight="59" verticalGridLines="false" horizontalGridLines="true" horizontalGridLineColor="0x7C7C7C" horizontalSeparatorSkin="{null}" alternatingItemColors="[0x4A4A49,0x4A4A49]" rowCount="3"><!--itemClick="dgMessages_itemClickHandler(event)" selectionColor="0x4A4A49" rollOverColor="0x4A4A49" selectionColor="0x00ADEE" rollOverColor="0x286982"-->
+							
+							<ASclasses:RowColorDataGrid 
+								id="dgMessages" rowColorFunction="calcRowColor" dataProvider="{acMessagesToDisplay}" creationComplete="showInboxMessages()" buttonMode="true"
+								itemClick="dgMessages_itemClickHandler(event)"
+								width="100%" height="100%"
+								color="0xFFFFFF" verticalAlign="middle"
+								selectable="false"
+								headerHeight="0"
+								borderVisible="false" rowHeight="59" verticalGridLines="false" horizontalGridLines="true" horizontalGridLineColor="0x7C7C7C" horizontalSeparatorSkin="{null}" alternatingItemColors="[0x4A4A49,0x4A4A49]" rowCount="3"><!--itemClick="dgMessages_itemClickHandler(event)" selectionColor="0x4A4A49" rollOverColor="0x4A4A49" selectionColor="0x00ADEE" rollOverColor="0x286982"-->
+								
 								<!--INITIALLY KEPT THE DATAGRID SELECTABLE, ONLY SO I COULD CALL dgMessages.selectedItem WHEN DELETING A MESSAGE-->
 								<ASclasses:columns> 
 									<mx:DataGridColumn dataField="status" width="46">
@@ -693,20 +742,26 @@
 									</mx:DataGridColumn>
 								</ASclasses:columns> 
 							</ASclasses:RowColorDataGrid>
+							
 							<mx:Text id="lblNoMessages" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
 									 htmlText="{'There are no matching search results for the requested search.&lt;br&gt;Please make sure all words are spelled correctly, or try different keywords.'}" />
 							<mx:Text id="lblNoMessagesFolder" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
 									 text="There are no messages in this folder." />
+							
 						</s:NavigatorContent>
 						
 						<s:NavigatorContent icon="@Embed('images/messagesNew.png')">
 							
 						</s:NavigatorContent>
+						
 					</mx:ViewStack>
+					
 					<!--<mccuneControls:SuperTabBar id="tabsMessages" dataProvider="{viewStackMessages}" styleName="messagesTabs" color="0xFFFFFF" fontSize="11" fontWeight="bold" x="0" y="0" itemClick="tabsMessages_childIndexChangeHandler(event)" closePolicy="{SuperTab.CLOSE_NEVER}"/>-->
 					<!--<s:TabBar id="tabsMessages" dataProvider="{viewStackMessages}" styleName="messagesTabs" skinClass="skins.messages.CustomTabBarSkin" x="0" y="0" change="tabbar1_changeHandler(event)" />-->
 					<plus:TabBarPlus id="tabsMessages" gap="6" cornerRadius="4" styleName="messagesTabs" closePolicy="always" dataProvider="{viewStackMessages}" change="tabbar1_changeHandler(event)" />
+					
 				</s:Group>
+				
 			</s:HGroup>
 			
 		</s:VGroup>
