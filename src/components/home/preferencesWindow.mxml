@@ -6,16 +6,22 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import ASclasses.Constants;
+			
+			import controllers.Controller;
+			
+			import events.ApplicationEvent;
+			
 			import mx.managers.PopUpManager;
 			
-			private function saveSettings():void {
-				parentApplication.viewMode = (viewButton.selected) ? 'loggedIn' : 'widgetView';
-				if(parentApplication.currentState == 'widgetView' || parentApplication.currentState == 'loggedIn') parentApplication.currentState = parentApplication.viewMode;
+			[Bindable] private var controller:Controller = AppProperties.getInstance().controller;
+			
+			private function saveSettings():void 
+			{
+				controller.model.viewMode = (viewButton.selected) ? Constants.STATE_LOGGED_IN : Constants.STATE_WIDGET_VIEW;
 				
-				
-				//at some point we should improve the following two lines, so that this works also if the preferences are changed when looking at any given module.
-				//if(parentApplication.currentState == 'widgetView' && viewButton.selected) parentApplication.currentState = 'loggedIn';
-				//else if(parentApplication.currentState == 'loggedIn' && viewWidget.selected) parentApplication.currentState = 'widgetView';
+				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
+				AppProperties.getInstance().controller.application.dispatchEvent( event );
 				
 				PopUpManager.removePopUp(this);
 			}
@@ -75,12 +81,12 @@
 					<s:VGroup horizontalAlign="center" gap="0">
 						<s:Image source="@Embed(source='images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="{viewButton.selected = true;}" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Button View" click="{viewButton.selected = true;}" />
-						<s:RadioButton groupName="viewMode" id="viewButton" selected="{parentApplication.viewMode != 'widgetView'}" />
+						<s:RadioButton groupName="viewMode" id="viewButton" selected="{controller.model.viewMode != Constants.STATE_WIDGET_VIEW}" />
 					</s:VGroup>
 					<s:VGroup horizontalAlign="center" gap="0">
 						<s:Image source="@Embed(source='images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Widget View" click="{viewWidget.selected = true;}" />
-						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{parentApplication.viewMode == 'widgetView'}" />
+						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{controller.model.viewMode == Constants.STATE_WIDGET_VIEW}" />
 					</s:VGroup>
 				</s:HGroup>
 				<s:Label text="Select view mode for homepage" styleName="smallNote" paddingTop="78" />
