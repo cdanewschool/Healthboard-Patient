@@ -564,7 +564,7 @@ private function showCurrentMonth():void {
 	nutJournalDate.text = arrMonths[currentMonth] + ', ' + today.getFullYear();*/
 }
 
-[Bindable] public var nutritionRollOverRowIndex:int = -1;
+[Bindable] public var nutritionRollOverRowIndex:int = -2;
 private function onNutritionRollOver(event:ListEvent):void
 {
 	nutritionRollOverRowIndex = event.rowIndex;
