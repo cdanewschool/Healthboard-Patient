@@ -15,13 +15,10 @@
 			
 			import models.modules.ExerciseModel;
 			
-			import styles.ChartStyles;
-			
 			[Bindable] public var controller:ExerciseController = AppProperties.getInstance().controller.exerciseController as ExerciseController;
 			[Bindable] public var model:ExerciseModel = controller.model as ExerciseModel;
-			[Bindable] public var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 			
-			[Bindable] private var collapsedPixels:int = 0;
+			[Bindable] public var collapsedPixels:int = 0;
 		]]>
 	</fx:Script>
 	
@@ -45,8 +42,8 @@
 						<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
 							<fx:Script>
 								<![CDATA[
-									import ASclasses.MyCircleItemRenderer;
-									import ASclasses.MyCircleItemRendererOver;
+									import components.itemrenderers.chart.MyCircleItemRenderer;
+									import components.itemrenderers.chart.MyCircleItemRendererOver;
 									import ASclasses.MyCustomDataTip;
 									
 									import mx.charts.HitData;
@@ -129,15 +126,28 @@
 												<mx:HBox verticalAlign="middle" paddingLeft="10" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 													<fx:Script>
 														<![CDATA[
+															import ASclasses.MyCustomDataTip;
+															
 															import components.itemrenderers.chart.MyCircleItemRenderer;
 															import components.itemrenderers.chart.MyCircleItemRendererOver;
-															import ASclasses.MyCustomDataTip;
+															
+															import controllers.ExerciseController;
+															
+															import models.modules.ExerciseModel;
 															
 															import mx.charts.HitData;
 															import mx.charts.events.ChartItemEvent;
 															import mx.controls.Alert;
 															import mx.events.FlexEvent;
 															import mx.managers.PopUpManager;
+															
+															import styles.ChartStyles;
+															
+															[Bindable] public var controller:ExerciseController = AppProperties.getInstance().controller.exerciseController as ExerciseController;
+															
+															[Bindable] public var model:ExerciseModel = controller.model as ExerciseModel;
+															
+															[Bindable] public var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 															
 															override public function set data(value:Object):void
 															{
@@ -187,7 +197,7 @@
 																</mx:lineStroke>
 															</mx:LineSeries>
 															
-															<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="components.itemrenderers.chart.MyCircleItemRendererExercise" radius="4" adjustedRadius="4" fill="{outerDocument.chartStyles.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
+															<mx:LineSeries id="myLineSeries" yField="value" xField="date" itemRenderer="components.itemrenderers.chart.MyCircleItemRendererExercise" radius="4" adjustedRadius="4" fill="{chartStyles.colorVitalSignsWidgetBlack}" selectedIndex="0"><!--form="curve" -->
 																<mx:lineStroke>
 																	<s:SolidColorStroke color="0xFFFFFF" weight="2" />
 																</mx:lineStroke>
@@ -199,7 +209,7 @@
 														</mx:series>
 														
 														<mx:horizontalAxis>
-															<mx:DateTimeAxis id="exerciseXaxis" minimum="{outerDocument.model.chartMinExPA}" maximum="{outerDocument.model.chartMaxExPA}" />
+															<mx:DateTimeAxis id="exerciseXaxis" minimum="{model.chartMinExPA}" maximum="{model.chartMaxExPA}" />
 														</mx:horizontalAxis>
 														
 														<mx:horizontalAxisRenderers>
