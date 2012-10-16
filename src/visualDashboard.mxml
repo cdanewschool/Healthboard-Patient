@@ -10,8 +10,6 @@
 	xmlns:ns="calendar.mxml_views.*"
 	xmlns:views="calendar.classes.views.*"
 	xmlns:calendar="external.com.flexcalendar.components.calendar.*"
-	xmlns:containers="external.SuperTabNavigator.com.dougmccune.containers.*"
-	xmlns:controls="external.SuperTabNavigator.com.dougmccune.controls.*"
 	xmlns:home="components.home.*"
 	xmlns:plus="external.TabBarPlus.plus.*"
 	xmlns:radarchart="fr.kapit.radarchart.*" xmlns:amcharts="http://www.amcharts.com/com_internal"
