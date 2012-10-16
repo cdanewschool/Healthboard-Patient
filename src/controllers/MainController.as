@@ -49,6 +49,13 @@ package controllers
 				}
 				else dashboard.howToHandleMessageTabs = "createApptsMessage";
 			}
+			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
+			{
+				dashboard.viewsEducationalResources.selectedIndex = 1; 
+				dashboard.viewsEducationalResourcesMenu.selectedIndex = 1; 
+				dashboard.viewsEducationalResourcesBreadcrumb.selectedIndex = 1;
+			}
+			
 		}
 		
 		override protected function onTabClose(event:ListEvent):void
