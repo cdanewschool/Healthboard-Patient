@@ -2,11 +2,15 @@ package controllers
 {
 	import ASclasses.Constants;
 	
+	import components.widgets.EducationalResourcesWidget;
+	
 	import controllers.Controller;
 	
 	import events.ApplicationEvent;
 	
 	import external.TabBarPlus.plus.TabBarPlus;
+	
+	import modules.NutritionModule;
 	
 	import mx.collections.IList;
 	import mx.events.ListEvent;
@@ -51,9 +55,24 @@ package controllers
 			}
 			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
 			{
-				dashboard.viewsEducationalResources.selectedIndex = 1; 
-				dashboard.viewsEducationalResourcesMenu.selectedIndex = 1; 
-				dashboard.viewsEducationalResourcesBreadcrumb.selectedIndex = 1;
+				if( event.currentTarget is NutritionModule )
+				{
+					dashboard.educationalResourcesModule.viewsEducationalResources.selectedIndex = 1; 
+					dashboard.educationalResourcesModule.viewsEducationalResourcesMenu.selectedIndex = 1; 
+					dashboard.educationalResourcesModule.viewsEducationalResourcesBreadcrumb.selectedIndex = 1;
+				}
+				else if( event.target is EducationalResourcesWidget )
+				{
+					if( dashboard.widgetEducationalResources.viewIndex > -1 )
+						dashboard.educationalResourcesModule.viewsEducationalResources.selectedIndex = dashboard.widgetEducationalResources.viewIndex;
+					
+					if( dashboard.widgetEducationalResources.menuIndex > -1 )
+						dashboard.educationalResourcesModule.viewsEducationalResourcesMenu.selectedIndex = dashboard.widgetEducationalResources.menuIndex;
+					
+					if( dashboard.widgetEducationalResources.breadcrumbIndex > -1 )
+						dashboard.educationalResourcesModule.viewsEducationalResourcesBreadcrumb.selectedIndex = dashboard.widgetEducationalResources.breadcrumbIndex;
+				}
+				
 			}
 			
 		}
