@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by MedicalRecordsController, MedicalRecordsModel and MedicalRecordsModule.
+ */
 import ASclasses.MyCustomDataTip;
 
 import components.medicalRecords.ServiceDetails;

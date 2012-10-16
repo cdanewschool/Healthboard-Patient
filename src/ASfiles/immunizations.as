@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by ImmunizationsController, ImmunizationsModel and ImmunizationsModule.
+ */
 import ASclasses.MyCustomDataTip;
 
 import popups.ImmunizationDetails;

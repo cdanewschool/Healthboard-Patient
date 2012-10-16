@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by VitalSignsController, VitalSignsModel and VitalSignsModule.
+ */
 import vitalsigns.addTrackerWindow;
 import vitalsigns.editGoalWindow;
 import vitalsigns.recordVitalsWindow;

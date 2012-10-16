@@ -1,3 +1,7 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by AppointmentsController, AppointentsModel and AppointmentsModule.
+*/
+
 /*
 APPOINTMENTS "LIFE CYCLE"
 

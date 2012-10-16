@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by EducationalResourcesController, EducationalResourcesModel and EducationalResourcesModule.
+ */
 import components.educationalResources.bookmarkAdd;
 import components.educationalResources.bookmarkRemove;
 

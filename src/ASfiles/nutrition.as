@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by NutritionController, NutritionModel and NutritionModule.
+ */
 import ASclasses.Constants;
 
 import components.nutrition.FoodJournalToolTip;

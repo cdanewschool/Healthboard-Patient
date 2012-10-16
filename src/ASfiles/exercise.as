@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by ExercisesController, ExercisesModel and ExercisesModule.
+ */
 import components.exercise.addPersonalExercise;
 import components.exercise.recordResultsWindow;
 import components.exercise.runEditGoal;

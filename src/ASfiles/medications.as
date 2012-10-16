@@ -1,3 +1,6 @@
+/**
+ * NOTE: This file has been deprecated, and has been replaced by MedicationsController, MedicationsModel and MedicationsModule.
+ */
 import medications.medTips;
 import popups.myChartPopupWindow;
 import components.medications.myRequestRenewalWindow;
