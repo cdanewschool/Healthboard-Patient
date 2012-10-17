@@ -22,7 +22,7 @@
 			[Bindable] public var model:VitalSignsModel = controller.model as VitalSignsModel;
 			[Bindable] public var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 			
-			public var collapsedPixels:uint = 0;
+			[Bindable] public var collapsedPixels:uint = 0;
 			
 			private function init():void
 			{

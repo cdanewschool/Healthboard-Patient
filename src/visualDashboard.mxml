@@ -32,7 +32,7 @@
 	<!--	external actionscript includes 	-->
 	<fx:Script source="ASfiles/home.as" />
 	<fx:Script source="ASfiles/messages.as" />
-	<fx:Script source="../../visualDashboardShared/sharedASfiles/messages.as" />
+	<fx:Script source="../../visualDashboardShared/src/sharedASfiles/messages.as" />
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->

@@ -2,7 +2,9 @@
 <s:VGroup 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" xmlns:components1="external.flashcommander.components.*">
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:components="components.*" 
+	xmlns:components1="external.flashcommander.components.*">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -10,12 +12,17 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import components.educationalResources.bookmarkAdd;
 			import components.educationalResources.bookmarkRemove;
 			
+			import events.BookmarkEvent;
+			
+			import models.Bookmark;
+			
 			import mx.collections.ArrayCollection;
+			import mx.events.IndexChangedEvent;
 			import mx.managers.PopUpManager;
+			import mx.utils.ObjectUtil;
 			
 			import spark.components.TitleWindow;
 			
@@ -25,15 +32,17 @@
 			[Embed(source="images/smallArrowCollapsed.png")]
 			[Bindable] public var whiteArrow:Class;
 			
-			[Bindable] public var erBookmarks:ArrayCollection = new ArrayCollection
+			[Bindable] public var bookmarks:ArrayCollection = new ArrayCollection
 				(
 					[
-						{label: "Food & Diet", data: 1},
-						{label: "Facts About Fat", data: 2}
+						new Bookmark( "Food & Diet", 1),
+						new Bookmark( "Facts About Fat", 2)
 					]
 				);
 			
-			private var arrTitles:Array = new Array
+			[Bindable] private var bookmark:Bookmark;
+			
+			private var titles:Array = new Array
 				(
 					"Educational Resources Home",
 					"Food & Diet",
@@ -49,33 +58,69 @@
 					"Mental Conditions"
 				);
 			
-			[Bindable] public var arrBookmarkIndices:Array = new Array(1,2); 
-			
-			private function erDisplayBookmark(item:Object):void 
+			private function displayBookmark( item:Bookmark ):void 
 			{
-				viewsEducationalResources.selectedIndex = viewsEducationalResourcesMenu.selectedIndex = viewsEducationalResourcesBreadcrumb.selectedIndex = item.data;
+				viewsEducationalResources.selectedIndex = viewsEducationalResourcesMenu.selectedIndex = viewsEducationalResourcesBreadcrumb.selectedIndex = item.index;
 			}
 			
-			private function erAddBookmark():void 
+			private function addBookmark():void 
 			{
 				if(	viewsEducationalResources.selectedIndex != 4 
 					&& viewsEducationalResources.selectedIndex != 6 ) 
 				{
-					erBookmarks.addItemAt( { label: arrTitles[viewsEducationalResources.selectedIndex], data: viewsEducationalResources.selectedIndex }, 0 );
-					erBookmark0.visible = erBookmark0.includeInLayout = false;
-					erBookmark1.visible = erBookmark1.includeInLayout = true;
-					arrBookmarkIndices.splice(0,0,viewsEducationalResources.selectedIndex);
+					bookmark = new Bookmark( titles[viewsEducationalResources.selectedIndex], viewsEducationalResources.selectedIndex );
+					bookmarks.addItemAt( bookmark, 0 );
 					
 					var myBookmarkAdd:bookmarkAdd = bookmarkAdd(PopUpManager.createPopUp(this, bookmarkAdd) as spark.components.TitleWindow);
-					myBookmarkAdd.bookmarkLabel = arrTitles[viewsEducationalResources.selectedIndex];
-					PopUpManager.centerPopUp(myBookmarkAdd);
+					myBookmarkAdd.bookmark = bookmark.clone();
+					myBookmarkAdd.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
+					myBookmarkAdd.addEventListener( BookmarkEvent.EDIT, onEditBookmark );
+					
+					PopUpManager.centerPopUp( myBookmarkAdd );
 				}
 			}
 			
-			private function erRemoveBookmark():void 
+			private function onEditBookmark( event:BookmarkEvent ):void
+			{
+				if( bookmark.label != event.bookmark.label ) bookmark.label = event.bookmark.label;
+			}
+			
+			private function onRemoveBookmark( event:BookmarkEvent ):void
+			{
+				bookmarks.removeItemAt( bookmarks.getItemIndex(bookmark) );
+				bookmark = null;
+			}
+			
+			private function removeBookmark():void 
 			{
 				var myBookmarkRemove:bookmarkRemove = bookmarkRemove(PopUpManager.createPopUp(this, bookmarkRemove) as spark.components.TitleWindow);
+				myBookmarkRemove.bookmark = bookmark;
+				myBookmarkRemove.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
+				
 				PopUpManager.centerPopUp(myBookmarkRemove);
+			}
+			
+			private function onViewChange(event:IndexChangedEvent):void
+			{
+				updateBookmark();
+			}
+			
+			private function updateBookmark():void
+			{
+				bookmark = getBookmarkByIndex( viewsEducationalResources.selectedIndex );
+			}
+			
+			private function getBookmarkByIndex( index:int ):Bookmark
+			{
+				for each(var bookmark:Bookmark in bookmarks)
+				{
+					if( bookmark.index == index )
+					{
+						return bookmark;
+					}
+				}
+				
+				return null;
 			}
 			
 			[Bindable] private var resourceNames:Array = new Array("Diabetes diet","Diabetes symptoms","Diabetes pictures","Diabetes treatment","Diabetes prevention","Heartburn basics","Heartburn remedies","Heartburn during pregnancy","Heartburn relief","Heartburn prevention");
@@ -115,11 +160,11 @@
 			</s:HGroup>	
 			
 			<s:DropDownList 
-				id="dropDownERBookmarks"
-				dataProvider="{erBookmarks}" prompt="My Bookmarks   ▼" 
+				id="dropDownBookmarks"
+				dataProvider="{bookmarks}" prompt="My Bookmarks   ▼" 
 				width="164" horizontalScrollPolicy="off" dropShadowVisible="false" 
 				contentBackgroundColor="0x4A4A49" rollOverColor="0x5E5E5D" selectionColor="0x5E5E5D" skinClass="skins.general.MyDropDownListSkinNoButton" color="0xAEDBE2" 
-				change="{erDisplayBookmark(dropDownERBookmarks.selectedItem); dropDownERBookmarks.selectedIndex = -1;}" />
+				change="{displayBookmark(dropDownBookmarks.selectedItem); dropDownBookmarks.selectedIndex = -1;}" />
 
 		</s:BorderContainer>
 		
@@ -321,8 +366,8 @@
 			
 			<s:HGroup verticalAlign="middle" gap="8" paddingRight="11">
 				<s:Button width="48" height="24" label="Print" />
-				<s:Image id="erBookmark0" source="@Embed('images/erBookmark0.png')" buttonMode="true" click="erAddBookmark()" toolTip="Bookmark this page" visible="{arrBookmarkIndices.indexOf(viewsEducationalResources.selectedIndex) == -1}" includeInLayout="{arrBookmarkIndices.indexOf(viewsEducationalResources.selectedIndex) == -1}" />
-				<s:Image id="erBookmark1" source="@Embed('images/erBookmark1.png')" buttonMode="true" click="erRemoveBookmark()" toolTip="Remove this bookmark" visible="{arrBookmarkIndices.indexOf(viewsEducationalResources.selectedIndex) != -1}" includeInLayout="{arrBookmarkIndices.indexOf(viewsEducationalResources.selectedIndex) != -1}" />
+				<s:Image id="addBookmarkButton" source="@Embed('images/erBookmark0.png')" buttonMode="true" click="addBookmark()" toolTip="Bookmark this page" visible="{bookmark==null}" includeInLayout="{bookmark==null}" />
+				<s:Image id="removeBookmarkButton" source="@Embed('images/erBookmark1.png')" buttonMode="true" click="removeBookmark()" toolTip="Remove this bookmark" visible="{bookmark!=null}" includeInLayout="{bookmark!=null}" />
 				<s:Image source="@Embed('images/erBtnHelp.png')" buttonMode="true" />
 			</s:HGroup>
 			
@@ -511,7 +556,7 @@
 			
 			</mx:ViewStack>
 			
-			<mx:ViewStack id="viewsEducationalResources" width="100%" height="100%" color="0x3C3C3B">
+			<mx:ViewStack id="viewsEducationalResources" width="100%" height="100%" color="0x3C3C3B" change="onViewChange(event)" creationComplete="updateBookmark()">
 				
 				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
 					

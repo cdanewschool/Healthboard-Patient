@@ -3,6 +3,8 @@
  */
 import ASclasses.Constants;
 
+import com.amcharts.utils.Utils;
+
 import components.nutrition.FoodJournalToolTip;
 import components.nutrition.FoodPlanToolTip;
 import components.nutrition.downloadWorksheetWindow;
@@ -13,6 +15,7 @@ import mx.charts.ChartItem;
 import mx.charts.series.items.BarSeriesItem;
 import mx.collections.ArrayCollection;
 import mx.collections.ArrayList;
+import mx.events.ListEvent;
 import mx.events.ToolTipEvent;
 import mx.graphics.GradientEntry;
 import mx.graphics.IFill;
@@ -398,6 +401,16 @@ private function downloadWorksheet():void {
 ]);//{meal:'Breakfast', portion:'1 bowl', ingredients:'Cereal', calories:105, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
 //{meal:'Breakfast', portion:'2 slices', ingredients:'Canadian bacon', calories:85, date: DateUtil.get10DigitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'Thin cut canadian bacon, lightly smoked.'},
 
+[Bindable] public var arrNutritionFoodJournalAlt1:ArrayCollection = new ArrayCollection([
+	{meal:'Breakfast', portion:'1 plate', ingredients:'Eggs and bacon', calories:380, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
+	{meal:'Dinner', portion:'1 bowl', ingredients:'Mac and cheese', calories:600, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''}
+]);
+
+[Bindable] public var arrNutritionFoodJournalAlt2:ArrayCollection = new ArrayCollection([
+	{meal:'Lunch', portion:'1 plate', ingredients:'Caesar Salad', calories:150, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:''},
+	{meal:'Dinner', portion:'1 plate', ingredients:'Fish with mashed potatoes', calories:500, date: get10digitDate((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()), comments:'Delicious!'}
+]);
+
 private function handleNutritionDateRange(range:String):void {	
 	if(range == '1d') {
 		viewsNutritionJournal.selectedIndex = 0;
@@ -406,6 +419,11 @@ private function handleNutritionDateRange(range:String):void {
 		showJournalPlate(currentDailyPlate);
 		showCurrentDay();	//nutJournalDate.text = DateUtil.formatDateFromString((today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear());
 		lblWhatIHaveEaten.text = currentDayDiff == 0 ? "What I Have Eaten Today" : "What I Have Eaten This Day";
+		
+		nutritionJournal.dataProvider = (currentDayDiff == 0) ? arrNutritionFoodJournal : (currentDailyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentDay.getMonth()+1)+'/'+currentDay.getDate()+'/'+currentDay.getFullYear())
+		}
 	}
 	else if(range == '1wk') {
 		viewsNutritionJournal.selectedIndex = 1;
@@ -414,6 +432,11 @@ private function handleNutritionDateRange(range:String):void {
 		showJournalPlate(currentWeeklyPlate);
 		showCurrentWeek();
 		lblWhatIHaveEaten.text = "What I Have Eaten This Week";
+		
+		nutritionJournal.dataProvider = (currentWeekDiff == 0) ? arrNutritionFoodJournal : (currentWeeklyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentSunday.getMonth()+1)+'/'+currentSunday.getDate()+'/'+currentSunday.getFullYear())
+		}
 	}
 	else if(range == '1mo') {
 		viewsNutritionJournal.selectedIndex = 2;
@@ -422,6 +445,11 @@ private function handleNutritionDateRange(range:String):void {
 		showJournalPlate(currentMonthlyPlate);
 		showCurrentMonth();
 		lblWhatIHaveEaten.text = "What I Have Eaten This Month";
+		
+		nutritionJournal.dataProvider = (currentMonthDiff == 0) ? arrNutritionFoodJournal : (currentMonthlyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentMonth.getMonth()+1)+'/01/'+currentMonth.getFullYear())
+		}
 	}
 }
 
@@ -433,6 +461,11 @@ private function nutNavigateDate(direction:String):void {
 		currentDailyPlate = (currentDayDiff == 0) ? 0 : (currentDailyPlate == 1) ? 2 : 1;
 		showJournalPlate(currentDailyPlate);
 		showCurrentDay();
+		
+		nutritionJournal.dataProvider = (currentDayDiff == 0) ? arrNutritionFoodJournal : (currentDailyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentDay.getMonth()+1)+'/'+currentDay.getDate()+'/'+currentDay.getFullYear())
+		}
 		
 		if(currentDayDiff == 0) updateNutritionDatesDay('today');
 		else if(currentDailyPlate == 1) updateNutritionDatesDay('alt1');
@@ -446,6 +479,11 @@ private function nutNavigateDate(direction:String):void {
 		showJournalPlate(currentWeeklyPlate);
 		showCurrentWeek();
 		
+		nutritionJournal.dataProvider = (currentWeekDiff == 0) ? arrNutritionFoodJournal : (currentWeeklyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentSunday.getMonth()+1)+'/'+currentSunday.getDate()+'/'+currentSunday.getFullYear())
+		}
+		
 		if(currentWeekDiff == 0) updateNutritionDatesWeek('thisWeek');
 		else if(currentWeeklyPlate == 1) updateNutritionDatesWeek('alt1');
 		else updateNutritionDatesWeek('alt2');
@@ -457,6 +495,11 @@ private function nutNavigateDate(direction:String):void {
 		currentMonthlyPlate = (currentMonthlyPlate == 1) ? 2 : 1;
 		showJournalPlate(currentMonthlyPlate);
 		showCurrentMonth();
+		
+		nutritionJournal.dataProvider = (currentMonthDiff == 0) ? arrNutritionFoodJournal : (currentMonthlyPlate == 1) ? arrNutritionFoodJournalAlt2 : arrNutritionFoodJournalAlt1;
+		for each(var meal:Object in nutritionJournal.dataProvider) {
+			meal.date = get10digitDate((currentMonth.getMonth()+1)+'/01/'+currentMonth.getFullYear())
+		}
 		
 		if(currentMonthDiff == 0) updateNutritionDatesMonth('thisMonth');
 		else if(currentMonthlyPlate == 1) updateNutritionDatesMonth('alt1');
@@ -525,4 +568,10 @@ private function showCurrentMonth():void {
 	adjustedCurrentMonthDiff = (today.getMonth() + currentMonthDiff < 0) ? 
 	currentMonth = (today.getMonth() + currentMonthDiff) % 12;
 	nutJournalDate.text = arrMonths[currentMonth] + ', ' + today.getFullYear();*/
+}
+
+[Bindable] public var nutritionRollOverRowIndex:int = -2;
+private function onNutritionRollOver(event:ListEvent):void
+{
+	nutritionRollOverRowIndex = event.rowIndex;
 }
