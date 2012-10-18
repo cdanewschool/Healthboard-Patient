@@ -16,18 +16,14 @@
 	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
 	xmlns:general="components.general.*" 
 	xmlns="*" xmlns:modules="modules.*"
+	xmlns:models="models.*" 
+	xmlns:widgets="components.widgets.*"
+	xmlns:views1="components.views.*" 
+	xmlns:modules1="components.modules.*"
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	creationComplete="init()" xmlns:models="models.*" xmlns:widgets="components.widgets.*" xmlns:views1="components.views.*" xmlns:modules1="components.modules.*">
-	
-	<fx:Script>
-		<![CDATA[
-			import models.modules.MedicationsModel;
-			
-			import util.DateFormatters;
-		]]>
-	</fx:Script>
+	creationComplete="init()">
 	
 	<!--	external actionscript includes 	-->
 	<fx:Script source="ASfiles/home.as" />
@@ -220,10 +216,12 @@
 																}
 															]]>
 														</fx:Script>
+														
 														<mx:HBox width="11" paddingTop="6">
 															<s:Image source="@Embed('images/messagesUrgentSmall.png')" toolTip="Urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" />
 															<s:Image source="@Embed('images/messagesSomewhatUrgentSmall.png')" toolTip="Somewhat urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" />
 														</mx:HBox>
+														
 														<s:Label text="{outerDocument.displayTime(data.date, 'short')}" fontSize="12" width="62" color="0x868686" paddingTop="6" />
 														<s:Label text="{data.correspondent}" color="0xFFFFFF" fontSize="12" width="90" fontWeight="{data.status == 'unread' ? 'bold' : 'normal'}" paddingTop="6" />
 														<mx:LinkButton id="btnWidgetMessage" label="{data.subject.substr(0,13) + showEllipsis()}" fontSize="12" fontWeight="{data.status == 'unread' ? 'bold' : 'normal'}" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnWidgetMessage.styleName='linkBtnUnderline';}" rollOut="btnWidgetMessage.styleName='linkBtn';" paddingLeft="-3" />
@@ -241,7 +239,7 @@
 								
 							</enhancedtitlewindow:EnhancedTitleWindow>
 							
-							<widgets:AppointmentsWidget
+							<widgets:PatientAppointmentsWidget
 								id="widgetAppointments" width="305" title="Appointments (4)" 
 								collapsible="true" headerClickable="false" module="modAppointments" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
@@ -270,8 +268,10 @@
 						<s:VGroup gap="17">
 							
 							<widgets:MedicationsWidget
-								id="widgetMedications" width="633" title="Medications" collapsible="true" headerClickable="false" module="modMedications" 
-								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" creationComplete="controller.loadData( Constants.MEDICATIONS )" 
+								id="widgetMedications" width="633" title="Medications" 
+								collapsible="true" headerClickable="false" module="modMedications" 
+								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
+								creationComplete="controller.loadData( Constants.MEDICATIONS )" 
 								visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}" />
 								
 							<s:HGroup gap="22">
@@ -330,6 +330,7 @@
 									<s:Image source="@Embed('images/widgetLibraryMessages.png')" />
 									<s:Label text="Messages" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetMessagesOpen}" includeInLayout="{!widgetMessagesOpen}" horizontalAlign="center" gap="4" click="{widgetMessagesOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryMessages.png')" overSkin="@Embed('images/widgetLibraryMessagesOver.png')" downSkin="@Embed('images/widgetLibraryMessagesDown.png')" />
 									<s:Label text="Messages" fontSize="11" color="0x666666" fontStyle="italic" />
@@ -337,91 +338,115 @@
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryAppointments.png')" />
 									<s:Label text="Appointments" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetAppointmentsOpen}" includeInLayout="{!widgetAppointmentsOpen}" horizontalAlign="center" gap="4" click="{widgetAppointmentsOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryAppointments.png')" overSkin="@Embed('images/widgetLibraryAppointmentsOver.png')" downSkin="@Embed('images/widgetLibraryAppointmentsDown.png')" />
 									<s:Label text="Appointments" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetMedicalRecordsOpen}" includeInLayout="{widgetMedicalRecordsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryMedicalRecords.png')" />
 									<s:Label text="Medical Records" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetMedicalRecordsOpen}" includeInLayout="{!widgetMedicalRecordsOpen}" horizontalAlign="center" gap="4" click="{widgetMedicalRecordsOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryMedicalRecords.png')" overSkin="@Embed('images/widgetLibraryMedicalRecordsOver.png')" downSkin="@Embed('images/widgetLibraryMedicalRecordsDown.png')" />
 									<s:Label text="Medical Records" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetImmunizationsOpen}" includeInLayout="{widgetImmunizationsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryImmunizations.png')" />
 									<s:Label text="Immunizations" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetImmunizationsOpen}" includeInLayout="{!widgetImmunizationsOpen}" horizontalAlign="center" gap="4" click="{widgetImmunizationsOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryImmunizations.png')" overSkin="@Embed('images/widgetLibraryImmunizationsOver.png')" downSkin="@Embed('images/widgetLibraryImmunizationsDown.png')" />
 									<s:Label text="Immunizations" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetVitalSignsOpen}" includeInLayout="{widgetVitalSignsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryVitalSigns.png')" />
 									<s:Label text="Vital Signs" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetVitalSignsOpen}" includeInLayout="{!widgetVitalSignsOpen}" horizontalAlign="center" gap="4" click="{widgetVitalSignsOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryVitalSigns.png')" overSkin="@Embed('images/widgetLibraryVitalSignsOver.png')" downSkin="@Embed('images/widgetLibraryVitalSignsDown.png')" />
 									<s:Label text="Vital Signs" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetEducationalResourcesOpen}" includeInLayout="{widgetEducationalResourcesOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryEducationalResources.png')" />
 									<s:Label text="{'Educational\nResources'}" textAlign="center" lineHeight="11" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetEducationalResourcesOpen}" includeInLayout="{!widgetEducationalResourcesOpen}" horizontalAlign="center" gap="4" click="{widgetEducationalResourcesOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryEducationalResources.png')" overSkin="@Embed('images/widgetLibraryEducationalResourcesOver.png')" downSkin="@Embed('images/widgetLibraryEducationalResourcesDown.png')" />
 									<s:Label text="{'Educational\nResources'}" textAlign="center" lineHeight="11" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetExerciseOpen}" includeInLayout="{widgetExerciseOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryExercise.png')" />
 									<s:Label text="Exercise" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetExerciseOpen}" includeInLayout="{!widgetExerciseOpen}" horizontalAlign="center" gap="4" click="{widgetExerciseOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryExercise.png')" overSkin="@Embed('images/widgetLibraryExerciseOver.png')" downSkin="@Embed('images/widgetLibraryExerciseDown.png')" />
 									<s:Label text="Exercise" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryMedications.png')" />
 									<s:Label text="Medications" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetMedicationsOpen}" includeInLayout="{!widgetMedicationsOpen}" horizontalAlign="center" gap="4" click="{widgetMedicationsOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryMedications.png')" overSkin="@Embed('images/widgetLibraryMedicationsOver.png')" downSkin="@Embed('images/widgetLibraryMedicationsDown.png')" />
 									<s:Label text="Medications" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 							<s:HGroup>
+								
 								<s:VGroup visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" horizontalAlign="center" gap="4">
 									<s:Image source="@Embed('images/widgetLibraryNutrition.png')" />
 									<s:Label text="Nutrition" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
+								
 								<s:VGroup visible="{!widgetNutritionOpen}" includeInLayout="{!widgetNutritionOpen}" horizontalAlign="center" gap="4" click="{widgetNutritionOpen = true}" buttonMode="true">
 									<mx:Button upSkin="@Embed('images/widgetLibraryNutrition.png')" overSkin="@Embed('images/widgetLibraryNutritionOver.png')" downSkin="@Embed('images/widgetLibraryNutritionDown.png')" />
 									<s:Label text="Nutrition" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
+								
 							</s:HGroup>
 							
 						</s:BorderContainer>
@@ -433,6 +458,7 @@
 			</s:Scroller>
 			
 		</s:HGroup>
+		
 		<!--<mx:Grid includeIn="widgetView" horizontalGap="33" verticalGap="18" horizontalAlign="center" width="100%" paddingTop="40">
 		<mx:GridRow>
 		<mx:GridItem>
@@ -531,10 +557,11 @@
 			<home:userProfileForm 
 				id="myProfileForm" skinClass="skins.general.myChromelessTitleWindow"
 				width="980" height="681"
-				title=" User Profile" backgroundColor="0x4A4A49" borderColor="0X898989" styleName="whiteBoldTitle" dropShadowVisible="false" chromeColor="#706F6F" />
+				title=" User Profile" 
+				backgroundColor="0x4A4A49" borderColor="0X898989" styleName="whiteBoldTitle" dropShadowVisible="false" chromeColor="#706F6F" />
 		</s:VGroup>
 		
-		<!-- CALENDAR -->
+		<!-- APPOINTMENTS -->
 		<modules:AppointmentsModule id="appointmentsModule" includeIn="modAppointments" width="976" paddingTop="10" />
 		
 		<!-- IMMUNIZATIONS -->
@@ -593,6 +620,7 @@
 								<s:Spacer width="100%" />
 								
 								<s:Label text="{(dgMessages.dataProvider.length &lt;= 1 ? dgMessages.dataProvider.length : '1 - ' + dgMessages.dataProvider.length) + ' of ' + dgMessages.dataProvider.length}" color="0xFFFFFF" fontSize="11" />						
+							
 							</s:BorderContainer>
 							
 							<s:Line xFrom="0" xTo="822">
@@ -602,6 +630,7 @@
 							</s:Line>
 							
 							<s:HGroup width="100%" color="0xFFFFFF" fontSize="11" height="31" verticalAlign="middle" paddingLeft="13" paddingRight="19" paddingTop="-1">
+								
 								<s:Label text="Select:" paddingTop="2" />
 								<mx:LinkButton id="btnSelectAll" label="All" enabled="{areOptionsEnabled}" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" paddingLeft="-5" paddingRight="-8" click="{select('all')}" rollOver="{if(areOptionsEnabled) btnSelectAll.styleName='linkBtnUnderline';}" rollOut="btnSelectAll.styleName='linkBtn';" />
 								<s:Label text="," paddingTop="2" />
@@ -617,6 +646,7 @@
 								<s:Label text="," paddingTop="2" />
 								<mx:LinkButton id="btnShowUnread" label="Unread" enabled="{areOptionsEnabled}" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" paddingLeft="-6" paddingRight="-8" click="showUnread()" rollOver="{if(areOptionsEnabled) btnShowUnread.styleName='linkBtnUnderline';}" rollOut="btnShowUnread.styleName='linkBtn';" />
 								<s:Label text="Sort by:" paddingLeft="18" paddingTop="2" paddingRight="-9" />
+								
 								<s:DropDownList id="dropDownMessageSort" enabled="{areOptionsEnabled}" selectedIndex="0" width="105" dropShadowVisible="false" contentBackgroundColor="0x4A4A49" rollOverColor="0x5E5E5D" selectionColor="0x5E5E5D" skinClass="skins.general.MyDropDownListSkin" color="0xAEDBE2" change="messageSort()"> 
 									<mx:ArrayCollection>
 										<fx:String>Date Received</fx:String>
@@ -624,6 +654,7 @@
 										<fx:String>Urgency Level</fx:String>
 									</mx:ArrayCollection>
 								</s:DropDownList>
+								
 							</s:HGroup>
 							
 							<s:Line xFrom="0" xTo="822">
@@ -633,7 +664,9 @@
 							</s:Line>
 							
 							<ASclasses:RowColorDataGrid 
-								id="dgMessages" rowColorFunction="calcRowColor" dataProvider="{acMessagesToDisplay}" creationComplete="showInboxMessages()" buttonMode="true"
+								id="dgMessages" rowColorFunction="calcRowColor" 
+								dataProvider="{acMessagesToDisplay}" 
+								creationComplete="showInboxMessages()" buttonMode="true"
 								itemClick="dgMessages_itemClickHandler(event)"
 								width="100%" height="100%"
 								color="0xFFFFFF" verticalAlign="middle"
@@ -643,6 +676,7 @@
 								
 								<!--INITIALLY KEPT THE DATAGRID SELECTABLE, ONLY SO I COULD CALL dgMessages.selectedItem WHEN DELETING A MESSAGE-->
 								<ASclasses:columns> 
+									
 									<mx:DataGridColumn dataField="status" width="46">
 										<mx:itemRenderer>
 											<fx:Component>
@@ -654,6 +688,7 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
+									
 									<mx:DataGridColumn width="26">
 										<mx:itemRenderer>
 											<fx:Component>
@@ -672,6 +707,7 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
+									
 									<mx:DataGridColumn dataField="correspondent" width="132">
 										<mx:itemRenderer>
 											<fx:Component>		
@@ -682,6 +718,7 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
+									
 									<mx:DataGridColumn dataField="subject" width="588">
 										<mx:itemRenderer>
 											<fx:Component>
@@ -707,18 +744,22 @@
 															}
 														]]>
 													</fx:Script>
+													
 													<mx:HBox width="17" >
 														<s:Image source="@Embed('images/messagesUrgent.png')" toolTip="Urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" />
 														<s:Image source="@Embed('images/messagesSomewhatUrgent.png')" toolTip="Somewhat urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" />
 													</mx:HBox>
+													
 													<mx:VBox verticalGap="3">
 														<s:Label text="{showNumberOfMessages() + data.subject}" color="0xAEDEE4" fontSize="13" fontWeight="{data.status == 'unread' ? 'bold' : 'normal'}" />
 														<s:Label text="{data.messages[data.messages.length - 1].text.substr(0,75) + showEllipsis()}" maxDisplayedLines="1" />
 													</mx:VBox>
+													
 												</mx:HBox>
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
+									
 									<mx:DataGridColumn>
 										<mx:itemRenderer>
 											<fx:Component>
@@ -743,6 +784,7 @@
 							
 							<mx:Text id="lblNoMessages" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
 									 htmlText="{'There are no matching search results for the requested search.&lt;br&gt;Please make sure all words are spelled correctly, or try different keywords.'}" />
+							
 							<mx:Text id="lblNoMessagesFolder" visible="false" includeInLayout="false" width="100%" textAlign="center" color="0xFFFFFF" fontSize="11" paddingTop="31"
 									 text="There are no messages in this folder." />
 							
@@ -754,8 +796,6 @@
 						
 					</mx:ViewStack>
 					
-					<!--<mccuneControls:SuperTabBar id="tabsMessages" dataProvider="{viewStackMessages}" styleName="messagesTabs" color="0xFFFFFF" fontSize="11" fontWeight="bold" x="0" y="0" itemClick="tabsMessages_childIndexChangeHandler(event)" closePolicy="{SuperTab.CLOSE_NEVER}"/>-->
-					<!--<s:TabBar id="tabsMessages" dataProvider="{viewStackMessages}" styleName="messagesTabs" skinClass="skins.messages.CustomTabBarSkin" x="0" y="0" change="tabbar1_changeHandler(event)" />-->
 					<plus:TabBarPlus id="tabsMessages" gap="6" cornerRadius="4" styleName="messagesTabs" closePolicy="always" dataProvider="{viewStackMessages}" change="tabbar1_changeHandler(event)" />
 					
 				</s:Group>
