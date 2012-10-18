@@ -46,7 +46,7 @@
 		<s:State name="default" />
 		<s:State name="loggedIn" />
 		<s:State name="widgetView" />
-		<s:State name="modCalendar" />
+		<s:State name="modAppointments" />
 		<s:State name="modImmunizations" />
 		<s:State name="modMessages" />
 		<s:State name="modMedicalRecords" />
@@ -93,7 +93,7 @@
 	</s:HGroup>
 	</mx:ApplicationControlBar>-->
 	
-	<s:VGroup includeIn="loggedIn, profile, widgetView, modCalendar, modImmunizations, modMessages, modMedicalRecords, modMedications, modVitalSigns, modEducationalResources, modExercise, modNutrition" width="1024" horizontalAlign="center">		
+	<s:VGroup includeIn="loggedIn, profile, widgetView, modAppointments, modImmunizations, modMessages, modMedicalRecords, modMedications, modVitalSigns, modEducationalResources, modExercise, modNutrition" width="1024" horizontalAlign="center">		
 		<!-- HEADER -->
 		<s:Group width="100%">
 			<s:BorderContainer width="1024" height="38" borderAlpha="0">
@@ -164,16 +164,16 @@
 		<!-- HOME / BUTTON VIEW -->
 		<s:HGroup id="home" paddingTop="59" includeIn="loggedIn">
 			<s:TileGroup id="buttonsTileGroup" requestedColumnCount="5" horizontalGap="42" verticalGap="46" clipAndEnableScrolling="true">
-				<mx:Button id="buttonMessages" upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" click="{this.currentState='modMessages';}" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
-				<mx:Button id="buttonAppointments" upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="{this.currentState='modCalendar';}" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
-				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="{controller.loadData( Constants.MEDICAL_RECORDS ); this.currentState='modMedicalRecords';}" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
-				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{controller.loadData( Constants.IMMUNIZATIONS ); this.currentState='modImmunizations';}" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
-				<mx:Button id="buttonVitalSigns" upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" click="{this.currentState='modVitalSigns'}" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
-				<mx:Button id="buttonExercise" upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" click="{this.currentState='modExercise'}" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
-				<mx:Button id="buttonNutrition" upSkin="@Embed('images/nutrition.png')" overSkin="@Embed('images/nutrition_over.png')" downSkin="@Embed('images/nutrition_down.png')" click="{this.currentState='modNutrition'}" mouseMove="buttonViewMoveHandler(event,imgNutrition)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonNutrition)" />
-				<mx:Button id="buttonEducationalResources" upSkin="@Embed('images/educationalResources.png')" overSkin="@Embed('images/educationalResources_over.png')" downSkin="@Embed('images/educationalResources_down.png')" click="{this.currentState='modEducationalResources'}" mouseMove="buttonViewMoveHandler(event,imgEducationalResources)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonEducationalResources)" />
+				<mx:Button id="buttonMessages" upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" click="{this.currentState=Constants.MODULE_MESSAGES;}" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
+				<mx:Button id="buttonAppointments" upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="{this.currentState=Constants.MODULE_APPOINTMENTS;}" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
+				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="{controller.loadData( Constants.MEDICAL_RECORDS ); this.currentState=Constants.MODULE_MEDICAL_RECORDS;}" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
+				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="{controller.loadData( Constants.IMMUNIZATIONS );  this.currentState=Constants.MODULE_IMMUNIZATIONS;}" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
+				<mx:Button id="buttonVitalSigns" upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" click="{this.currentState=Constants.MODULE_VITAL_SIGNS}" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
+				<mx:Button id="buttonExercise" upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" click="{this.currentState=Constants.MODULE_EXERCISE}" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
+				<mx:Button id="buttonNutrition" upSkin="@Embed('images/nutrition.png')" overSkin="@Embed('images/nutrition_over.png')" downSkin="@Embed('images/nutrition_down.png')" click="{this.currentState=Constants.MODULE_NUTRITION}" mouseMove="buttonViewMoveHandler(event,imgNutrition)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonNutrition)" />
+				<mx:Button id="buttonEducationalResources" upSkin="@Embed('images/educationalResources.png')" overSkin="@Embed('images/educationalResources_over.png')" downSkin="@Embed('images/educationalResources_down.png')" click="{this.currentState=Constants.MODULE_EDUCATIONAL_RESOURCES}" mouseMove="buttonViewMoveHandler(event,imgEducationalResources)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonEducationalResources)" />
 				<mx:Button id="buttonCommunityGroup" upSkin="@Embed('images/communityGroup.png')" overSkin="@Embed('images/communityGroup_over.png')" downSkin="@Embed('images/communityGroup_down.png')" mouseMove="buttonViewMoveHandler(event,imgCommunityGroup)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonCommunityGroup)" />
-				<mx:Button id="buttonMedications" upSkin="@Embed('images/medications.png')" overSkin="@Embed('images/medications_over.png')" downSkin="@Embed('images/medications_down.png')" click="{controller.loadData( Constants.MEDICATIONS ); this.currentState='modMedications';}" mouseMove="buttonViewMoveHandler(event,imgMedications)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedications)" />
+				<mx:Button id="buttonMedications" upSkin="@Embed('images/medications.png')" overSkin="@Embed('images/medications_over.png')" downSkin="@Embed('images/medications_down.png')" click="{controller.loadData( Constants.MEDICATIONS ); this.currentState=Constants.MODULE_MEDICATIONS;}" mouseMove="buttonViewMoveHandler(event,imgMedications)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedications)" />
 			</s:TileGroup>
 		</s:HGroup>
 		
@@ -243,7 +243,7 @@
 							
 							<widgets:AppointmentsWidget
 								id="widgetAppointments" width="305" title="Appointments (4)" 
-								collapsible="true" headerClickable="false" module="modCalendar" 
+								collapsible="true" headerClickable="false" module="modAppointments" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
 								visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" />
 							
@@ -535,7 +535,7 @@
 		</s:VGroup>
 		
 		<!-- CALENDAR -->
-		<modules:AppointmentsModule id="appointmentsModule" includeIn="modCalendar" width="976" paddingTop="10" />
+		<modules:AppointmentsModule id="appointmentsModule" includeIn="modAppointments" width="976" paddingTop="10" />
 		
 		<!-- IMMUNIZATIONS -->
 		<modules:ImmunizationsModule includeIn="modImmunizations" width="976" paddingTop="10" />

@@ -15,9 +15,6 @@ import events.ApplicationDataEvent;
 import events.ApplicationEvent;
 import events.AppointmentEvent;
 
-import util.ChartLabelFunctions;
-import util.DateUtil;
-
 import external.*;
 import external.TabBarPlus.plus.TabBarPlus;
 import external.TabBarPlus.plus.TabPlus;
@@ -49,6 +46,9 @@ import spark.events.IndexChangeEvent;
 import spark.filters.DropShadowFilter;
 
 import styles.ChartStyles;
+
+import util.ChartLabelFunctions;
+import util.DateUtil;
 
 //this.stage.displayState = StageDisplayState.FULL_SCREEN;
 /* public function updateBreadcrumb(action:String):void {
@@ -161,13 +161,13 @@ private function buttonViewDragDropHandler(event:DragEvent, target:mx.controls.B
 [Bindable] [Embed("images/btnWidgetTriggerClose.png")] public var widgetTriggerClose:Class;
 
 public function falsifyWidget(widget:String):void {
-	if(widget == 'modMessages') widgetMessagesOpen = false;
-	else if(widget == 'modCalendar') widgetAppointmentsOpen = false;
-	else if(widget == 'modMedicalRecords') widgetMedicalRecordsOpen = false;
-	else if(widget == 'modImmunizations') widgetImmunizationsOpen = false;
-	else if(widget == 'modVitalSigns') widgetVitalSignsOpen = false;
-	else if(widget == 'modEducationalResources') widgetEducationalResourcesOpen = false;
-	else if(widget == 'modExercise') widgetExerciseOpen = false;
-	else if(widget == 'modMedications') widgetMedicationsOpen = false;
-	else if(widget == 'modNutrition') widgetNutritionOpen = false;
+	if(widget == Constants.MODULE_MESSAGES) widgetMessagesOpen = false;
+	else if(widget == Constants.MODULE_APPOINTMENTS) widgetAppointmentsOpen = false;
+	else if(widget == Constants.MODULE_MEDICAL_RECORDS) widgetMedicalRecordsOpen = false;
+	else if(widget == Constants.MODULE_IMMUNIZATIONS) widgetImmunizationsOpen = false;
+	else if(widget == Constants.MODULE_VITAL_SIGNS) widgetVitalSignsOpen = false;
+	else if(widget == Constants.MODULE_EDUCATIONAL_RESOURCES) widgetEducationalResourcesOpen = false;
+	else if(widget == Constants.MODULE_EXERCISE) widgetExerciseOpen = false;
+	else if(widget == Constants.MODULE_MEDICATIONS) widgetMedicationsOpen = false;
+	else if(widget == Constants.MODULE_NUTRITION) widgetNutritionOpen = false;
 }
