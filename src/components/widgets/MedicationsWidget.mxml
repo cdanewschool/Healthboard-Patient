@@ -25,7 +25,7 @@
 			[Bindable] public var model:MedicationsModel = controller.model as MedicationsModel;
 			[Bindable] private var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 			
-			private function onClick():void
+			private function showModule():void
 			{
 				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true );
 				event.data = Constants.MODULE_MEDICATIONS;
@@ -83,7 +83,7 @@
 	<mx:PlotChart 
 		id="plotMedicationsWidget" 
 		dataProvider="{model.medicationsDataWidget}" width="100%" 
-		backgroundElements="{chartStyles.bgeMedicationsWidget}" click="onClick()" buttonMode="true"
+		backgroundElements="{chartStyles.bgeMedicationsWidget}" click="showModule()" buttonMode="true"
 		creationComplete="medicationsSetMinMaxWidget();" height="181"><!-- height="403" (replaced by medications.as: plotMedications.height= medicationsCategories.length * 34 + 29;) paddingLeft="-155" paddingLeft="7"-->	<!--showDataTips="true" dataTipFunction="dataTipsMedications" itemClick="showMedicationDetails(event)" creationComplete="applyCustomDataTipsMedi();" -->
 		
 		<mx:horizontalAxisRenderers>

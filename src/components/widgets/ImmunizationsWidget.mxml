@@ -22,14 +22,8 @@
 			[Bindable] private var model:ImmunizationsModel = controller.model as ImmunizationsModel;
 			[Bindable] private var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 			
-			private function onClick():void
+			private function showModule():void
 			{
-				/*
-				var event:ApplicationDataEvent = new ApplicationDataEvent( ApplicationDataEvent.LOAD, true );
-				event.data = Constants.MEDICATIONS;
-				dispatchEvent( event );
-				*/
-				
 				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true );
 				event.data = Constants.MODULE_IMMUNIZATIONS;
 				dispatchEvent( event );
@@ -51,7 +45,7 @@
 	
 	<mx:DataGrid 
 		buttonMode="true"
-		width="100%" itemClick="onClick();"
+		width="100%" itemClick="showModule();"
 		color="0xFFFFFF" verticalAlign="middle"
 		selectable="false"
 		headerHeight="0"

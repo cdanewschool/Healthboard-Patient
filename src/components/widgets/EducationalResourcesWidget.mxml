@@ -19,14 +19,14 @@
 			public var menuIndex:int = -1;
 			public var breadcrumbIndex:int = -1;
 			
-			private function setState( state:String, viewIndex:int = -1, menuIndex:int = -1, breadcrumbIndex:int = -1 ):void
+			private function showModule( viewIndex:int = -1, menuIndex:int = -1, breadcrumbIndex:int = -1 ):void
 			{
 				this.viewIndex = viewIndex;
 				this.menuIndex = menuIndex;
 				this.breadcrumbIndex = breadcrumbIndex;
 				
 				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true );
-				event.data = state;
+				event.data = Constants.MODULE_EDUCATIONAL_RESOURCES;
 				dispatchEvent( event );
 			}
 		]]>
@@ -37,9 +37,9 @@
 	
 	<s:HGroup gap="-1" paddingTop="-2" paddingBottom="5">
 		
-		<s:TextInput id="search" text="Search" fontSize="11" fontStyle="italic" color="0x999999" contentBackgroundAlpha="0" height="24" paddingLeft="7" paddingTop="5" width="252" click="{if(search.text == 'Search') search.text=''}" enter="setState(Constants.MODULE_EDUCATIONAL_RESOURCES, search.text.substr(0,1) == 'h' || search.text.substr(0,1) == 'H' ? 6 : 4, 0, 4);" />
+		<s:TextInput id="search" text="Search" fontSize="11" fontStyle="italic" color="0x999999" contentBackgroundAlpha="0" height="24" paddingLeft="7" paddingTop="5" width="252" click="{if(search.text == 'Search') search.text=''}" enter="showModule(search.text.substr(0,1) == 'h' || search.text.substr(0,1) == 'H' ? 6 : 4, 0, 4);" />
 		
-		<s:Button styleName="searchButtonIcon" width="24" height="24" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES, search.text.substr(0,1) == 'h' || search.text.substr(0,1) == 'H' ? 6 : 4, 0, 4);" />
+		<s:Button styleName="searchButtonIcon" width="24" height="24" click="showModule(search.text.substr(0,1) == 'h' || search.text.substr(0,1) == 'H' ? 6 : 4, 0, 4);" />
 	
 	</s:HGroup>
 	
@@ -49,33 +49,33 @@
 		
 		<s:Image source="@Embed('images/ER3.png')" buttonMode="true" />
 		
-		<mx:LinkButton id="btnLoren" label="Lorem ipsum" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnLoren.styleName='linkBtnUnderline';}" rollOut="btnLoren.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES);" />
+		<mx:LinkButton id="btnLoren" label="Lorem ipsum" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnLoren.styleName='linkBtnUnderline';}" rollOut="btnLoren.styleName='linkBtn';" click="showModule();" />
 		
 		<s:VGroup color="0xAEDBE2" gap="0" paddingTop="4" paddingLeft="-1">
 			
 			<s:HGroup paddingTop="-6">
 				<s:Label text="•" paddingTop="6" />
-				<mx:LinkButton id="btnERWidget1" label="Balancing Calories" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget1.styleName='linkBtnUnderline';}" rollOut="btnERWidget1.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES,1,1,1);" />
+				<mx:LinkButton id="btnERWidget1" label="Balancing Calories" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget1.styleName='linkBtnUnderline';}" rollOut="btnERWidget1.styleName='linkBtn';" click="showModule(1,1,1);" />
 			</s:HGroup>
 			
 			<s:HGroup paddingTop="-6">
 				<s:Label text="•" paddingTop="6" />
-				<mx:LinkButton id="btnERWidget2" label="Food to Increase" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget2.styleName='linkBtnUnderline';}" rollOut="btnERWidget2.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES,1,1,1); " />
+				<mx:LinkButton id="btnERWidget2" label="Food to Increase" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget2.styleName='linkBtnUnderline';}" rollOut="btnERWidget2.styleName='linkBtn';" click="showModule(1,1,1); " />
 			</s:HGroup>
 			
 			<s:HGroup paddingTop="-6">
 				<s:Label text="•" paddingTop="6" />
-				<mx:LinkButton id="btnERWidget3" label="Living with Diabetes" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget3.styleName='linkBtnUnderline';}" rollOut="btnERWidget3.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES,5,5,5);" />
+				<mx:LinkButton id="btnERWidget3" label="Living with Diabetes" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget3.styleName='linkBtnUnderline';}" rollOut="btnERWidget3.styleName='linkBtn';" click="showModule(5,5,5);" />
 			</s:HGroup>
 			
 			<s:HGroup paddingTop="-6">
 				<s:Label text="•" paddingTop="6" />
-				<mx:LinkButton id="btnERWidget4" label="Losing Weight" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget4.styleName='linkBtnUnderline';}" rollOut="btnERWidget4.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES,1,1,1);" />
+				<mx:LinkButton id="btnERWidget4" label="Losing Weight" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget4.styleName='linkBtnUnderline';}" rollOut="btnERWidget4.styleName='linkBtn';" click="showModule(1,1,1);" />
 			</s:HGroup>
 			
 			<s:HGroup paddingTop="-6">
 				<s:Label text="•" paddingTop="6" />
-				<mx:LinkButton id="btnERWidget5" label="Get Fit" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget5.styleName='linkBtnUnderline';}" rollOut="btnERWidget5.styleName='linkBtn';" click="setState(Constants.MODULE_EDUCATIONAL_RESOURCES,1,1,1);" />
+				<mx:LinkButton id="btnERWidget5" label="Get Fit" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERWidget5.styleName='linkBtnUnderline';}" rollOut="btnERWidget5.styleName='linkBtn';" click="showModule(1,1,1);" />
 			</s:HGroup>
 			
 		</s:VGroup>
