@@ -71,7 +71,7 @@
 					bookmark = new Bookmark( titles[viewsEducationalResources.selectedIndex], viewsEducationalResources.selectedIndex );
 					bookmarks.addItemAt( bookmark, 0 );
 					
-					var myBookmarkAdd:bookmarkAdd = bookmarkAdd(PopUpManager.createPopUp(this, bookmarkAdd) as spark.components.TitleWindow);
+					var myBookmarkAdd:bookmarkAdd = bookmarkAdd(PopUpManager.createPopUp(AppProperties.getInstance().controller.application, bookmarkAdd) as spark.components.TitleWindow);
 					myBookmarkAdd.bookmark = bookmark.clone();
 					myBookmarkAdd.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
 					myBookmarkAdd.addEventListener( BookmarkEvent.EDIT, onEditBookmark );
@@ -93,7 +93,7 @@
 			
 			private function removeBookmark():void 
 			{
-				var myBookmarkRemove:bookmarkRemove = bookmarkRemove(PopUpManager.createPopUp(this, bookmarkRemove) as spark.components.TitleWindow);
+				var myBookmarkRemove:bookmarkRemove = bookmarkRemove(PopUpManager.createPopUp(AppProperties.getInstance().controller.application, bookmarkRemove) as spark.components.TitleWindow);
 				myBookmarkRemove.bookmark = bookmark;
 				myBookmarkRemove.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
 				

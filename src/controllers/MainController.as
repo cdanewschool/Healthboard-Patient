@@ -55,7 +55,7 @@ package controllers
 			}
 			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
 			{
-				if( event.currentTarget is NutritionModule )
+				if( event.target is NutritionModule )
 				{
 					dashboard.educationalResourcesModule.viewsEducationalResources.selectedIndex = 1; 
 					dashboard.educationalResourcesModule.viewsEducationalResourcesMenu.selectedIndex = 1; 
