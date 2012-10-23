@@ -7,6 +7,7 @@ package controllers
 	import controllers.Controller;
 	
 	import events.ApplicationEvent;
+	import events.AuthenticationEvent;
 	
 	import external.TabBarPlus.plus.TabBarPlus;
 	
@@ -28,6 +29,16 @@ package controllers
 			medicationsController = new PatientMedicationsController();
 			nutritionController = new NutritionController();
 			vitalSignsController = new VitalSignsController();
+		}
+		
+		override protected function onAuthenticated(event:AuthenticationEvent):void
+		{
+			if( !initialized )
+			{
+				medicationsController.init();
+			}
+			
+			super.onAuthenticated( event );
 		}
 		
 		override protected function onSetState( event:ApplicationEvent ):void
