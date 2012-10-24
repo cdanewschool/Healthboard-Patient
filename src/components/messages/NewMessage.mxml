@@ -215,7 +215,7 @@
 												}
 											]]>
 										</fx:Script>
-										<mx:Image id="imgAttachment" source="{data.filedata}" maxWidth="430" maxHeight="430" horizontalAlign="center" horizontalCenter="0" /> <!--visible="false" includeInLayout="false"-->
+										<mx:Image id="imgAttachment" source="{data.data}" maxWidth="430" maxHeight="430" horizontalAlign="center" horizontalCenter="0" /> <!--visible="false" includeInLayout="false"-->
 										<mx:Image source="@Embed('images/messagesDelete.png')" toolTip="Delete image attachment" buttonMode="true" right="5" top="5" click="delete_clickHandler(event)" />
 									</mx:Canvas>
 								</fx:Component>
