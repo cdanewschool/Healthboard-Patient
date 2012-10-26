@@ -91,11 +91,11 @@
 				</s:HGroup>
 				<s:Label text="Select view mode for homepage" styleName="smallNote" paddingTop="78" />
 			</s:NavigatorContent>
-			<s:NavigatorContent label="Type and Units">
+			<s:NavigatorContent label="Font and Units">
 				<s:layout>
 					<s:VerticalLayout />
 				</s:layout>
-				<s:Label text="Tipe size" fontStyle="italic" color="0x4D4D4D" />
+				<s:Label text="Font size" fontStyle="italic" color="0x4D4D4D" />
 				<s:VGroup gap="2">
 					<s:HGroup verticalAlign="middle">
 						<s:RadioButton groupName="fontSize" id="fontSizeDefault" selected="true" />
