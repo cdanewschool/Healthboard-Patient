@@ -6,6 +6,8 @@ package controllers
 	
 	import controllers.Controller;
 	
+	import enum.RecipientType;
+	
 	import events.ApplicationEvent;
 	import events.AuthenticationEvent;
 	
@@ -51,7 +53,7 @@ package controllers
 			
 			if( application.currentState == Constants.MODULE_MESSAGES )
 			{
-				MessagesModel(messagesController.model).pendingRecipientType = event.message ? event.message.recipientType : 1;
+				MessagesModel(messagesController.model).pendingRecipientType = event.message ? event.message.recipientType : RecipientType.PROVIDER;
 			}
 			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
 			{
