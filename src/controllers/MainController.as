@@ -11,6 +11,8 @@ package controllers
 	
 	import external.TabBarPlus.plus.TabBarPlus;
 	
+	import models.modules.MessagesModel;
+	
 	import modules.NutritionModule;
 	
 	import mx.collections.IList;
@@ -49,20 +51,7 @@ package controllers
 			
 			if( application.currentState == Constants.MODULE_MESSAGES )
 			{
-				/**
-				 * howToHandleMessageTabs is a fix; if we call createNewMessage from the appointments module (i.e. sending a msg to a doctor or nurse) or viewMessage 
-				 * from the Widgets module before the messages module has been created, then it messes up everything... so, the first time we want to createNewMessage 
-				 * from appts or viewMessage from Widgets, we just set it to "viewWidgetMessage" or "createApptsMessage", and the corresponding function will be called 
-				 * from the messages module instead...
-				 */
-				
-				if( dashboard.howToHandleMessageTabs != "not created" ) 
-				{
-					dashboard.createNewMessage( event.message ? event.message.recipientType : 1 );
-					
-					dashboard.tabsMessages.selectedIndex = dashboard.viewStackMessages.length - 2;
-				}
-				else dashboard.howToHandleMessageTabs = "createApptsMessage";
+				MessagesModel(messagesController.model).pendingRecipientType = event.message ? event.message.recipientType : 1;
 			}
 			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
 			{
@@ -99,23 +88,7 @@ package controllers
 				var dataProvider:IList = TabBarPlus( event.target.owner).dataProvider as IList;
 				var index:int = event.rowIndex;
 				
-				if( dataProvider == dashboard.viewStackMessages ) 
-				{
-					//	this array will hold the index values of each "NEW" message in arrOpenTabs. Its purpose is to know which "NEW" message we're closing (if it is in fact a new message)
-					var arrNewMessagesInOpenTabs:Array = new Array(); 
-					
-					for(var i:uint = 0; i < dashboard.arrOpenTabs.length; i++) 
-					{
-						if( dashboard.arrOpenTabs[i] == "NEW") arrNewMessagesInOpenTabs.push(i);
-					}
-					
-					if( dashboard.arrOpenTabs[index-1] == "NEW" ) 
-						dashboard.arrNewMessages.splice( arrNewMessagesInOpenTabs.indexOf(index-1), 1 );
-					
-					dashboard.arrOpenTabs.splice(index-1,1);
-					dashboard.viewStackMessages.selectedIndex--;
-				}
-				else if( application.currentState == "modMedications" ) 
+				if( application.currentState == "modMedications" ) 
 				{
 					medicationsController.model.openTabs.splice(index-1,1);
 				}
