@@ -522,7 +522,7 @@
 		<modules:ImmunizationsModule includeIn="modImmunizations" width="976" paddingTop="10" />
 		
 		<!-- MESSAGES -->
-		<modules:MessagesModule includeIn="modMessages" width="976" paddingTop="10" />
+		<modules:MessagesModule includeIn="modMessages" width="976" />
 		
 		<!--MEDICAL RECORDS-->
 		<modules:MedicalRecordsModule includeIn="modMedicalRecords" width="976" paddingTop="10" />

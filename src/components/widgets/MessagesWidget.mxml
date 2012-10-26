@@ -3,7 +3,9 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" title="{'Messages ' + controller.getUnreadMessageCountString() }" >
+	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" 
+	title="{'Messages ' + model.unreadMessageCount ? '(' + model.unreadMessageCount + ')' : ''}">
+	
 	<fx:Script>
 		<![CDATA[
 			import ASclasses.Constants;
