@@ -187,7 +187,7 @@
 						
 						<s:VGroup gap="17">
 							
-							<widgets:MessagesWidget
+							<widgets:PatientMessagesWidget
 								id="widgetMessages" width="305" 
 								collapsible="true" headerClickable="false" module="modMessages" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
