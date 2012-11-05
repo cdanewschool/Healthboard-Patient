@@ -42,6 +42,10 @@
 				lblPhoneWork.text = phoneWork.text;
 				lblPhoneHome.text = phoneHome.text;
 				lblPhoneMobile.text = phoneMobile.text;
+				
+				var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SHOW_STATUS, true );
+				evt.data = "Your profile has been saved";
+				dispatchEvent( evt );
 			}
 		]]>
 	</fx:Script>

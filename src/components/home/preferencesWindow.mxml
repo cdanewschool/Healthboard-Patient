@@ -20,6 +20,10 @@
 			{
 				controller.model.viewMode = (viewButton.selected) ? Constants.STATE_LOGGED_IN : Constants.STATE_WIDGET_VIEW;
 				
+				var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SHOW_STATUS, true );
+				evt.data = "Your preferences have been saved";
+				AppProperties.getInstance().controller.application.dispatchEvent( evt );
+				
 				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
 				AppProperties.getInstance().controller.application.dispatchEvent( event );
 				
