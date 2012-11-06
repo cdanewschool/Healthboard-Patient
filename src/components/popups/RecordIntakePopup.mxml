@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	controlBarVisible="true"
+	skinClass="skins.general.myHeaderlessTitleWindow" 
+	width="400" height="467"
+	creationComplete="init()" xmlns:components="external.flashcommander.components.*">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import controllers.MedicationsController;
+			
+			import models.modules.MedicationsModel;
+			
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TextInput;
+			
+			import util.DateFormatters;
+			
+			[Bindable] private var controller:MedicationsController = AppProperties.getInstance().controller.medicationsController as MedicationsController;
+			[Bindable] public var model:MedicationsModel = controller.model as MedicationsModel;
+			
+			[Bindable] private var today:Date;
+			
+			private function save():void
+			{
+				var medication:String = String( medicationName.selectedItem );
+				var medicationData:Object = controller.getMedicationByName( medication );
+				
+				if( medication == "" || medicationData == null )
+				{
+					medicationName.errorString = "Invalid medication";
+					return;
+				}
+				else if( extraDosages.selected && comments.text == "" )
+				{
+					comments.errorString = "Required for overdose";
+					return;
+				}
+				
+				medicationName.errorString = null;
+				comments.errorString = null;
+				
+				var data:Object;
+				var selectedDate:Date = dateChooser.selectedDate;
+				
+				for( var i:int=1;i<=3;i++)
+				{
+					if( !this['dosage'+i].selected ) continue;
+					
+					var intake:int = parseInt( TextInput(this['dosageCount'+i]).text );
+					
+					var hours:int = parseInt( TextInput(this['dosageTimeHours'+i]).text );
+					hours = isNaN(hours) ? 0 : hours;
+					
+					var minutes:int = parseInt( TextInput(this['dosageTimeMinutes'+i]).text );
+					minutes = isNaN(minutes) ? 0 : minutes;
+					
+					var date:Date = new Date( selectedDate.fullYear, selectedDate.month, selectedDate.date, hours, minutes );
+					
+					medicationData.date = DateFormatters.dateTimeShort.format( date );
+					medicationData.intake = intake;
+					medicationData.status = "active";
+					medicationData.taken = true;
+					medicationData.type = MedicationsModel.TYPE_ACTIVE;
+					
+					model.medicationsData.addItem( medicationData );
+				}
+				
+				controller.filterMedsFromStatus();
+				
+				PopUpManager.removePopUp( this );
+			}
+			
+			private function cancel():void
+			{
+				PopUpManager.removePopUp( this );
+			}
+			
+			private function navigate( direction:int = 1 ):void
+			{
+				dateChooser.selectedDate = new Date( dateChooser.selectedDate.fullYear, dateChooser.selectedDate.month + direction, dateChooser.selectedDate.date );
+			}
+			
+			private function onTookAllClick():void
+			{
+				selectAlLDosages();
+				
+				extraDosages.selected = false;
+			}
+			
+			private function onTookExtraClick():void
+			{
+				selectAlLDosages();
+			}
+			
+			private function selectAlLDosages():void
+			{
+				dosage1.selected = dosage2.selected = dosage3.selected = true;
+			}
+			
+			private function validateMed():void{}
+			
+			private function getDateLabel(item:Date):String 
+			{
+				return DateFormatters.dateOnlyBackslashDelimited.format(item);
+			}
+			
+			private function init():void
+			{
+				controlBarVisible = false;
+				
+				today = new Date
+					( 
+						AppProperties.getInstance().controller.model.today.fullYear, 
+						AppProperties.getInstance().controller.model.today.month, 
+						AppProperties.getInstance().controller.model.today.date 
+					);
+				
+				medicationName.dataProvider = new ArrayCollection( model.medicationsCategories.source.slice() );
+				
+				dateChooser.selectableRange = {rangeEnd: today}
+				dateChooser.selectedDate = today;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="20" paddingTop="15" paddingRight="20" gap="15" horizontalAlign="left" />
+	</s:layout>
+	
+	<s:Label text="Record Intake" styleName="darkGrayBold16" paddingBottom="5" />
+	
+	<s:VGroup gap="5">
+		
+		<s:Line xFrom="0" xTo="360">
+			<s:stroke>
+				<s:SolidColorStroke color="0x4D4D4D" weight=".5" alpha="1" />
+			</s:stroke>
+		</s:Line>
+		
+		<s:HGroup width="100%" verticalAlign="middle">
+			
+			<s:Image source="@Embed('images/arrowLeft.png')" click="navigate(-1)" buttonMode="true" />
+			
+			<s:HGroup width="100%" horizontalAlign="center">
+				<mx:DateField id="dateChooser" textFieldClass="mx.core.UIFTETextField" textInputClass="mx.controls.MXFTETextInput" width="100" height="24" dateChooserStyleName="dateChooserDark" labelFunction="getDateLabel" />
+			</s:HGroup>
+			
+			<s:Image id="navigateNext" source="@Embed('images/arrowRight.png')" click="navigate(1)" buttonMode="true" enabled="{dateChooser.selectedDate.month &lt; today.month}" toolTip="{navigateNext.enabled?'':'Future intakes cannot be recorded.'}" />
+			
+		</s:HGroup>
+		
+		<s:Line xFrom="0" xTo="360">
+			<s:stroke>
+				<s:SolidColorStroke color="0x4D4D4D" weight=".5" alpha="1" />
+			</s:stroke>
+		</s:Line>
+		
+	</s:VGroup>
+	
+	<s:HGroup  verticalAlign="middle">
+		<s:Label text="Name:" width="60" textAlign="right" styleName="black12" />
+		<components:AutoComplete id="medicationName" width="298" height="24" prefixOnly="false" forceOpen="true" focusIn="medicationName.errorString = null" />
+	</s:HGroup>
+	
+	<s:HGroup width="100%" verticalAlign="middle">
+		
+		<s:Label text="Intake:" width="60" textAlign="right" styleName="black12" />
+		
+		<s:VGroup paddingTop="15">
+			
+			<s:CheckBox label="I took all doses for the selected date." click="onTookAllClick()" />
+			
+			<mx:Grid paddingLeft="20">
+				
+				<mx:GridRow>
+					<mx:GridItem width="100">
+						<s:Label text="Dosage" styleName="mediumGray12Italic" />
+					</mx:GridItem>
+					<mx:GridItem width="75">
+						<s:Label text="Time" styleName="mediumGray12Italic" />
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:Label text="Quantity" styleName="mediumGray12Italic" />
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<!--	1st dosage	-->
+				<mx:GridRow>
+					<mx:GridItem>
+						<s:CheckBox id="dosage1" label="1st dosage" />
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageTimeHours1" width="23" height="19" text="08" />
+							<s:TextInput id="dosageTimeMinutes1" width="23" height="19" text="00" />
+							<s:Label text="hr" />
+						</s:HGroup>
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageCount1" width="23" height="19" text="1"/>
+							<s:Label text="tablets" />
+						</s:HGroup>
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<!--	2nd dosage	-->
+				<mx:GridRow>
+					<mx:GridItem>
+						<s:CheckBox id="dosage2" label="2nd dosage" />
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageTimeHours2" width="23" height="19" text="12" />
+							<s:TextInput id="dosageTimeMinutes2" width="23" height="19" text="00" />
+							<s:Label text="hr" />
+						</s:HGroup>
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageCount2" width="23" height="19" text="1"/>
+							<s:Label text="tablets" />
+						</s:HGroup>
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<!--	3rd dosage	-->
+				<mx:GridRow>
+					<mx:GridItem>
+						<s:CheckBox id="dosage3" label="3rd dosage" />
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageTimeHours3" width="23" height="19" text="15" />
+							<s:TextInput id="dosageTimeMinutes3" width="23" height="19" text="00" />
+							<s:Label text="hr" />
+						</s:HGroup>
+					</mx:GridItem>
+					<mx:GridItem>
+						<s:HGroup>
+							<s:TextInput id="dosageCount3" width="23" height="19" text="1" />
+							<s:Label text="tablets" />
+						</s:HGroup>
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<!--	3+ dosages	-->
+				<mx:GridRow>
+					<mx:GridItem>
+						<s:CheckBox id="extraDosages" label="More than 3" click="onTookExtraClick()" />
+					</mx:GridItem>
+					<mx:GridItem colSpan="2">
+						<s:Label text="Please explain below" visible="{extraDosages.selected}" styleName="red11" paddingTop="5" />
+					</mx:GridItem>
+				</mx:GridRow>
+				
+			</mx:Grid>
+		</s:VGroup>
+	</s:HGroup>
+	
+	<s:HGroup>
+		<s:VGroup horizontalAlign="right">
+			<s:Label text="Comments:" width="60" textAlign="right" styleName="black12" />
+			<s:Image source="@Embed('images/redWarning.png')" visible="{extraDosages.selected}" focusIn="comments.errorString=null" />
+		</s:VGroup>
+		<s:TextArea id="comments" width="296" height="91" />
+	</s:HGroup>
+
+	<s:Line xFrom="0" xTo="360">
+		<s:stroke>
+			<s:SolidColorStroke color="0x4D4D4D" weight=".5" alpha="1" />
+		</s:stroke>
+	</s:Line>
+	
+	<s:HGroup width="100%" horizontalAlign="right">
+		<s:Button label="Record" click="save()" styleName="grayText11" width="58" height="24" />
+		<s:Button label="Cancel" click="cancel()" styleName="grayText11" width="56" height="24"/>
+	</s:HGroup>
+	
+</s:TitleWindow>
