@@ -6,5 +6,12 @@ package controllers
 		{
 			super();
 		}
+		
+		override public function init():void
+		{
+			super.init();
+			
+			model.dataService.send();
+		}
 	}
 }

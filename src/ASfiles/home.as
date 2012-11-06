@@ -71,7 +71,7 @@ btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarke
 
 private var appointmentsController:AppointmentsController;
 private var immunizationsController:ImmunizationsController;
-private var medicalRecordsController:MedicalRecordsController;
+[Bindable] private var medicalRecordsController:MedicalRecordsController;
 private var medicationsController:MedicationsController;
 
 protected function init():void

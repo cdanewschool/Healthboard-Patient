@@ -2,6 +2,7 @@ package controllers
 {
 	import ASclasses.Constants;
 	
+	import components.home.NextStepsOverlay;
 	import components.widgets.EducationalResourcesWidget;
 	
 	import controllers.Controller;
@@ -18,10 +19,14 @@ package controllers
 	import modules.NutritionModule;
 	
 	import mx.collections.IList;
+	import mx.events.CloseEvent;
 	import mx.events.ListEvent;
+	import mx.managers.PopUpManager;
 	
 	public class MainController extends Controller
 	{
+		[Bindable] public var nextStepsOverlay:NextStepsOverlay;
+		
 		public function MainController()
 		{
 			super();
@@ -35,6 +40,30 @@ package controllers
 			vitalSignsController = new VitalSignsController();
 		}
 		
+		public function showNextStepsOverlay():void
+		{
+			if( nextStepsOverlay ) 
+			{
+				onNextStepsClose()
+				
+				return;
+			}
+			
+			nextStepsOverlay= PopUpManager.createPopUp( application, NextStepsOverlay ) as NextStepsOverlay;
+			nextStepsOverlay.addEventListener( CloseEvent.CLOSE, onNextStepsClose );
+			
+			nextStepsOverlay.x = application.stage.width/2 - nextStepsOverlay.width/2;
+			nextStepsOverlay.y = visualDashboard(application).header.height;
+		}
+		
+		private function onNextStepsClose( event:CloseEvent = null ):void
+		{
+			PopUpManager.removePopUp( nextStepsOverlay );
+			
+			nextStepsOverlay.removeEventListener( CloseEvent.CLOSE, onNextStepsClose );
+			nextStepsOverlay = null;
+		}
+		
 		override protected function onAuthenticated(event:AuthenticationEvent):void
 		{
 			if( !initialized )
@@ -43,6 +72,13 @@ package controllers
 			}
 			
 			super.onAuthenticated( event );
+		}
+		
+		override protected function onNavigate( event:ApplicationEvent ):void
+		{
+			super.onNavigate(event);
+
+			closeNextStepsOverlay();
 		}
 		
 		override protected function onSetState( event:ApplicationEvent ):void
@@ -77,6 +113,7 @@ package controllers
 				
 			}
 			
+			closeNextStepsOverlay();
 		}
 		
 		override protected function onTabClose(event:ListEvent):void
@@ -102,6 +139,17 @@ package controllers
 			else 
 			{
 				trace("Bad data provider");
+			}
+		}
+		
+		private function closeNextStepsOverlay():void
+		{
+			if( nextStepsOverlay
+				&& nextStepsOverlay.parent )
+			{
+				nextStepsOverlay.dispatchEvent( new CloseEvent( CloseEvent.CLOSE, true ) );
+				
+				nextStepsOverlay = null;
 			}
 		}
 	}

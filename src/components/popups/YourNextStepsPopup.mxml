@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:components="external.flashcommander.components.*"
+	controlBarVisible="true"
+	skinClass="skins.general.myHeaderlessTitleWindow" 
+	width="373" height="426"
+	creationComplete="init()">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			
+			private function init():void
+			{
+				controlBarVisible = false;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="20" paddingTop="15" paddingRight="20" gap="10" horizontalAlign="left" />
+	</s:layout>
+	
+	<s:Label text="Your Next Steps" styleName="darkGrayBold16" />
+	
+	<mx:Text 
+		width="100%"
+		text="You have the ability to access the next steps recommended to you by your doctor and follow up on your progress from anywhere within the Healthboard."
+		styleName="darkGray12" />
+	
+	<s:BorderContainer width="333" height="277">
+
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xF7F7F7" alpha="1" ratio="0" />
+				<s:GradientEntry color="0xB3B3B3" alpha="1" ratio="1" />
+			</s:LinearGradient>
+		</s:backgroundFill>
+		
+		<s:layout>
+			<s:VerticalLayout paddingLeft="15" paddingTop="15" paddingRight="15" gap="20" />
+		</s:layout>
+		
+		<s:HGroup width="100%">
+			<s:Image source="images/nextsteps/status.jpg" />
+			<s:VGroup width="100%" gap="2">
+				<s:Label text="Status" styleName="darkGrayBold12" />
+				<mx:Text width="100%" text="The status of the next step is listed to help you keep track. You can also mark it upon completion." styleName="darkGray12" />
+			</s:VGroup>
+		</s:HGroup>
+		
+		<s:HGroup width="100%">
+			<s:Image source="images/nextsteps/nextsteps.jpg" />
+			<s:VGroup width="100%" gap="2">
+				<s:Label text="Direct Link for Recommendation" styleName="darkGrayBold12" />
+				<mx:Text width="100%" text="You can use the provided link to go to the appropriate module in order to follow the doctor’s recommendation." styleName="darkGray12" />
+			</s:VGroup>
+		</s:HGroup>
+		
+		<s:HGroup width="100%">
+			<s:Image source="images/nextsteps/options.jpg" />
+			<s:VGroup width="100%" gap="2">
+				<s:Label text="View Options" styleName="darkGrayBold12" />
+				<mx:Text width="100%" text="You have the option to view all next steps, whether it is in progress or have already been completed." styleName="darkGray12" />
+			</s:VGroup>
+		</s:HGroup>
+		
+	</s:BorderContainer>
+	
+	<s:HGroup width="100%" horizontalAlign="right">
+		<s:Button label="Close" click="PopUpManager.removePopUp( this );" styleName="grayText11" width="56" height="24"/>
+	</s:HGroup>
+	
+</s:TitleWindow>
