@@ -565,7 +565,7 @@
 		<modules:MedicalRecordsModule includeIn="modMedicalRecords" width="976" paddingTop="10" />
 		
 		<!--MEDICATIONS-->
-		<modules1:PatientMedicationsModule includeIn="modMedications" width="976" paddingTop="10" />
+		<modules:MedicationsModule includeIn="modMedications" width="976" paddingTop="10" />
 		
 		<!-- VITAL SIGNS -->
 		<modules:VitalSignsModule includeIn="modVitalSigns" width="976" paddingTop="10" />
