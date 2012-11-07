@@ -168,10 +168,18 @@
 					</s:DropDownList>-->
 					<mx:LinkButton id="btnProfile" label="{controller.model.fullname}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
 					
-					<mx:LinkButton id="btnLogout" label="Logout" color="0xE6E6E6" textRollOverColor="0xE6E6E6" textSelectedColor="0xE6E6E6" skin="{null}" paddingLeft="1" click="{currentState='default'}" rollOver="btnLogout.styleName='linkBtnUnderline';" rollOut="btnLogout.styleName='linkBtn';" />
+					<!--<s:HGroup paddingTop="-6" paddingLeft="-9">
+						<s:DropDownList id="dropDownViewOld" dropShadowVisible="false" skinClass="skins.general.MyOptionsDropDownListSkin" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" width="35" fontSize="12" change="dropDownView_changeHandler(event)"> 
+							<mx:ArrayCollection>
+								<fx:String>     Homepage Options</fx:String>
+								<fx:String>     Font and Units</fx:String>
+								<fx:String>     Notifications</fx:String>
+							</mx:ArrayCollection>
+						</s:DropDownList>
+					</s:HGroup>-->
 					
-					<s:HGroup paddingTop="-6" paddingLeft="-9">
-						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MyOptionsDropDownListSkin" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" width="35" fontSize="12" change="dropDownView_changeHandler(event)"> 
+					<s:HGroup paddingTop="-12" paddingLeft="-2">
+						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="dropDownView_changeHandler(event)"> 
 							<mx:ArrayCollection>
 								<fx:String>     Homepage Options</fx:String>
 								<fx:String>     Font and Units</fx:String>
@@ -179,6 +187,8 @@
 							</mx:ArrayCollection>
 						</s:DropDownList>
 					</s:HGroup>
+					
+					<mx:LinkButton id="btnLogout" label="Logout" color="0xE6E6E6" textRollOverColor="0xE6E6E6" textSelectedColor="0xE6E6E6" skin="{null}" paddingLeft="1" click="{currentState='default'}" rollOver="btnLogout.styleName='linkBtnUnderline';" rollOut="btnLogout.styleName='linkBtn';" />
 				</s:HGroup>
 			</s:BorderContainer>
 		</s:Group>
