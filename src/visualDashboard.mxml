@@ -258,7 +258,7 @@
 						
 						<s:VGroup gap="17">
 							
-							<widgets:MedicationsWidget
+							<widgets:PatientMedicationsWidget
 								id="widgetMedications" width="633" title="Medications" 
 								collapsible="true" headerClickable="false" module="modMedications" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
