@@ -87,9 +87,10 @@ package controllers
 			
 			var dashboard:visualDashboard = application as visualDashboard;
 			
-			if( application.currentState == Constants.MODULE_MESSAGES )
+			if( application.currentState == Constants.MODULE_MESSAGES
+				&& event.message )
 			{
-				MessagesModel(messagesController.model).pendingRecipientType = event.message ? event.message.recipientType : RecipientType.PROVIDER;
+				MessagesModel(messagesController.model).pendingRecipientType = event.message.recipientType;
 			}
 			else if( application.currentState == Constants.MODULE_EDUCATIONAL_RESOURCES )
 			{
