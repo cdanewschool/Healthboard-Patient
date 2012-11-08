@@ -18,9 +18,13 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import ASclasses.Constants;
+			
 			import components.popups.YourNextStepsPopup;
 			
 			import controllers.MedicalRecordsController;
+			
+			import events.ApplicationEvent;
 			
 			import models.NextStep;
 			import models.modules.MedicalRecordsModel;
@@ -74,13 +78,37 @@
 			
 			private function onItemClick(event:ListEvent):void
 			{
+				var item:NextStep = NextStep( event.itemRenderer.data );
+				
+				if( item.area )
+				{
+					var module:String;
+					
+					if( item.area == 'exercise' )
+						module = Constants.MODULE_EXERCISE;
+					else if( item.area == 'health' )
+						module = Constants.MODULE_NUTRITION;
+					else if( item.area == 'schedule' )
+						module = Constants.MODULE_APPOINTMENTS;
+					else if( item.area == 'vitals' )
+						module = Constants.MODULE_VITAL_SIGNS;
+					
+					if( module )
+					{
+						var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, module );
+						AppProperties.getInstance().controller.application.dispatchEvent( evt );
+					}
+					
+				}
 				grid.selectedItem = null;
 			}
 			
-			public function markAsComplete(item:NextStep):void
+			public function markAsComplete(event:MouseEvent,item:NextStep,completed:Boolean=true):void
 			{
-				item.completed = true;
-				item.status = "inactive";
+				event.stopImmediatePropagation();
+				
+				item.completed = completed;
+				item.status = completed ? "inactive" : "active";
 				
 				model.medicalRecordsNextSteps.dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE ) );
 				
@@ -90,8 +118,10 @@
 				grid.selectedItem = null;
 			}
 			
-			public function markAsRemoved(item:NextStep):void
+			public function markAsRemoved(event:MouseEvent,item:NextStep):void
 			{
+				event.stopImmediatePropagation();
+				
 				item.removed = true;
 				item.status = "inactive";
 				
@@ -204,9 +234,9 @@
 								]]>
 							</fx:Script>
 							<s:Label text="{data.completed ? 'Complete' : 'In Progress'}" color="{data.status == 'inactive' ? 0x999999 : 0xAEDEE4}" fontFamily="myMyriad" />
-							<s:Image source="@Embed('images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(NextStep(data))" toolTip="Click to mark as complete" visible="{!data.completed}" includeInLayout="{!data.completed}" />
-							<s:Image source="@Embed('images/checkmarkNextSteps.png')" visible="{data.completed}" includeInLayout="{data.completed}" />
-							<s:Image source="@Embed('images/btnCloseTiny.png')" visible="{!data.completed}" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(NextStep(data))" toolTip="Click to mark as removed" />
+							<s:Image source="@Embed('images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(event,NextStep(data))" toolTip="Mark as complete" visible="{!data.completed}" includeInLayout="{!data.completed}" />
+							<s:Image source="@Embed('images/checkmarkNextSteps.png')" click="outerDocument.markAsComplete(event,NextStep(data),false)" toolTip="Unmark as complete" visible="{data.completed}" includeInLayout="{data.completed}"  />
+							<s:Image source="@Embed('images/btnCloseTiny.png')" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(event,NextStep(data))" toolTip="Mark as removed" visible="{!data.removed}" />
 						</mx:HBox>
 					</fx:Component>
 				</mx:itemRenderer>
