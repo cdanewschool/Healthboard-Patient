@@ -14,12 +14,16 @@ package controllers
 	
 	import external.TabBarPlus.plus.TabBarPlus;
 	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import models.modules.MessagesModel;
 	
 	import modules.NutritionModule;
 	
 	import mx.collections.IList;
 	import mx.events.CloseEvent;
+	import mx.events.FlexMouseEvent;
 	import mx.events.ListEvent;
 	import mx.managers.PopUpManager;
 	
@@ -51,9 +55,10 @@ package controllers
 			
 			nextStepsOverlay= PopUpManager.createPopUp( application, NextStepsOverlay ) as NextStepsOverlay;
 			nextStepsOverlay.addEventListener( CloseEvent.CLOSE, onNextStepsClose );
+			nextStepsOverlay.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, onNextStepsOutsideClick);
 			
 			nextStepsOverlay.x = application.stage.width/2 - nextStepsOverlay.width/2;
-			nextStepsOverlay.y = visualDashboard(application).header.height;
+			nextStepsOverlay.y = visualDashboard(application).header.height - 1;
 		}
 		
 		private function onNextStepsClose( event:CloseEvent = null ):void
@@ -62,6 +67,11 @@ package controllers
 			
 			nextStepsOverlay.removeEventListener( CloseEvent.CLOSE, onNextStepsClose );
 			nextStepsOverlay = null;
+		}
+		
+		private function onNextStepsOutsideClick( event:FlexMouseEvent = null ):void
+		{
+			if(!visualDashboard(application).nextStepsTrigger.hitTestPoint(event.stageX,event.stageY)) onNextStepsClose();
 		}
 		
 		override protected function onAuthenticated(event:AuthenticationEvent):void
