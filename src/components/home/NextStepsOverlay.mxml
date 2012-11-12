@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup 
+<s:BorderContainer 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	gap="0"
-	width="678" height="222" 
+	width="678" height="222"
+	borderColor="0xF0F0F0"
 	addedToStage="onAdded()" removedFromStage="onRemoved()" creationComplete="init()">
 	
 	<fx:Declarations>
@@ -86,9 +86,9 @@
 					
 					if( item.area == 'exercise' )
 						module = Constants.MODULE_EXERCISE;
-					else if( item.area == 'health' )
+					else if( item.area == 'nutrition' )
 						module = Constants.MODULE_NUTRITION;
-					else if( item.area == 'schedule' )
+					else if( item.area == 'appointments' )
 						module = Constants.MODULE_APPOINTMENTS;
 					else if( item.area == 'vitals' )
 						module = Constants.MODULE_VITAL_SIGNS;
@@ -178,11 +178,15 @@
 		]]>
 	</fx:Script>
 	
-	<s:BorderContainer width="100%" height="26" backgroundFill="{headerFill}" borderAlpha="0">
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	
+	<s:BorderContainer width="100%" height="23" backgroundFill="{headerFill}" borderVisible="false">
 		
 		<s:HGroup width="100%" verticalAlign="middle" paddingLeft="10" paddingRight="10">
 			
-			<mx:LinkButton label="What's this?" click="onWhatClick(event)" styleName="linkBtnDarkBlue" />
+			<mx:LinkButton id="btnWhatsThis" label="What's this?" click="onWhatClick(event)" color="0x064E71" textRollOverColor="0x064E71" textSelectedColor="0x064E71" skin="{null}" rollOver="{btnWhatsThis.styleName='linkBtnUnderline';}" rollOut="btnWhatsThis.styleName='linkBtn';" paddingLeft="-5" />
 			
 			<s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
 				<s:Label text="View:" paddingTop="2" />
@@ -198,14 +202,14 @@
 		id="grid"
 		dataProvider="{model.medicalRecordsNextSteps}" styleName="standardDataGrid" fontFamily="myMyriad"
 		width="100%" height="100%"  
-		headerStyleName="dataGridHeader"
+		headerStyleName="dataGridHeader" rowHeight="22" headerHeight="22"
 		fontSize="12"
 		horizontalGridLineColor="0x444442" horizontalGridLines="true" alternatingItemColors="[0x3C3C3B,0x3C3C3B]"
-		paddingTop="6" rowCount="8"
+		rowCount="8"
 		itemClick="onItemClick(event)" dataTipFunction="getTooltip">
 		
 		<mx:columns>
-			<mx:DataGridColumn dataField="urgency" headerText="Urgency" width="75" color="0xAEDEE4">
+			<mx:DataGridColumn dataField="urgency" headerText="Urgency" width="74" color="0xAEDEE4">
 				<mx:itemRenderer>
 					<fx:Component>
 						<mx:HBox width="68" horizontalAlign="center" paddingTop="5">
@@ -222,12 +226,12 @@
 			</mx:DataGridColumn>
 			
 			<mx:DataGridColumn dataField="dateAssigned" headerText="Assigned On" width="92" paddingLeft="10" labelFunction="getDateLabel" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
-			<mx:DataGridColumn dataField="recommendation" headerText="Next Steps" width="290" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
-			<mx:DataGridColumn dataField="assignee" headerText="Assignee" width="96" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />			
-			<mx:DataGridColumn dataField="completed" headerText="Status" width="112" paddingLeft="10" showDataTips="true">
+			<mx:DataGridColumn dataField="recommendation" headerText="Next Steps" width="288" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
+			<mx:DataGridColumn dataField="assignee" headerText="Assignee" width="94" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />			
+			<mx:DataGridColumn dataField="completed" headerText="Status" paddingLeft="10" showDataTips="true">
 				<mx:itemRenderer>
 					<fx:Component>
-						<mx:HBox paddingTop="5" horizontalGap="10">
+						<mx:HBox paddingTop="2" horizontalGap="10">
 							<fx:Script>
 								<![CDATA[
 									import models.NextStep;
@@ -245,4 +249,4 @@
 		
 	</mx:DataGrid>
 	
-</s:VGroup>
+</s:BorderContainer>
