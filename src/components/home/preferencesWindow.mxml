@@ -89,7 +89,7 @@
 					</s:VGroup>
 					<s:VGroup horizontalAlign="center" gap="0">
 						<s:Image source="@Embed(source='images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
-						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Widget View" click="{viewWidget.selected = true;}" />
+						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Advanced View" click="{viewWidget.selected = true;}" />
 						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{controller.model.viewMode == Constants.STATE_WIDGET_VIEW}" />
 					</s:VGroup>
 				</s:HGroup>
