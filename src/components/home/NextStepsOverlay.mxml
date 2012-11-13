@@ -183,7 +183,7 @@
 				timer.addEventListener( TimerEvent.TIMER_COMPLETE, onTimerComplete );
 				
 				sort = new Sort();
-				sort.fields = [ new SortField('completed') ];
+				sort.fields = [ new SortField('completed'), new SortField('dateAssigned',false,true) ];
 				
 				model.medicalRecordsNextSteps.sort = sort;
 				model.medicalRecordsNextSteps.filterFunction = filterByRemoved;
@@ -239,7 +239,7 @@
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
 			
-			<mx:DataGridColumn dataField="dateAssigned" headerText="Assigned On" width="92" paddingLeft="10" labelFunction="getDateLabel" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
+			<mx:DataGridColumn dataField="dateAssigned" headerText="Date" width="92" paddingLeft="10" labelFunction="getDateLabel" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
 			<mx:DataGridColumn dataField="recommendation" headerText="Next Steps" width="288" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
 			<mx:DataGridColumn dataField="assignee" headerText="Assignee" width="94" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />			
 			<mx:DataGridColumn dataField="completed" headerText="Status" paddingLeft="10" showDataTips="true">
@@ -251,10 +251,10 @@
 									import models.NextStep;
 								]]>
 							</fx:Script>
-							<s:Label text="{data.completed ? 'Complete' : 'In Progress'}" color="{data.status == 'inactive' ? 0x999999 : 0xAEDEE4}" fontFamily="myMyriad" />
-							<s:Image source="@Embed('images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(event,NextStep(data))" toolTip="Mark as complete" visible="{!data.completed}" includeInLayout="{!data.completed}" />
-							<s:Image source="@Embed('images/checkmarkNextSteps.png')" click="outerDocument.markAsComplete(event,NextStep(data),false)" toolTip="Unmark as complete" visible="{data.completed}" includeInLayout="{data.completed}"  />
-							<s:Image source="@Embed('images/btnCloseTiny.png')" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(event,NextStep(data))" toolTip="Mark as removed" visible="{!data.removed}" />
+							<s:Label text="{data.removed ? 'Declined' : (data.completed ? 'Complete' : 'In Progress')}" color="{data.status == 'inactive' ? 0x999999 : 0xAEDEE4}" fontFamily="myMyriad" />
+							<s:Image source="@Embed('images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(event,NextStep(data))" toolTip="Mark as complete" visible="{!data.completed &amp;&amp; !data.removed}" includeInLayout="{!data.completed &amp;&amp; !data.removed}" />
+							<s:Image source="@Embed('images/checkmarkNextSteps.png')" click="outerDocument.markAsComplete(event,NextStep(data),false)" toolTip="Unmark as complete" visible="{data.completed &amp;&amp; !data.removed}" includeInLayout="{data.completed &amp;&amp; !data.removed}" />
+							<s:Image source="@Embed('images/btnCloseTiny.png')" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(event,NextStep(data))" toolTip="Mark as declined" visible="{!data.completed}" includeInLayout="{!data.completed}" enabled="{!data.removed}" />
 						</mx:HBox>
 					</fx:Component>
 				</mx:itemRenderer>
