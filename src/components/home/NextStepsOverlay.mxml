@@ -92,6 +92,20 @@
 						module = Constants.MODULE_APPOINTMENTS;
 					else if( item.area == 'vitals' )
 						module = Constants.MODULE_VITAL_SIGNS;
+					else if( item.area == 'records' )
+					{
+						module = Constants.MODULE_MEDICAL_RECORDS;
+						
+						var controller:MedicalRecordsController = MedicalRecordsController(AppProperties.getInstance().controller.medicalRecordsController);
+						var model:MedicalRecordsModel = MedicalRecordsModel(controller.model);
+						
+						var medicalRecord:Object = controller.getMedicalRecordByNextStep( item );
+						
+						if( medicalRecord )
+						{
+							model.pendingIndex = model.medicalRecordsData.getItemIndex( medicalRecord );
+						}
+					}
 					
 					if( module )
 					{
