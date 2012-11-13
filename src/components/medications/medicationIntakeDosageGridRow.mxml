@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:GridRow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			[Bindable] public var dosageNumber:String;
+			[Bindable] public var dosageHours:String;
+			[Bindable] public var dosageDirectedIntake:int;
+			[Bindable] public var dosageSelected:Boolean;
+		]]>
+	</fx:Script>
+	
+	<mx:GridItem verticalAlign="middle">
+		<s:CheckBox id="dosage" label="{dosageNumber}" selected="{dosageSelected}" /><!--label="1st dosage" -->
+	</mx:GridItem>
+	<mx:GridItem verticalAlign="middle">
+		<s:HGroup verticalAlign="middle">
+			<s:TextInput id="dosageTimeHours" width="23" height="19" text="{dosageHours}" /><!--text="08"-->
+			<s:TextInput id="dosageTimeMinutes" width="23" height="19" text="00" />
+			<s:Label text="hr" />
+		</s:HGroup>
+	</mx:GridItem>
+	<mx:GridItem verticalAlign="middle">
+		<s:HGroup verticalAlign="middle">
+			<s:NumericStepper id="dosageCount" value="{dosageDirectedIntake}" minimum="1" maximum="30" width="40" />
+			<s:Label text="tablet(s)" />
+		</s:HGroup>
+	</mx:GridItem>
+</mx:GridRow>
