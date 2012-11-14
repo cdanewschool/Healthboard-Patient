@@ -74,6 +74,7 @@
 					dosage.taken = true;
 					dosage.type = MedicationsModel.TYPE_ACTIVE;
 					dosage.frequency = !extraDosages.selected ? medication.directedFrequency : medication.directedFrequency+1;
+					dosage.comments = comments.text;
 					dosage.actionable = true;
 				}
 				
