@@ -24,9 +24,6 @@
 				evt.data = "Your preferences have been saved";
 				AppProperties.getInstance().controller.application.dispatchEvent( evt );
 				
-				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
-				AppProperties.getInstance().controller.application.dispatchEvent( event );
-				
 				PopUpManager.removePopUp(this);
 			}
 		]]>
