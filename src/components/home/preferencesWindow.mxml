@@ -20,12 +20,17 @@
 			{
 				controller.model.viewMode = (viewButton.selected) ? Constants.STATE_LOGGED_IN : Constants.STATE_WIDGET_VIEW;
 				
+				var currentState:String = AppProperties.getInstance().controller.application.currentState;
+				
+				if( currentState == Constants.STATE_LOGGED_IN || currentState == Constants.STATE_WIDGET_VIEW )
+				{
+					var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
+					AppProperties.getInstance().controller.application.dispatchEvent( event );
+				}
+				
 				var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SHOW_STATUS, true );
 				evt.data = "Your preferences have been saved";
 				AppProperties.getInstance().controller.application.dispatchEvent( evt );
-				
-				var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
-				AppProperties.getInstance().controller.application.dispatchEvent( event );
 				
 				PopUpManager.removePopUp(this);
 			}
