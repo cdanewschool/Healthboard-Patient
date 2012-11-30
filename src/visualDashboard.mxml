@@ -209,7 +209,7 @@
 			</s:BorderContainer>
 		</s:Group>
 		
-		<s:HGroup height="40" includeIn="loggedIn">
+		<s:HGroup height="40" includeIn="loggedIn, widgetView">
 			<components:StatusDisplay height="40" />
 		</s:HGroup>
 		
@@ -230,7 +230,7 @@
 		</s:HGroup>
 		
 		<!-- HOME / WIDGET VIEW -->
-		<s:HGroup includeIn="widgetView" paddingTop="15">
+		<s:HGroup includeIn="widgetView" paddingTop="-30">
 			
 			<s:Scroller id="widgetScroller" height="728" width="1024" horizontalScrollPolicy="off">
 				
