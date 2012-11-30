@@ -40,12 +40,23 @@
 			[Bindable] private var isExplanationMissing:Boolean = false;
 			[Bindable] private var isMedAsNeeded:Boolean;
 			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if( dateChooser )
+				{
+					dateChooser.enabled = dateChooser.selectedDate.date < today.date
+				}
+			}
+			
 			private function save():void
 			{
 				var data:Object;
 				var selectedDate:Date = dateChooser.selectedDate;
 				
-				for(var i:int=1; i <= medication.directedFrequency; i++) {
+				for(var i:int=1; i <= medication.directedFrequency; i++) 
+				{
 					var gridRow:medicationIntakeDosageGridRow = medicationIntakeDosageGridRow(gridDosages.getChildByName('dosage'+i));
 					
 					if(!gridRow.dosage.selected) continue;
@@ -62,13 +73,15 @@
 					
 					var dosage:Object = controller.getMedicationByNameAndDate( medication.name, date );
 						
-					if(!dosage) {
+					if(!dosage) 
+					{
 						dosage = ObjectUtil.clone( medication );
 						model.medicationsData.addItem( dosage );
 					}
 					
 					if(!isMedAsNeeded) dosage.date = DateFormatters.dateTimeShort.format( date );
 					else dosage.dateAN = DateFormatters.dateTimeShort.format( date );
+					
 					dosage.intake = intake;
 					dosage.status = "active";
 					dosage.taken = true;
@@ -78,7 +91,7 @@
 					dosage.actionable = true;
 				}
 				
-				model.medicationsData.refresh();	//controller.filterMedsFromStatus();
+				model.medicationsData.refresh();
 				
 				PopUpManager.removePopUp( this );
 			}
@@ -91,42 +104,56 @@
 			private function navigate( direction:int = 1 ):void
 			{
 				dateChooser.selectedDate = new Date( dateChooser.selectedDate.fullYear, dateChooser.selectedDate.month, dateChooser.selectedDate.date + direction);
+				
+				invalidateProperties();
 			}
 			
-			private function onTookAllClick():void {
+			private function onTookAllClick():void 
+			{
 				if(checkAll.selected) selectAllDosages();
 				else deselectAllDosages();
 				
 				extraDosages.selected = false;
 			}
 			
-			private function onTookExtraClick():void {
-				if(extraDosages.selected) {
+			private function onTookExtraClick():void 
+			{
+				if(extraDosages.selected) 
+				{
 					selectAllDosages();
-					if(!isMedAsNeeded && comments.text == '') {
+					
+					if(!isMedAsNeeded && comments.text == '') 
+					{
 						isExplanationMissing = true;
 						commentsValidator.validate(comments.text);
 					}
 				}
-				else {
+				else 
+				{
 					isExplanationMissing = false;
 					commentsValidator.validate('dummy');
 				}
 			}
 			
-			private function selectAllDosages():void {
-				for(var i:uint=1; i <= medication.directedFrequency; i++) {
+			private function selectAllDosages():void 
+			{
+				for(var i:uint=1; i <= medication.directedFrequency; i++) 
+				{
 					var gridRow:medicationIntakeDosageGridRow = medicationIntakeDosageGridRow(gridDosages.getChildByName('dosage'+i));
 					gridRow.dosage.selected = true;
 				}
+				
 				areCheckboxesSelected = true;
 			}
 			
-			private function deselectAllDosages():void {
-				for(var i:uint=1; i <= medication.directedFrequency; i++) {
+			private function deselectAllDosages():void 
+			{
+				for(var i:uint=1; i <= medication.directedFrequency; i++) 
+				{
 					var gridRow:medicationIntakeDosageGridRow = medicationIntakeDosageGridRow(gridDosages.getChildByName('dosage'+i));
 					gridRow.dosage.selected = false;
 				}
+				
 				areCheckboxesSelected = false;
 			}
 			
@@ -155,7 +182,9 @@
 				
 				var myGridRow:medicationIntakeDosageGridRow;
 				var arrTimesBasedOnFrequency:Array = new Array([12],[8,18],[8,14,20],[7,12,17,22],[6,10,14,18,22],[7,10,13,16,19,22],[8,10,12,14,16,18,20],[8,10,12,14,16,18,20,22],[7,9,11,13,15,17,19,21,23],[5,7,9,11,13,15,17,19,21,23]);
-				for(var i:uint = 0; i < medication.directedFrequency; i++) {
+				
+				for(var i:uint = 0; i < medication.directedFrequency; i++) 
+				{
 					myGridRow = new medicationIntakeDosageGridRow;
 					myGridRow.name = "dosage" + (i+1);
 					var suffices:Array = new Array("st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th");
@@ -170,29 +199,38 @@
 				analyzeCheckboxes();
 			}
 			
-			private function onGridRowClick(event:MouseEvent = null):void {
+			private function onGridRowClick(event:MouseEvent = null):void 
+			{
 				if(!event.target is CheckBox) return;
+				
 				analyzeCheckboxes();
 			}
 			
-			private function analyzeCheckboxes():void {
+			private function analyzeCheckboxes():void 
+			{
 				areCheckboxesSelected = false;
 				
-				for(var i:uint=1; i <= medication.directedFrequency; i++) {
+				for(var i:uint=1; i <= medication.directedFrequency; i++) 
+				{
 					var gridRow:medicationIntakeDosageGridRow = medicationIntakeDosageGridRow(gridDosages.getChildByName('dosage'+i));
-					if(gridRow.dosage.selected) {
+					
+					if(gridRow.dosage.selected) 
+					{
 						areCheckboxesSelected = true;
 						break;
 					}
 				}
 			}
 			
-			private function handleComment():void {
-				if(extraDosages.selected) {
+			private function handleComment():void 
+			{
+				if(extraDosages.selected) 
+				{
 					isExplanationMissing = (comments.text == '');
 					commentsValidator.validate(comments.text);
 				}
-				else {
+				else
+				{
 					isExplanationMissing = false;
 					commentsValidator.validate('dummy');
 				}
@@ -222,7 +260,7 @@
 				<mx:DateField id="dateChooser" textFieldClass="mx.core.UIFTETextField" textInputClass="mx.controls.MXFTETextInput" width="100" height="24" dateChooserStyleName="dateChooserDark" labelFunction="getDateLabel" />
 			</s:HGroup>
 			
-			<s:Image id="navigateNext" source="@Embed('/images/arrowRight.png')" click="navigate(1)" buttonMode="true" enabled="{dateChooser.selectedDate.date &lt; today.date}" toolTip="{navigateNext.enabled?'':'Future intakes cannot be recorded.'}" />
+			<s:Image id="navigateNext" source="@Embed('/images/arrowRight.png')" click="navigate(1)" buttonMode="true" toolTip="{navigateNext.enabled?'':'Future intakes cannot be recorded.'}" />
 			
 		</s:HGroup>
 		

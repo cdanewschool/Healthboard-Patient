@@ -71,6 +71,8 @@
 									
 									import util.DateUtil;
 									
+									[Bindable] public var item:Object;
+									
 									override public function set data(value:Object):void 
 									{
 										super.data = value;
@@ -79,6 +81,8 @@
 										{
 											chart.dataProvider = value.chart[0].data;
 										}
+										
+										item = data && data.chart && data.chart.length ? data.chart[0].data[data.chart[0].data.length - 1] : null;
 									}
 									
 									private function setState():void
@@ -102,11 +106,11 @@
 									private function chartRolloutEventHandler(event:ChartItemEvent):void 
 									{
 										//lblTemperature.width = 40;
-										lblWeight.text = lblBloodPressure1.text = lblHeartRate.text = lblRespiratory.text = lblTemperature.text = data.chart[0].data[data.chart[0].data.length - 1].value;
-										lblBloodPressure2.text = data.chart[0].data[data.chart[0].data.length - 1].value2;
-										lblHeightFeet.text = String(Math.floor(data.chart[0].data[data.chart[0].data.length - 1].value / 12));
-										lblHeightInches.text = String(data.chart[0].data[data.chart[0].data.length - 1].value % 12);
-										//lblDate.text = DateUtil.formatDateFromString(data.chart[0].data[data.chart[0].data.length - 1].date);
+										lblWeight.text = lblBloodPressure1.text = lblHeartRate.text = lblRespiratory.text = lblTemperature.text = item.value;
+										lblBloodPressure2.text = item.value2;
+										lblHeightFeet.text = String(Math.floor(item.value / 12));
+										lblHeightInches.text = String(item.value % 12);
+										//lblDate.text = DateUtil.formatDateFromString(item.date);
 										myLineSeries.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.chart.MyCircleItemRenderer));
 										myLineSeries2.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.chart.MyCircleItemRenderer));
 									}
@@ -136,7 +140,7 @@
 							
 							<s:HGroup width="140" gap="-2">
 								<mx:LinkButton icon.expanded="@Embed(source='/images/smallArrowGray.png')" icon.collapsed="@Embed(source='/images/smallArrowCollapsedGray.png')" horizontalGap="10" id="btnVital" label="{data.vital}" fontSize="12" fontWeight="bold" toggle="true" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" click="{if(this.currentState=='expanded') {this.currentState = 'collapsed'; outerDocument.collapsedPixels++;} else {this.currentState = 'expanded'; outerDocument.collapsedPixels--;}}" />
-								<mx:Label text="{'(Last: ' + DateUtil.formatDateFromString(data.chart[0].data[data.chart[0].data.length - 1].date) + ')'}" fontSize="12" color="0x868686" paddingTop="1" />
+								<mx:Label text="{'(Last: ' + DateUtil.formatDateFromString(item.date) + ')'}" fontSize="12" color="0x868686" paddingTop="1" />
 							</s:HGroup>
 							
 							<s:Group includeIn="expanded"><!--includeInLayout="{this.currentState == 'expanded'}" visible="{this.currentState == 'expanded'}"-->
@@ -213,42 +217,42 @@
 									
 									<s:VGroup includeInLayout="{data.vital == 'Weight'}" visible="{data.vital == 'Weight'}" gap="-3">
 										<s:HGroup verticalAlign="baseline" gap="4">
-											<s:Label id="lblWeight" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+											<s:Label id="lblWeight" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value}" />
 											<s:Label fontSize="12" text="pounds" />
 										</s:HGroup>
 									</s:VGroup>
 									
 									<s:HGroup includeInLayout="{data.vital == 'Blood pressure'}" visible="{data.vital == 'Blood pressure'}" verticalAlign="baseline" gap="0">
-										<s:Label id="lblBloodPressure1" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+										<s:Label id="lblBloodPressure1" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value}" />
 										<s:Label fontSize="24" text="/" color="0xFFFFFF" fontWeight="bold" />
-										<s:Label id="lblBloodPressure2" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value2}" />
+										<s:Label id="lblBloodPressure2" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value2}" />
 										<s:Label fontSize="12" text="mmHg" paddingLeft="3" />
 									</s:HGroup>
 									
 									<s:HGroup includeInLayout="{data.vital == 'Heart rate'}" visible="{data.vital == 'Heart rate'}" verticalAlign="baseline" gap="4">
-										<s:Label id="lblHeartRate" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+										<s:Label id="lblHeartRate" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value}" />
 										<s:Label fontSize="12" text="beats / minute" />
 									</s:HGroup>
 									
 									<s:HGroup includeInLayout="{data.vital == 'Respiratory'}" visible="{data.vital == 'Respiratory'}" verticalAlign="baseline" gap="4">
-										<s:Label id="lblRespiratory" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+										<s:Label id="lblRespiratory" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value}" />
 										<s:Label fontSize="12" text="breaths / minute" />
 									</s:HGroup>
 									
 									<s:HGroup includeInLayout="{data.vital == 'Temperature'}" visible="{data.vital == 'Temperature'}" verticalAlign="baseline" gap="1">
-										<s:Label id="lblTemperature" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+										<s:Label id="lblTemperature" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value}" />
 										<s:Label fontSize="24" text="°" />
 										<s:Label fontSize="12" text="Fahrenheit" />
 									</s:HGroup>
 									
 									<s:HGroup includeInLayout="{data.vital == 'Height'}" visible="{data.vital == 'Height'}" verticalAlign="baseline" gap="4">
-										<s:Label id="lblHeightFeet" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{Math.floor(data.chart[0].data[data.chart[0].data.length - 1].value / 12)}" />
+										<s:Label id="lblHeightFeet" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{Math.floor(item.value / 12)}" />
 										<s:Label fontSize="12" text="feet" />
-										<s:Label id="lblHeightInches" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{data.chart[0].data[data.chart[0].data.length - 1].value % 12}" />
+										<s:Label id="lblHeightInches" fontSize="24" fontWeight="bold" color="0xFBB03B" text="{item.value % 12}" />
 										<s:Label fontSize="12" text="inches" />
 									</s:HGroup>
 									
-									<!--<s:Label id="lblDate" includeInLayout="{this.currentState == 'expanded'}" visible="{this.currentState == 'expanded'}" text="{DateUtil.formatDateFromString(data.chart[0].data[data.chart[0].data.length - 1].date)}" fontSize="13" fontStyle="italic" color="0xCCCCCC" />-->
+									<!--<s:Label id="lblDate" includeInLayout="{this.currentState == 'expanded'}" visible="{this.currentState == 'expanded'}" text="{DateUtil.formatDateFromString(item.date)}" fontSize="13" fontStyle="italic" color="0xCCCCCC" />-->
 								</s:VGroup>
 							</s:HGroup>
 							

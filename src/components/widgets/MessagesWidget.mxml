@@ -11,6 +11,8 @@
 			import ASclasses.Constants;
 			
 			import events.ApplicationEvent;
+			
+			[Bindable] private var rowCount:int = 4;
 		]]>
 	</fx:Script>
 	
@@ -41,7 +43,7 @@
 		selectable="false"
 		headerHeight="0"
 		borderVisible="false" verticalGridLines="false" horizontalGridLines="false" horizontalSeparatorSkin="{null}" alternatingItemColors="[0x3C3C3B,0x3C3C3B]"
-		horizontalScrollPolicy="off" verticalScrollPolicy="off" rowCount="4" rowHeight="18">
+		horizontalScrollPolicy="off" verticalScrollPolicy="off" rowCount="{rowCount}" rowHeight="18">
 		
 		<mx:columns>
 			<mx:DataGridColumn dataField="correspondent">
@@ -58,8 +60,8 @@
 							</fx:Script>
 							
 							<mx:HBox width="11" paddingTop="6">
-								<s:Image source="@Embed('/images/messagesUrgentSmall.png')" toolTip="Urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Urgent'}" />
-								<s:Image source="@Embed('/images/messagesSomewhatUrgentSmall.png')" toolTip="Somewhat urgent" visible="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" includeInLayout="{data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'}" />
+								<s:Image id="urgent" source="@Embed('/images/messagesUrgentSmall.png')" toolTip="Urgent" creationComplete="urgent.visible=data.messages[data.messages.length - 1].urgency == 'Urgent'" includeInLayout="{urgent.visible}" />
+								<s:Image id="somewhatUrgent" source="@Embed('/images/messagesSomewhatUrgentSmall.png')" toolTip="Somewhat urgent" creationComplete="somewhatUrgent.visible=data.messages[data.messages.length - 1].urgency == 'Somewhat urgent'" includeInLayout="{somewhatUrgent.visible}" />
 							</mx:HBox>
 							
 							<s:Label text="{outerDocument.controller.displayTime(data.date, 'short')}" fontSize="12" width="62" color="0x868686" paddingTop="6" />
@@ -73,7 +75,7 @@
 	</mx:DataGrid>
 	
 	<s:HGroup paddingLeft="20" paddingTop="-6" gap="2">
-		<s:Label fontSize="12" color="0x868686" text="{'...plus ' + (model.messagesToDisplay.length - datagrid.rowCount) + ' more ' + (model.messagesToDisplay.length - datagrid.rowCount == 1 ? 'message.' : 'messages.')}" visible="{model.messagesToDisplay.length > datagrid.rowCount}" includeInLayout="{model.messagesToDisplay.length > 4}" paddingTop="6" />
+		<s:Label fontSize="12" color="0x868686" text='{...plus ' + (model.messagesToDisplay.length - rowCount) + ' more ' + (model.messagesToDisplay.length - rowCount == 1 ? 'message.' : 'messages.')}" visible="{model.messagesToDisplay.length > rowCount}" includeInLayout="{model.messagesToDisplay.length > rowCount}" paddingTop="6" />
 		<mx:LinkButton id="btnWidgetAllMessages" label="View All »" fontSize="12" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnWidgetAllMessages.styleName='linkBtnUnderline';}" rollOut="btnWidgetAllMessages.styleName='linkBtn';" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MESSAGES ) );" paddingLeft="-3" />
 	</s:HGroup>
 	

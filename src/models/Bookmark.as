@@ -2,6 +2,7 @@ package models
 {
 	import flash.utils.describeType;
 
+	[Bindable]
 	public class Bookmark
 	{
 		public var index:int;

@@ -149,6 +149,8 @@
 															
 															[Bindable] public var chartStyles:ChartStyles = AppProperties.getInstance().controller.model.chartStyles;
 															
+															[Bindable] public var item:Object;
+															
 															override public function set data(value:Object):void
 															{
 																super.data = value;
@@ -157,6 +159,8 @@
 																{
 																	chart.dataProvider = value.chart[0].data;
 																}
+																
+																item = data && data.chart && data.chart.length ? data.chart[0].data[data.chart[0].data.length - 1] : null;
 															}	
 															
 															private function chartRolloverEventHandler(event:ChartItemEvent):void 
@@ -169,8 +173,8 @@
 															
 															private function chartRolloutEventHandler(event:ChartItemEvent):void 
 															{
-																lblMinutes.text = data.chart[0].data[data.chart[0].data.length - 1].value;
-																lblMiles.text = data.chart[0].data[data.chart[0].data.length - 1].miles;
+																lblMinutes.text = item.value;
+																lblMiles.text = item.miles;
 																
 																myLineSeries.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.chart.MyCircleItemRendererExercise)); 
 															}
@@ -229,12 +233,12 @@
 													<s:VGroup fontSize="12" paddingLeft="10" gap="3">
 														
 														<s:HGroup gap="3">
-															<s:Label id="lblMinutes" color="0xFBB03B" fontWeight="bold" text="{data.chart[0].data[data.chart[0].data.length - 1].value}" />
+															<s:Label id="lblMinutes" color="0xFBB03B" fontWeight="bold" creationComplete="item ? lblMinutes.text=item.value: ''" />
 															<s:Label text="minutes" color="0xFFFFFF" />
 														</s:HGroup>
 														
 														<s:HGroup visible="{data.measure == 'Run / Walk'}" includeInLayout="{data.measure == 'Run / Walk'}" gap="3">
-															<s:Label id="lblMiles" color="0xFBB03B" fontWeight="bold" text="{data.chart[0].data[data.chart[0].data.length - 1].miles}" />
+															<s:Label id="lblMiles" color="0xFBB03B" fontWeight="bold" creationComplete="item ? lblMiles.text=item.miles: ''" />
 															<s:Label text="miles" color="0xFFFFFF" />
 														</s:HGroup>
 														
