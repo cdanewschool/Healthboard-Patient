@@ -4,8 +4,6 @@
 .gitignore.swp
 .project
 .settings
-/bin-debug
-/bin-release
-/html-template
-/libs
-/linked-swc
+bin-debug/
+bin-release/
+html-template/
