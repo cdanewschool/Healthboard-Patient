@@ -216,16 +216,16 @@
 		<!-- HOME / BUTTON VIEW -->
 		<s:HGroup id="home" paddingTop="19" includeIn="loggedIn">
 			<s:TileGroup id="buttonsTileGroup" requestedColumnCount="5" horizontalGap="42" verticalGap="46" clipAndEnableScrolling="true">
-				<mx:Button id="buttonMessages" upSkin="@Embed('images/messages.png')" overSkin="@Embed('images/messages_over.png')" downSkin="@Embed('images/messages_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MESSAGES ) )" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
-				<mx:Button id="buttonAppointments" upSkin="@Embed('images/appointments.png')" overSkin="@Embed('images/appointments_over.png')" downSkin="@Embed('images/appointments_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_APPOINTMENTS ) )" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
-				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('images/medicalRecords.png')" overSkin="@Embed('images/medicalRecords_over.png')" downSkin="@Embed('images/medicalRecords_down.png')" click="controller.loadData( Constants.MEDICAL_RECORDS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_MEDICAL_RECORDS ) )" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
-				<mx:Button id="buttonImmunizations" upSkin="@Embed('images/immunizations.png')" overSkin="@Embed('images/immunizations_over.png')" downSkin="@Embed('images/immunizations_down.png')" click="controller.loadData( Constants.IMMUNIZATIONS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_IMMUNIZATIONS ) )" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
-				<mx:Button id="buttonVitalSigns" upSkin="@Embed('images/vitalSigns.png')" overSkin="@Embed('images/vitalSigns_over.png')" downSkin="@Embed('images/vitalSigns_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_VITAL_SIGNS ) )" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
-				<mx:Button id="buttonExercise" upSkin="@Embed('images/exercise.png')" overSkin="@Embed('images/exercise_over.png')" downSkin="@Embed('images/exercise_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_EXERCISE ) )" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
-				<mx:Button id="buttonNutrition" upSkin="@Embed('images/nutrition.png')" overSkin="@Embed('images/nutrition_over.png')" downSkin="@Embed('images/nutrition_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_NUTRITION ) )" mouseMove="buttonViewMoveHandler(event,imgNutrition)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonNutrition)" />
-				<mx:Button id="buttonEducationalResources" upSkin="@Embed('images/educationalResources.png')" overSkin="@Embed('images/educationalResources_over.png')" downSkin="@Embed('images/educationalResources_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_EDUCATIONAL_RESOURCES ) )" mouseMove="buttonViewMoveHandler(event,imgEducationalResources)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonEducationalResources)" />
-				<mx:Button id="buttonCommunityGroup" upSkin="@Embed('images/communityGroup.png')" overSkin="@Embed('images/communityGroup_over.png')" downSkin="@Embed('images/communityGroup_down.png')" mouseMove="buttonViewMoveHandler(event,imgCommunityGroup)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonCommunityGroup)" />
-				<mx:Button id="buttonMedications" upSkin="@Embed('images/medications.png')" overSkin="@Embed('images/medications_over.png')" downSkin="@Embed('images/medications_down.png')" click="controller.loadData( Constants.MEDICATIONS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MEDICATIONS ) )" mouseMove="buttonViewMoveHandler(event,imgMedications)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedications)" />
+				<mx:Button id="buttonMessages" upSkin="@Embed('/images/messages.png')" overSkin="@Embed('/images/messages_over.png')" downSkin="@Embed('/images/messages_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MESSAGES ) )" mouseMove="buttonViewMoveHandler(event,imgMessages)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMessages)" />
+				<mx:Button id="buttonAppointments" upSkin="@Embed('/images/appointments.png')" overSkin="@Embed('/images/appointments_over.png')" downSkin="@Embed('/images/appointments_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_APPOINTMENTS ) )" mouseMove="buttonViewMoveHandler(event,imgAppointments)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonAppointments)" />
+				<mx:Button id="buttonMedicalRecords" upSkin="@Embed('/images/medicalRecords.png')" overSkin="@Embed('/images/medicalRecords_over.png')" downSkin="@Embed('/images/medicalRecords_down.png')" click="controller.loadData( Constants.MEDICAL_RECORDS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_MEDICAL_RECORDS ) )" mouseMove="buttonViewMoveHandler(event,imgMedicalRecords)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedicalRecords)" />
+				<mx:Button id="buttonImmunizations" upSkin="@Embed('/images/immunizations.png')" overSkin="@Embed('/images/immunizations_over.png')" downSkin="@Embed('/images/immunizations_down.png')" click="controller.loadData( Constants.IMMUNIZATIONS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_IMMUNIZATIONS ) )" mouseMove="buttonViewMoveHandler(event,imgImmunizations)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonImmunizations)" />
+				<mx:Button id="buttonVitalSigns" upSkin="@Embed('/images/vitalSigns.png')" overSkin="@Embed('/images/vitalSigns_over.png')" downSkin="@Embed('/images/vitalSigns_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_VITAL_SIGNS ) )" mouseMove="buttonViewMoveHandler(event,imgVitalSigns)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonVitalSigns)" />
+				<mx:Button id="buttonExercise" upSkin="@Embed('/images/exercise.png')" overSkin="@Embed('/images/exercise_over.png')" downSkin="@Embed('/images/exercise_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false,Constants.MODULE_EXERCISE ) )" mouseMove="buttonViewMoveHandler(event,imgExercise)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonExercise)" />
+				<mx:Button id="buttonNutrition" upSkin="@Embed('/images/nutrition.png')" overSkin="@Embed('/images/nutrition_over.png')" downSkin="@Embed('/images/nutrition_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_NUTRITION ) )" mouseMove="buttonViewMoveHandler(event,imgNutrition)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonNutrition)" />
+				<mx:Button id="buttonEducationalResources" upSkin="@Embed('/images/educationalResources.png')" overSkin="@Embed('/images/educationalResources_over.png')" downSkin="@Embed('/images/educationalResources_down.png')" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_EDUCATIONAL_RESOURCES ) )" mouseMove="buttonViewMoveHandler(event,imgEducationalResources)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonEducationalResources)" />
+				<mx:Button id="buttonCommunityGroup" upSkin="@Embed('/images/communityGroup.png')" overSkin="@Embed('/images/communityGroup_over.png')" downSkin="@Embed('/images/communityGroup_down.png')" mouseMove="buttonViewMoveHandler(event,imgCommunityGroup)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonCommunityGroup)" />
+				<mx:Button id="buttonMedications" upSkin="@Embed('/images/medications.png')" overSkin="@Embed('/images/medications_over.png')" downSkin="@Embed('/images/medications_down.png')" click="controller.loadData( Constants.MEDICATIONS ); dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MEDICATIONS ) )" mouseMove="buttonViewMoveHandler(event,imgMedications)" dragEnter="buttonViewDragEnterHandler(event)" dragDrop="buttonViewDragDropHandler(event,buttonMedications)" />
 			</s:TileGroup>
 		</s:HGroup>
 		
@@ -334,12 +334,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetMessagesOpen}" includeInLayout="{widgetMessagesOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryMessages.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryMessages.png')" />
 									<s:Label text="Messages" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetMessagesOpen}" includeInLayout="{!widgetMessagesOpen}" horizontalAlign="center" gap="4" click="{widgetMessagesOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryMessages.png')" overSkin="@Embed('images/widgetLibraryMessagesOver.png')" downSkin="@Embed('images/widgetLibraryMessagesDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryMessages.png')" overSkin="@Embed('/images/widgetLibraryMessagesOver.png')" downSkin="@Embed('/images/widgetLibraryMessagesDown.png')" />
 									<s:Label text="Messages" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 							</s:HGroup>
@@ -347,12 +347,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryAppointments.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryAppointments.png')" />
 									<s:Label text="Appointments" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetAppointmentsOpen}" includeInLayout="{!widgetAppointmentsOpen}" horizontalAlign="center" gap="4" click="{widgetAppointmentsOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryAppointments.png')" overSkin="@Embed('images/widgetLibraryAppointmentsOver.png')" downSkin="@Embed('images/widgetLibraryAppointmentsDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryAppointments.png')" overSkin="@Embed('/images/widgetLibraryAppointmentsOver.png')" downSkin="@Embed('/images/widgetLibraryAppointmentsDown.png')" />
 									<s:Label text="Appointments" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -361,12 +361,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetMedicalRecordsOpen}" includeInLayout="{widgetMedicalRecordsOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryMedicalRecords.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryMedicalRecords.png')" />
 									<s:Label text="Medical Records" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetMedicalRecordsOpen}" includeInLayout="{!widgetMedicalRecordsOpen}" horizontalAlign="center" gap="4" click="{widgetMedicalRecordsOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryMedicalRecords.png')" overSkin="@Embed('images/widgetLibraryMedicalRecordsOver.png')" downSkin="@Embed('images/widgetLibraryMedicalRecordsDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryMedicalRecords.png')" overSkin="@Embed('/images/widgetLibraryMedicalRecordsOver.png')" downSkin="@Embed('/images/widgetLibraryMedicalRecordsDown.png')" />
 									<s:Label text="Medical Records" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -375,12 +375,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetImmunizationsOpen}" includeInLayout="{widgetImmunizationsOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryImmunizations.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryImmunizations.png')" />
 									<s:Label text="Immunizations" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetImmunizationsOpen}" includeInLayout="{!widgetImmunizationsOpen}" horizontalAlign="center" gap="4" click="{widgetImmunizationsOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryImmunizations.png')" overSkin="@Embed('images/widgetLibraryImmunizationsOver.png')" downSkin="@Embed('images/widgetLibraryImmunizationsDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryImmunizations.png')" overSkin="@Embed('/images/widgetLibraryImmunizationsOver.png')" downSkin="@Embed('/images/widgetLibraryImmunizationsDown.png')" />
 									<s:Label text="Immunizations" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -389,12 +389,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetVitalSignsOpen}" includeInLayout="{widgetVitalSignsOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryVitalSigns.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryVitalSigns.png')" />
 									<s:Label text="Vital Signs" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetVitalSignsOpen}" includeInLayout="{!widgetVitalSignsOpen}" horizontalAlign="center" gap="4" click="{widgetVitalSignsOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryVitalSigns.png')" overSkin="@Embed('images/widgetLibraryVitalSignsOver.png')" downSkin="@Embed('images/widgetLibraryVitalSignsDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryVitalSigns.png')" overSkin="@Embed('/images/widgetLibraryVitalSignsOver.png')" downSkin="@Embed('/images/widgetLibraryVitalSignsDown.png')" />
 									<s:Label text="Vital Signs" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -403,12 +403,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetEducationalResourcesOpen}" includeInLayout="{widgetEducationalResourcesOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryEducationalResources.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryEducationalResources.png')" />
 									<s:Label text="{'Educational\nResources'}" textAlign="center" lineHeight="11" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetEducationalResourcesOpen}" includeInLayout="{!widgetEducationalResourcesOpen}" horizontalAlign="center" gap="4" click="{widgetEducationalResourcesOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryEducationalResources.png')" overSkin="@Embed('images/widgetLibraryEducationalResourcesOver.png')" downSkin="@Embed('images/widgetLibraryEducationalResourcesDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryEducationalResources.png')" overSkin="@Embed('/images/widgetLibraryEducationalResourcesOver.png')" downSkin="@Embed('/images/widgetLibraryEducationalResourcesDown.png')" />
 									<s:Label text="{'Educational\nResources'}" textAlign="center" lineHeight="11" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -417,12 +417,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetExerciseOpen}" includeInLayout="{widgetExerciseOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryExercise.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryExercise.png')" />
 									<s:Label text="Exercise" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetExerciseOpen}" includeInLayout="{!widgetExerciseOpen}" horizontalAlign="center" gap="4" click="{widgetExerciseOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryExercise.png')" overSkin="@Embed('images/widgetLibraryExerciseOver.png')" downSkin="@Embed('images/widgetLibraryExerciseDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryExercise.png')" overSkin="@Embed('/images/widgetLibraryExerciseOver.png')" downSkin="@Embed('/images/widgetLibraryExerciseDown.png')" />
 									<s:Label text="Exercise" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -431,12 +431,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetMedicationsOpen}" includeInLayout="{widgetMedicationsOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryMedications.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryMedications.png')" />
 									<s:Label text="Medications" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetMedicationsOpen}" includeInLayout="{!widgetMedicationsOpen}" horizontalAlign="center" gap="4" click="{widgetMedicationsOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryMedications.png')" overSkin="@Embed('images/widgetLibraryMedicationsOver.png')" downSkin="@Embed('images/widgetLibraryMedicationsDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryMedications.png')" overSkin="@Embed('/images/widgetLibraryMedicationsOver.png')" downSkin="@Embed('/images/widgetLibraryMedicationsDown.png')" />
 									<s:Label text="Medications" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -445,12 +445,12 @@
 							<s:HGroup>
 								
 								<s:VGroup visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" horizontalAlign="center" gap="4">
-									<s:Image source="@Embed('images/widgetLibraryNutrition.png')" />
+									<s:Image source="@Embed('/images/widgetLibraryNutrition.png')" />
 									<s:Label text="Nutrition" fontSize="11" color="0xFFFFFF" />
 								</s:VGroup>
 								
 								<s:VGroup visible="{!widgetNutritionOpen}" includeInLayout="{!widgetNutritionOpen}" horizontalAlign="center" gap="4" click="{widgetNutritionOpen = true}" buttonMode="true">
-									<mx:Button upSkin="@Embed('images/widgetLibraryNutrition.png')" overSkin="@Embed('images/widgetLibraryNutritionOver.png')" downSkin="@Embed('images/widgetLibraryNutritionDown.png')" />
+									<mx:Button upSkin="@Embed('/images/widgetLibraryNutrition.png')" overSkin="@Embed('/images/widgetLibraryNutritionOver.png')" downSkin="@Embed('/images/widgetLibraryNutritionDown.png')" />
 									<s:Label text="Nutrition" fontSize="11" color="0x666666" fontStyle="italic" />
 								</s:VGroup>
 								
@@ -474,7 +474,7 @@
 		<mx:ViewStack id="vsMessages">
 		<s:NavigatorContent label="Messages">
 		<s:TitleWindow id="messages" skinClass="skins.general.myHeaderlessTitleWindow" title="Messages" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenMessages.jpg')" />
+		<mx:Image source="@Embed('/images/screenMessages.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -486,7 +486,7 @@
 		<mx:ViewStack id="vsMedicalRecords">
 		<s:NavigatorContent label="Medical Records">
 		<s:TitleWindow id="medicalRecords" skinClass="skins.general.myHeaderlessTitleWindow" title="Medical Records" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenMedicalRecords.jpg')" />
+		<mx:Image source="@Embed('/images/screenMedicalRecords.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -500,7 +500,7 @@
 		<mx:ViewStack id="vsAppointments">
 		<s:NavigatorContent label="Appointments (2)">
 		<s:TitleWindow id="appointments" skinClass="skins.general.myHeaderlessTitleWindow" title="Appointments" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenAppointments.jpg')" />
+		<mx:Image source="@Embed('/images/screenAppointments.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -512,7 +512,7 @@
 		<mx:ViewStack id="vsExercise">
 		<s:NavigatorContent label="Exercise">
 		<s:TitleWindow id="exercise" skinClass="skins.general.myHeaderlessTitleWindow" title="Exercise" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenExercise.jpg')" />
+		<mx:Image source="@Embed('/images/screenExercise.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -524,7 +524,7 @@
 		<mx:ViewStack id="vsVitals">
 		<s:NavigatorContent label="Vitals">
 		<s:TitleWindow id="vitals" skinClass="skins.general.myHeaderlessTitleWindow" title="Vitals" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenVitals.jpg')" />
+		<mx:Image source="@Embed('/images/screenVitals.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -538,7 +538,7 @@
 		<mx:ViewStack id="vsNutrition">
 		<s:NavigatorContent label="Nutrition">
 		<s:TitleWindow id="nutrition" skinClass="skins.general.myHeaderlessTitleWindow" title="Nutrition" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenNutrition.jpg')" />
+		<mx:Image source="@Embed('/images/screenNutrition.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>
@@ -550,7 +550,7 @@
 		<mx:ViewStack id="vsImmunization">
 		<s:NavigatorContent label="Immunization (1)">
 		<s:TitleWindow id="immunization" skinClass="skins.general.myHeaderlessTitleWindow" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('images/screenImmunization.jpg')" />
+		<mx:Image source="@Embed('/images/screenImmunization.jpg')" />
 		</s:TitleWindow>
 		</s:NavigatorContent>
 		</mx:ViewStack>

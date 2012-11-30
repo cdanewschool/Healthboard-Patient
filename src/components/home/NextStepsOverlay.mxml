@@ -199,8 +199,8 @@
 									import enum.UrgencyType;
 								]]>
 							</fx:Script>
-							<s:Image source="@Embed('images/messagesUrgentSmall.png')" toolTip="Urgent" visible="{data.urgency == UrgencyType.URGENT}" includeInLayout="{data.urgency == UrgencyType.URGENT}" />
-							<s:Image source="@Embed('images/messagesSomewhatUrgentSmall.png')" toolTip="Somewhat urgent" visible="{data.urgency == UrgencyType.SOMEWHAT_URGENT}" includeInLayout="{data.urgency == UrgencyType.SOMEWHAT_URGENT}" />
+							<s:Image source="@Embed('/images/messagesUrgentSmall.png')" toolTip="Urgent" visible="{data.urgency == UrgencyType.URGENT}" includeInLayout="{data.urgency == UrgencyType.URGENT}" />
+							<s:Image source="@Embed('/images/messagesSomewhatUrgentSmall.png')" toolTip="Somewhat urgent" visible="{data.urgency == UrgencyType.SOMEWHAT_URGENT}" includeInLayout="{data.urgency == UrgencyType.SOMEWHAT_URGENT}" />
 						</mx:HBox>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -219,9 +219,9 @@
 								]]>
 							</fx:Script>
 							<s:Label text="{data.removed ? 'Declined' : (data.completed ? 'Complete' : 'In Progress')}" color="{data.status == 'inactive' ? 0x999999 : 0xAEDEE4}" fontFamily="myMyriad" />
-							<s:Image source="@Embed('images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(event,NextStep(data))" toolTip="Mark as complete" visible="{!data.completed &amp;&amp; !data.removed}" includeInLayout="{!data.completed &amp;&amp; !data.removed}" />
-							<s:Image source="@Embed('images/checkmarkNextSteps.png')" click="outerDocument.markAsComplete(event,NextStep(data),false)" toolTip="Unmark as complete" visible="{data.completed &amp;&amp; !data.removed}" includeInLayout="{data.completed &amp;&amp; !data.removed}" />
-							<s:Image source="@Embed('images/btnCloseTiny.png')" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(event,NextStep(data))" toolTip="Mark as declined" visible="{!data.completed}" includeInLayout="{!data.completed}" enabled="{!data.removed}" />
+							<s:Image source="@Embed('/images/checkmarkNextStepsWhite.png')" alpha=".5" buttonMode="true" click="outerDocument.markAsComplete(event,NextStep(data))" toolTip="Mark as complete" visible="{!data.completed &amp;&amp; !data.removed}" includeInLayout="{!data.completed &amp;&amp; !data.removed}" />
+							<s:Image source="@Embed('/images/checkmarkNextSteps.png')" click="outerDocument.markAsComplete(event,NextStep(data),false)" toolTip="Unmark as complete" visible="{data.completed &amp;&amp; !data.removed}" includeInLayout="{data.completed &amp;&amp; !data.removed}" />
+							<s:Image source="@Embed('/images/btnCloseTiny.png')" alpha=".6" buttonMode="true" click="outerDocument.markAsRemoved(event,NextStep(data))" toolTip="Mark as declined" visible="{!data.completed}" includeInLayout="{!data.completed}" enabled="{!data.removed}" />
 						</mx:HBox>
 					</fx:Component>
 				</mx:itemRenderer>

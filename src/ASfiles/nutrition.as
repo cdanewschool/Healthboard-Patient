@@ -53,45 +53,45 @@ public var arrSavedMeals:Array = new Array(
 [Bindable] private var mealType:String;
 [Bindable] private var glassesTaken:uint = 0;
 
-[Bindable] [Embed("images/vitalSignsCommentPatient.png")] public var iconComment:Class;
+[Bindable] [Embed("/images/vitalSignsCommentPatient.png")] public var iconComment:Class;
 
-[Bindable] [Embed("images/nutritionPlateEmpty.png")] public var plateEmpty:Class;
-[Bindable] [Embed("images/nutritionPlateFull.png")] public var plateFull:Class;
-[Bindable] [Embed("images/nutritionPlatePartial.png")] public var platePartial:Class;
-[Bindable] [Embed("images/nutritionPlateAlternative.png")] public var plateAlternative:Class;
-[Bindable] [Embed("images/nutritionSodiumEmpty.png")] public var sodiumEmpty:Class;
-[Bindable] [Embed("images/nutritionSodiumPartial.png")] public var sodiumPartial:Class;
-//[Bindable] [Embed("images/nutritionSodiumFull.png")] public var sodiumFull:Class;
-[Bindable] [Embed("images/nutritionFatsOilsEmpty.png")] public var fatsOilsEmpty:Class;
-//[Bindable] [Embed("images/nutritionFatsOilsPartial.png")] public var fatsOilsPartial:Class;
-[Bindable] [Embed("images/nutritionSugarsEmpty.png")] public var sugarsEmpty:Class;
-[Bindable] [Embed("images/nutritionSugarsPartial.png")] public var sugarsPartial:Class;
-//[Bindable] [Embed("images/nutritionSugarsFull.png")] public var sugarsFull:Class;
-[Bindable] [Embed("images/nutritionAlcoholEmpty.png")] public var alcoholEmpty:Class;
-//[Bindable] [Embed("images/nutritionAlcoholFull.png")] public var alcoholFull:Class;
+[Bindable] [Embed("/images/nutritionPlateEmpty.png")] public var plateEmpty:Class;
+[Bindable] [Embed("/images/nutritionPlateFull.png")] public var plateFull:Class;
+[Bindable] [Embed("/images/nutritionPlatePartial.png")] public var platePartial:Class;
+[Bindable] [Embed("/images/nutritionPlateAlternative.png")] public var plateAlternative:Class;
+[Bindable] [Embed("/images/nutritionSodiumEmpty.png")] public var sodiumEmpty:Class;
+[Bindable] [Embed("/images/nutritionSodiumPartial.png")] public var sodiumPartial:Class;
+//[Bindable] [Embed("/images/nutritionSodiumFull.png")] public var sodiumFull:Class;
+[Bindable] [Embed("/images/nutritionFatsOilsEmpty.png")] public var fatsOilsEmpty:Class;
+//[Bindable] [Embed("/images/nutritionFatsOilsPartial.png")] public var fatsOilsPartial:Class;
+[Bindable] [Embed("/images/nutritionSugarsEmpty.png")] public var sugarsEmpty:Class;
+[Bindable] [Embed("/images/nutritionSugarsPartial.png")] public var sugarsPartial:Class;
+//[Bindable] [Embed("/images/nutritionSugarsFull.png")] public var sugarsFull:Class;
+[Bindable] [Embed("/images/nutritionAlcoholEmpty.png")] public var alcoholEmpty:Class;
+//[Bindable] [Embed("/images/nutritionAlcoholFull.png")] public var alcoholFull:Class;
 
 [Bindable] [Embed('images/nutritionFoodJournalEmpty.png')] public var bigPlateEmpty:Class;
 [Bindable] [Embed('images/nutritionFoodJournal.png')] public var bigPlatePartial:Class;
 [Bindable] [Embed('images/nutritionFoodJournalFull.png')] public var bigPlateFull:Class;
 [Bindable] [Embed('images/nutritionFoodJournalAlmostFull.png')] public var bigPlateAlmostFull:Class;
-[Bindable] [Embed("images/nutritionBigSodiumEmpty.png")] public var bigSodiumEmpty:Class;
-[Bindable] [Embed("images/nutritionBigSodiumPartial.png")] public var bigSodiumPartial:Class;
-[Bindable] [Embed("images/nutritionBigSodiumFull.png")] public var bigSodiumFull:Class;
-[Bindable] [Embed("images/nutritionBigSodiumFullRed.png")] public var bigSodiumFullRed:Class;
-[Bindable] [Embed("images/nutritionBigFatsOilsEmpty.png")] public var bigFatsOilsEmpty:Class;
-[Bindable] [Embed("images/nutritionBigFatsOilsPartial.png")] public var bigFatsOilsPartial:Class;
-[Bindable] [Embed("images/nutritionBigFatsOilsFull.png")] public var bigFatsOilsFull:Class;
-[Bindable] [Embed("images/nutritionBigAlcoholEmpty.png")] public var bigAlcoholEmpty:Class;
-[Bindable] [Embed("images/nutritionBigAlcoholPartial.png")] public var bigAlcoholPartial:Class;
-[Bindable] [Embed("images/nutritionBigAlcoholFull.png")] public var bigAlcoholFull:Class;
-[Bindable] [Embed("images/nutritionBigWaterEmpty.png")] public var bigWaterEmpty:Class;
-[Bindable] [Embed("images/nutritionBigWaterPartial.png")] public var bigWaterPartial:Class;
-[Bindable] [Embed("images/nutritionBigWaterFull.png")] public var bigWaterFull:Class;
-[Bindable] [Embed("images/nutritionBigWaterVeryFull.png")] public var bigWaterVeryFull:Class;
+[Bindable] [Embed("/images/nutritionBigSodiumEmpty.png")] public var bigSodiumEmpty:Class;
+[Bindable] [Embed("/images/nutritionBigSodiumPartial.png")] public var bigSodiumPartial:Class;
+[Bindable] [Embed("/images/nutritionBigSodiumFull.png")] public var bigSodiumFull:Class;
+[Bindable] [Embed("/images/nutritionBigSodiumFullRed.png")] public var bigSodiumFullRed:Class;
+[Bindable] [Embed("/images/nutritionBigFatsOilsEmpty.png")] public var bigFatsOilsEmpty:Class;
+[Bindable] [Embed("/images/nutritionBigFatsOilsPartial.png")] public var bigFatsOilsPartial:Class;
+[Bindable] [Embed("/images/nutritionBigFatsOilsFull.png")] public var bigFatsOilsFull:Class;
+[Bindable] [Embed("/images/nutritionBigAlcoholEmpty.png")] public var bigAlcoholEmpty:Class;
+[Bindable] [Embed("/images/nutritionBigAlcoholPartial.png")] public var bigAlcoholPartial:Class;
+[Bindable] [Embed("/images/nutritionBigAlcoholFull.png")] public var bigAlcoholFull:Class;
+[Bindable] [Embed("/images/nutritionBigWaterEmpty.png")] public var bigWaterEmpty:Class;
+[Bindable] [Embed("/images/nutritionBigWaterPartial.png")] public var bigWaterPartial:Class;
+[Bindable] [Embed("/images/nutritionBigWaterFull.png")] public var bigWaterFull:Class;
+[Bindable] [Embed("/images/nutritionBigWaterVeryFull.png")] public var bigWaterVeryFull:Class;
 
-[Bindable] [Embed("images/nutritionPlateEmptyWidget.png")] public var plateEmptyWidget:Class;
-//[Bindable] [Embed("images/nutritionPlateFullWidget.png")] public var plateFullWidget:Class;	//(moved to SHARED)
-[Bindable] [Embed("images/nutritionPlatePartialWidget.png")] public var platePartialWidget:Class;
+[Bindable] [Embed("/images/nutritionPlateEmptyWidget.png")] public var plateEmptyWidget:Class;
+//[Bindable] [Embed("/images/nutritionPlateFullWidget.png")] public var plateFullWidget:Class;	//(moved to SHARED)
+[Bindable] [Embed("/images/nutritionPlatePartialWidget.png")] public var platePartialWidget:Class;
 
 [Bindable] private var arrNutSummaryCalories:ArrayCollection = new ArrayCollection([
 	{type: "calories", calories: 0, goal: 1600, caloriesFromExtras: 0}

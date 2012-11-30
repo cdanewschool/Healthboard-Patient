@@ -88,16 +88,16 @@ var now:Date = new Date();
 fileReference.save(now.toString(), "timelog.txt");
 } */
 
-[Bindable] [Embed('images/messages.png')] private var imgMessages:Class;
-[Bindable] [Embed('images/appointments.png')] private var imgAppointments:Class;
-[Bindable] [Embed('images/medicalRecords.png')] private var imgMedicalRecords:Class;
-[Bindable] [Embed('images/immunizations.png')] private var imgImmunizations:Class;
-[Bindable] [Embed('images/vitalSigns.png')] private var imgVitalSigns:Class;
-[Bindable] [Embed('images/exercise.png')] private var imgExercise:Class;
-[Bindable] [Embed('images/nutrition.png')] private var imgNutrition:Class;
-[Bindable] [Embed('images/educationalResources.png')] private var imgEducationalResources:Class;
-[Bindable] [Embed('images/communityGroup.png')] private var imgCommunityGroup:Class;
-[Bindable] [Embed('images/medications.png')] private var imgMedications:Class;
+[Bindable] [Embed('/images/messages.png')] private var imgMessages:Class;
+[Bindable] [Embed('/images/appointments.png')] private var imgAppointments:Class;
+[Bindable] [Embed('/images/medicalRecords.png')] private var imgMedicalRecords:Class;
+[Bindable] [Embed('/images/immunizations.png')] private var imgImmunizations:Class;
+[Bindable] [Embed('/images/vitalSigns.png')] private var imgVitalSigns:Class;
+[Bindable] [Embed('/images/exercise.png')] private var imgExercise:Class;
+[Bindable] [Embed('/images/nutrition.png')] private var imgNutrition:Class;
+[Bindable] [Embed('/images/educationalResources.png')] private var imgEducationalResources:Class;
+[Bindable] [Embed('/images/communityGroup.png')] private var imgCommunityGroup:Class;
+[Bindable] [Embed('/images/medications.png')] private var imgMedications:Class;
 
 // Initializes the drag and drop operation.
 private function buttonViewMoveHandler(event:MouseEvent, rollOverImg:Class):void {
@@ -131,8 +131,8 @@ private function buttonViewDragDropHandler(event:DragEvent, target:mx.controls.B
 [Bindable] private var widgetExerciseOpen:Boolean = true;
 [Bindable] private var widgetMedicationsOpen:Boolean = true;
 [Bindable] private var widgetNutritionOpen:Boolean = true;
-[Bindable] [Embed("images/btnWidgetTriggerOpen.png")] public var widgetTriggerOpen:Class;
-[Bindable] [Embed("images/btnWidgetTriggerClose.png")] public var widgetTriggerClose:Class;
+[Bindable] [Embed("/images/btnWidgetTriggerOpen.png")] public var widgetTriggerOpen:Class;
+[Bindable] [Embed("/images/btnWidgetTriggerClose.png")] public var widgetTriggerClose:Class;
 
 public function falsifyWidget(widget:String):void {
 	if(widget == Constants.MODULE_MESSAGES) widgetMessagesOpen = false;

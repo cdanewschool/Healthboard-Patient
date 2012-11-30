@@ -47,7 +47,7 @@
 	
 	<s:HGroup paddingLeft="-4">
 		
-		<s:Image source="@Embed('images/ER3.png')" buttonMode="true" />
+		<s:Image source="@Embed('/images/ER3.png')" buttonMode="true" />
 		
 		<mx:LinkButton id="btnLoren" label="Lorem ipsum" paddingTop="-5" paddingLeft="-7" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnLoren.styleName='linkBtnUnderline';}" rollOut="btnLoren.styleName='linkBtn';" click="showModule();" />
 		

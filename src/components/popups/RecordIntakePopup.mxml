@@ -216,13 +216,13 @@
 		
 		<s:HGroup width="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
 			
-			<s:Image source="@Embed('images/arrowLeft.png')" click="navigate(-1)" buttonMode="true" />
+			<s:Image source="@Embed('/images/arrowLeft.png')" click="navigate(-1)" buttonMode="true" />
 			
 			<s:HGroup width="100%" horizontalAlign="center">
 				<mx:DateField id="dateChooser" textFieldClass="mx.core.UIFTETextField" textInputClass="mx.controls.MXFTETextInput" width="100" height="24" dateChooserStyleName="dateChooserDark" labelFunction="getDateLabel" />
 			</s:HGroup>
 			
-			<s:Image id="navigateNext" source="@Embed('images/arrowRight.png')" click="navigate(1)" buttonMode="true" enabled="{dateChooser.selectedDate.date &lt; today.date}" toolTip="{navigateNext.enabled?'':'Future intakes cannot be recorded.'}" />
+			<s:Image id="navigateNext" source="@Embed('/images/arrowRight.png')" click="navigate(1)" buttonMode="true" enabled="{dateChooser.selectedDate.date &lt; today.date}" toolTip="{navigateNext.enabled?'':'Future intakes cannot be recorded.'}" />
 			
 		</s:HGroup>
 		
@@ -280,7 +280,7 @@
 	<s:HGroup>
 		<s:VGroup horizontalAlign="right">
 			<s:Label text="Comments:" width="60" textAlign="right" styleName="black12" paddingTop="4" />
-			<s:Image source="@Embed('images/redWarning2.png')" visible="{isExplanationMissing}" toolTip="Required for overdose" />
+			<s:Image source="@Embed('/images/redWarning2.png')" visible="{isExplanationMissing}" toolTip="Required for overdose" />
 		</s:VGroup>
 		<s:TextArea id="comments" width="305" height="91" change="{if(!isMedAsNeeded) handleComment()}" />
 	</s:HGroup>
