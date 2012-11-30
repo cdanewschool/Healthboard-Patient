@@ -10,23 +10,21 @@
 			
 			import controllers.Controller;
 			
+			import enum.ViewModeType;
+			
 			import events.ApplicationEvent;
 			
+			import models.UserPreferences;
+			
 			import mx.managers.PopUpManager;
+			
+			[Bindable] public var preferences:UserPreferences;
 			
 			[Bindable] private var controller:Controller = AppProperties.getInstance().controller;
 			
 			private function saveSettings():void 
 			{
-				controller.model.viewMode = (viewButton.selected) ? Constants.STATE_LOGGED_IN : Constants.STATE_WIDGET_VIEW;
-				
-				var currentState:String = AppProperties.getInstance().controller.application.currentState;
-				
-				if( currentState == Constants.STATE_LOGGED_IN || currentState == Constants.STATE_WIDGET_VIEW )
-				{
-					var event:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, AppProperties.getInstance().controller.model.viewMode );
-					AppProperties.getInstance().controller.application.dispatchEvent( event );
-				}
+				AppProperties.getInstance().controller.savePreferences( preferences );
 				
 				var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SHOW_STATUS, true );
 				evt.data = "Your preferences have been saved";
@@ -88,14 +86,14 @@
 				<s:Label text="View mode" fontStyle="italic" color="0x4D4D4D" />
 				<s:HGroup gap="30">
 					<s:VGroup horizontalAlign="center" gap="0">
-						<s:Image source="@Embed(source='images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="{viewButton.selected = true;}" />
+						<s:Image source="@Embed(source='/images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="{viewButton.selected = true;}" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Button View" click="{viewButton.selected = true;}" />
-						<s:RadioButton groupName="viewMode" id="viewButton" selected="{controller.model.viewMode != Constants.STATE_WIDGET_VIEW}" />
+						<s:RadioButton groupName="viewMode" id="viewButton" selected="{preferences.viewMode == ViewModeType.BUTTON}" click="preferences.viewMode = ViewModeType.BUTTON"  />
 					</s:VGroup>
 					<s:VGroup horizontalAlign="center" gap="0">
-						<s:Image source="@Embed(source='images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
+						<s:Image source="@Embed(source='/images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Advanced View" click="{viewWidget.selected = true;}" />
-						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{controller.model.viewMode == Constants.STATE_WIDGET_VIEW}" />
+						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{preferences.viewMode == ViewModeType.WIDGET}" click="preferences.viewMode = ViewModeType.WIDGET"  />
 					</s:VGroup>
 				</s:HGroup>
 				<s:Label text="Select view mode for homepage" styleName="smallNote" paddingTop="78" />
@@ -108,17 +106,17 @@
 				<s:VGroup gap="2">
 					<s:HGroup verticalAlign="middle">
 						<s:RadioButton groupName="fontSize" id="fontSizeDefault" selected="true" />
-						<s:Image source="@Embed(source='images/fontSizeDefault.png')" width="23" height="23" />
+						<s:Image source="@Embed(source='/images/fontSizeDefault.png')" width="23" height="23" />
 						<s:Label text="Default point size" paddingLeft="2" />
 					</s:HGroup>
 					<s:HGroup verticalAlign="middle">
 						<s:RadioButton groupName="fontSize" id="fontSizeMedium" />
-						<s:Image source="@Embed(source='images/fontSizeMedium.png')" width="23" height="23" />
+						<s:Image source="@Embed(source='/images/fontSizeMedium.png')" width="23" height="23" />
 						<s:Label text="+1 point size" paddingLeft="2" />
 					</s:HGroup>
 					<s:HGroup verticalAlign="middle">
 						<s:RadioButton groupName="fontSize" id="fontSizeLarge" />
-						<s:Image source="@Embed(source='images/fontSizeLarge.png')" width="23" height="23" />
+						<s:Image source="@Embed(source='/images/fontSizeLarge.png')" width="23" height="23" />
 						<s:Label text="+2 point size" paddingLeft="2" />
 					</s:HGroup>
 				</s:VGroup>
@@ -158,7 +156,7 @@
 				<s:Scroller height="242">
 					<s:VGroup color="0x4E4D4D" paddingRight="14">
 						<s:HGroup verticalAlign="middle">
-							<s:Image source="@Embed(source='images/notificationsIconAppointments.png')" width="20" height="20" />
+							<s:Image source="@Embed(source='/images/notificationsIconAppointments.png')" width="20" height="20" />
 							<s:Label text="Appointments" fontStyle="italic" />
 						</s:HGroup>
 						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
@@ -186,7 +184,7 @@
 						</s:HGroup>
 						
 						<s:HGroup verticalAlign="middle" paddingTop="13">
-							<s:Image source="@Embed(source='images/notificationsIconClasses.png')" width="20" height="20" />
+							<s:Image source="@Embed(source='/images/notificationsIconClasses.png')" width="20" height="20" />
 							<s:Label text="Classes" fontStyle="italic" />
 						</s:HGroup>
 						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
@@ -214,7 +212,7 @@
 						</s:HGroup>
 						
 						<s:HGroup verticalAlign="middle" paddingTop="13">
-							<s:Image source="@Embed(source='images/notificationsIconMedications.png')" width="20" height="20" />
+							<s:Image source="@Embed(source='/images/notificationsIconMedications.png')" width="20" height="20" />
 							<s:Label text="Medications" fontStyle="italic" />
 						</s:HGroup>
 						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
@@ -230,7 +228,7 @@
 						</s:VGroup>
 						
 						<s:HGroup verticalAlign="middle" paddingTop="13">
-							<s:Image source="@Embed(source='images/notificationsIconMedicalRecords.png')" width="20" height="20" />
+							<s:Image source="@Embed(source='/images/notificationsIconMedicalRecords.png')" width="20" height="20" />
 							<s:Label text="Medical Records" fontStyle="italic" />
 						</s:HGroup>
 						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->

@@ -23,11 +23,27 @@
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	creationComplete="init()">
+	preinitialize="onPreinitialize(event)" creationComplete="init();">
+	
 	<fx:Script>
 		<![CDATA[
 			import models.modules.MedicalRecordsModel;
 			import models.modules.MessagesModel;
+			
+			import mx.events.FlexEvent;
+			
+			private function onPreinitialize (event : FlexEvent) : void
+			{
+				AppProperties.getInstance().controller = new MainController();
+				AppProperties.getInstance().controller.model.addEventListener( ApplicationEvent.STYLES_LOADED, onStylesLoaded );
+			}
+			
+			private function onStylesLoaded( event:ApplicationEvent ):void
+			{
+				super.initialized = true;
+			}
+			
+			override public function set initialized(value:Boolean):void {}
 		]]>
 	</fx:Script>
 	
@@ -179,7 +195,7 @@
 					</s:HGroup>-->
 					
 					<s:HGroup paddingTop="-12" paddingLeft="-2">
-						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="dropDownView_changeHandler(event)"> 
+						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="onShowPreferences(event)"> 
 							<mx:ArrayCollection>
 								<fx:String>     Homepage Options</fx:String>
 								<fx:String>     Font and Units</fx:String>

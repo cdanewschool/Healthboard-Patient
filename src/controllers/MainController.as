@@ -3,29 +3,31 @@ package controllers
 	import ASclasses.Constants;
 	
 	import components.home.NextStepsOverlay;
+	import components.home.preferencesWindow;
 	import components.widgets.EducationalResourcesWidget;
 	
-	import controllers.Controller;
-	
-	import enum.RecipientType;
+	import enum.ViewModeType;
 	
 	import events.ApplicationEvent;
 	import events.AuthenticationEvent;
 	
 	import external.TabBarPlus.plus.TabBarPlus;
 	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	
+	import models.PatientApplicationModel;
+	import models.Preferences;
+	import models.UserPreferences;
 	import models.modules.MessagesModel;
 	
 	import modules.NutritionModule;
 	
 	import mx.collections.IList;
+	import mx.core.UIComponent;
 	import mx.events.CloseEvent;
 	import mx.events.FlexMouseEvent;
 	import mx.events.ListEvent;
 	import mx.managers.PopUpManager;
+	
+	import spark.components.TitleWindow;
 	
 	public class MainController extends Controller
 	{
@@ -35,6 +37,8 @@ package controllers
 		{
 			super();
 			
+			model = new PatientApplicationModel();
+			
 			appointmentsController = new PatientAppointmentsController();
 			exerciseController = new PatientExerciseController();
 			immunizationsController = new PatientImmunizationsController();
@@ -42,6 +46,56 @@ package controllers
 			medicationsController = new PatientMedicationsController();
 			nutritionController = new NutritionController();
 			vitalSignsController = new VitalSignsController();
+			
+			loadStyles();
+		}
+		
+		override public function showPreferences():UIComponent
+		{
+			var popup:preferencesWindow = preferencesWindow( PopUpManager.createPopUp(application, preferencesWindow) as TitleWindow );
+			popup.preferences = model.preferences.clone() as UserPreferences;
+			PopUpManager.centerPopUp(popup);
+			
+			return popup;
+		}
+		
+		override protected function loadPreferences():void
+		{
+			if( persistentData 
+				&& persistentData.data.hasOwnProperty('preferences') )
+			{
+				model.preferences = UserPreferences.fromObj( persistentData.data['preferences'] );
+			}
+			else
+			{
+				model.preferences = new UserPreferences();
+				savePreferences( model.preferences );
+			}
+			
+			processPreferences();
+		}
+		
+		override public function savePreferences( preferences:Preferences ):void
+		{
+			super.savePreferences(preferences);
+			
+			persistentData.data['preferences'] = preferences;
+			persistentData.flush();
+		}
+		
+		override protected function processPreferences( preferences:Preferences = null ):void
+		{
+			if( preferences == null ) preferences  = model.preferences;
+			
+			super.processPreferences( preferences );
+			
+			if( preferences 
+				&& preferences.viewMode != model.preferences.viewMode )
+			{
+				var state:String = preferences.viewMode == ViewModeType.WIDGET ? Constants.STATE_WIDGET_VIEW : Constants.STATE_LOGGED_IN;
+				
+				application.dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, state) );
+			}
 		}
 		
 		public function showNextStepsOverlay():void
@@ -162,6 +216,11 @@ package controllers
 				
 				nextStepsOverlay = null;
 			}
+		}
+		
+		override protected function get id():String
+		{
+			return 'visualDashboardPatient';
 		}
 	}
 }

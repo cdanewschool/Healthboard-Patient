@@ -48,26 +48,12 @@ import spark.filters.DropShadowFilter;
 import styles.ChartStyles;
 
 import util.ChartLabelFunctions;
-import util.DateUtil;
 import util.DateFormatters;
-
-//this.stage.displayState = StageDisplayState.FULL_SCREEN;
-/* public function updateBreadcrumb(action:String):void {
-if(action == 'messages') {
-if(viewStackMessages.selectedIndex > 0) {
-lblBreadcrumbCategory.visible = lblBreadcrumbCategory.includeInLayout = false;
-btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarkerSubcategory.visible = lblBreadcrumbSubcategory.visible = true;
-lblBreadcrumbSubcategory.text = viewStackMessages.selectedChild.label;
-}
-else {
-lblBreadcrumbCategory.visible = lblBreadcrumbCategory.includeInLayout = true;
-btnBreadcrumbCategory.visible = btnBreadcrumbCategory.includeInLayout = lblMarkerSubcategory.visible = lblBreadcrumbSubcategory.visible = false;
-}
-}
-} */
+import util.DateUtil;
 
 [Bindable] public var chartStyles:ChartStyles;
 [Bindable] public var controller:MainController;
+[Bindable] public var model:ApplicationModel;
 
 private var appointmentsController:AppointmentsController;
 private var immunizationsController:ImmunizationsController;
@@ -76,11 +62,10 @@ private var medicationsController:MedicationsController;
 
 protected function init():void
 {
-	AppProperties.getInstance().controller = controller = new MainController();
+	controller = AppProperties.getInstance().controller as MainController;
+	model = controller.model as ApplicationModel;
 	
-	var model:ApplicationModel = new ApplicationModel();
 	model.chartStyles = chartStyles = new ChartStyles();
-	controller.model = model;
 	
 	appointmentsController = controller.appointmentsController;
 	immunizationsController = controller.immunizationsController;
@@ -90,24 +75,12 @@ protected function init():void
 	chartStyles = new ChartStyles();
 }
 
-protected function dropDownView_changeHandler(event:IndexChangeEvent):void
+protected function onShowPreferences(event:IndexChangeEvent):void
 {
-	// TODO Auto-generated method stub
-	/*if(dropDownView.selectedIndex == 0) {
-	currentState == 'loggedIn' ? currentState = 'widgetView' : currentState = 'loggedIn';
-	dropDownView.selectedIndex = -1;
-	}*/
+	var popup:preferencesWindow = controller.showPreferences() as preferencesWindow;
+	popup.viewStackPreferences.selectedIndex = event.newIndex;
 	
-	var myPreferencesWindow:preferencesWindow = preferencesWindow(PopUpManager.createPopUp(this, preferencesWindow) as spark.components.TitleWindow);
-	myPreferencesWindow.viewStackPreferences.selectedIndex = event.newIndex;
-	PopUpManager.centerPopUp(myPreferencesWindow);
 	dropDownView.selectedIndex = -1;
-	/*var myClass:myClassesWindow = myClassesWindow(PopUpManager.createPopUp(this, myClassesWindow) as spark.components.TitleWindow);
-	if(reqClass != '') myClass.showClass(reqClass);
-	PopUpManager.centerPopUp(myClass);
-	stackViews.selectedIndex = 1;
-	*/
-	
 }
 
 /* private function saveTaskTime():void {

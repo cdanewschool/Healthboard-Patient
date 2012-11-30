@@ -38,7 +38,7 @@
 	
 	<s:VGroup>
 		<s:BorderContainer borderColor="0xBBBDBF" borderWeight="1" width="108" height="136"> 
-			<mx:Image source="@Embed(source='images/profilePic.jpg')" />
+			<mx:Image source="@Embed(source='/images/profilePic.jpg')" />
 		</s:BorderContainer>
 		<mx:LinkButton label="change profile pic" color="0xFF931E" textDecoration="underline" fontStyle="italic" fontSize="12" skin="{null}" />
 	</s:VGroup>

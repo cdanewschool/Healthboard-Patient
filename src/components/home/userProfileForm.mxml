@@ -72,7 +72,7 @@
 	
 	<s:VGroup paddingTop="10">
 		<s:BorderContainer borderColor="0xBBBDBF" borderWeight="1" width="108" height="136"> 
-			<mx:Image source="@Embed(source='images/profilePic.jpg')" />
+			<mx:Image source="@Embed(source='/images/profilePic.jpg')" />
 		</s:BorderContainer>
 		<mx:LinkButton id="btnChangePic" label="Change profile picture" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" textDecoration="underline" fontSize="12" fontWeight="normal" skin="{null}" paddingLeft="-2" rollOver="btnChangePic.styleName='linkBtnUnderline';" rollOut="btnChangePic.styleName='linkBtn';" />
 	</s:VGroup>
