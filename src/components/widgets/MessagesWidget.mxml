@@ -75,7 +75,7 @@
 	</mx:DataGrid>
 	
 	<s:HGroup paddingLeft="20" paddingTop="-6" gap="2">
-		<s:Label fontSize="12" color="0x868686" text='{...plus ' + (model.messagesToDisplay.length - rowCount) + ' more ' + (model.messagesToDisplay.length - rowCount == 1 ? 'message.' : 'messages.')}" visible="{model.messagesToDisplay.length > rowCount}" includeInLayout="{model.messagesToDisplay.length > rowCount}" paddingTop="6" />
+		<s:Label fontSize="12" color="0x868686" text="{'...plus ' + (model.messagesToDisplay.length - rowCount) + ' more ' + (model.messagesToDisplay.length - rowCount == 1 ? 'message.' : 'messages.')}" visible="{model.messagesToDisplay.length > rowCount}" includeInLayout="{model.messagesToDisplay.length > rowCount}" paddingTop="6" />
 		<mx:LinkButton id="btnWidgetAllMessages" label="View All »" fontSize="12" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" rollOver="{btnWidgetAllMessages.styleName='linkBtnUnderline';}" rollOut="btnWidgetAllMessages.styleName='linkBtn';" click="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, Constants.MODULE_MESSAGES ) );" paddingLeft="-3" />
 	</s:HGroup>
 	
