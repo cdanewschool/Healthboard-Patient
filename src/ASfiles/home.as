@@ -32,6 +32,7 @@ import mx.collections.IList;
 import mx.controls.Alert;
 import mx.controls.TabBar;
 import mx.core.DragSource;
+import mx.core.FlexGlobals;
 import mx.core.IFlexDisplayObject;
 import mx.core.IUIComponent;
 import mx.events.DataGridEvent;
@@ -73,6 +74,13 @@ protected function init():void
 	medicationsController = controller.medicationsController;
 	
 	chartStyles = new ChartStyles();
+}
+
+private function onResize():void
+{
+	if( !this.stage ) return;
+	
+	FlexGlobals.topLevelApplication.height = this.stage.stageHeight;
 }
 
 protected function onShowPreferences(event:IndexChangeEvent):void

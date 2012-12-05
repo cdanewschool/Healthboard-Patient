@@ -23,7 +23,7 @@
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	preinitialize="onPreinitialize(event)" creationComplete="init();">
+	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()">
 	
 	<fx:Script>
 		<![CDATA[
@@ -80,36 +80,8 @@
 	
 	<views1:LoginView width="1024" includeIn="default" authenticationSuccess="dispatchEvent( new ApplicationEvent( ApplicationEvent.SET_STATE, true, false, controller.model.viewMode) )"  />
 	
-	<!--<mx:ApplicationControlBar id="dockedBar" includeIn="loggedIn" 
-	dock="true" width="1024" borderVisible="false" dropShadowVisible="false" height="38" paddingLeft="0" paddingRight="0" fillColors="[0x999999,0xB3B3B3]" fillAlphas="[1,0]" cornerRadius="0" borderAlpha="0">
-	<s:VGroup paddingLeft="27" paddingTop="-3">
-	<comps:healthBoardLogoGray id="hbLogoGray" />
-	</s:VGroup>
-	
-	<mx:Spacer width="100%" />				
-	
-	<s:HGroup paddingTop="0" paddingRight="23">
-	<s:DropDownList selectedIndex="0" width="125" dropShadowVisible="false" contentBackgroundAlpha="0" focusAlpha="0" skinClass="skins.MyDropDownListSkin" fontFamily="myMyriad" fontWeight="bold" fontSize="12" color="0xAEDBE2"> 
-	<mx:ArrayCollection>
-	<fx:String>Isaac Goodman</fx:String>
-	<fx:String>User Profile</fx:String>
-	</mx:ArrayCollection>
-	</s:DropDownList>
-	
-	<mx:LinkButton label="Logout" color="0xFFFFFF" textDecoration="underline" fontSize="11" skin="{null}" paddingTop="2" paddingLeft="9" />
-	
-	<s:HGroup paddingTop="3">
-	<s:DropDownList dropShadowVisible="false" skinClass="skins.MyOptionsDropDownListSkin" width="17" fontFamily="myMyriad" fontSize="11"> 
-	<mx:ArrayCollection>
-	<fx:String>Button View</fx:String>
-	<fx:String>Widget View</fx:String>
-	</mx:ArrayCollection>
-	</s:DropDownList>
-	</s:HGroup>
-	</s:HGroup>
-	</mx:ApplicationControlBar>-->
-	
 	<s:VGroup includeIn="loggedIn, profile, widgetView, modAppointments, modImmunizations, modMessages, modMedicalRecords, modMedications, modVitalSigns, modEducationalResources, modExercise, modNutrition" width="1024" horizontalAlign="center">		
+		
 		<!-- HEADER -->
 		<s:Group id="header" width="100%" height="38">
 			
@@ -129,25 +101,6 @@
 				<s:VGroup paddingLeft="27" paddingTop="6" click="{currentState=controller.model.viewMode}" buttonMode="{currentState!=controller.model.viewMode}"><!--includeIn="loggedIn, widgetView, profile"-->
 					<fxg:healthBoardLogoGray />
 				</s:VGroup>
-				
-				<!--<s:HGroup alpha=".7" color="0xFFFFFF" includeIn="modMessages, modCalendar, modImmunizations, modMedicalRecords, modMedications, modVitalSigns, modEducationalResources, modExercise, modNutrition" verticalAlign="middle" paddingLeft="16" gap="-4" fontSize="12">
-				<mx:LinkButton id="btnBreadcrumbHome" label="Home" textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}" click="{currentState=Constants.STATE_LOGGED_IN}" rollOver="btnBreadcrumbHome.styleName='linkBtnUnderline';" rollOut="btnBreadcrumbHome.styleName='linkBtn';" />
-				
-				<s:Label text=">" paddingTop="2" />
-				
-				<s:Label id="lblBreadcrumbCategory" text.modMessages="Messages" text.modCalendar="Appointments" text.modImmunizations="Immunizations" text.modMedicalRecords="Medical Records" text.modMedications="Medications" fontWeight="bold" paddingTop="2" paddingLeft="10" />
-				<mx:LinkButton id="btnBreadcrumbCategory" visible="false" includeInLayout="false"
-				label.modMessages="Messages" label.modCalendar="Appointments" label.modImmunizations="Immunizations" label.modMedicalRecords="Medical Records" label.modMedications="Medications"
-				click.modMessages="{showInboxMessages();}"
-				textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}"
-				rollOver="btnBreadcrumbCategory.styleName='linkBtnUnderline';" rollOut="btnBreadcrumbCategory.styleName='linkBtn';" />
-				
-				<s:Label id="lblMarkerSubcategory" text=">" paddingTop="2" visible="false" />
-				
-				<s:Label id="lblBreadcrumbSubcategory" visible="false" fontWeight="bold" paddingTop="2" paddingLeft="10" />
-				<mx:LinkButton id="btnBreadcrumbSubcategory" visible="false"
-				textRollOverColor="0xFFFFFF" textSelectedColor="0xFFFFFF" skin="{null}" />--><!-- label.modMessages="Messages" label.modCalendar="Appointments" label.modImmunizations="Immunizations"-->
-				<!--</s:HGroup>-->
 				
 				<s:HGroup id="nextStepsTrigger" verticalAlign="middle" paddingLeft="267" height="38">
 					
@@ -169,30 +122,13 @@
 						
 					</s:BorderContainer>
 					
-				</s:HGroup>				
-				<!--<s:Button label="Start Task" color="0xFF0000" click="saveTaskTime()" />-->
+				</s:HGroup>
 				
 				<mx:Spacer width="100%" />
 				
 				<s:HGroup  paddingTop="6" paddingRight="14">
-					<!--
-					<s:DropDownList id="dropDownProfile" selectedIndex="0" width="125" dropShadowVisible="false" contentBackgroundAlpha="0" focusAlpha="0" skinClass="skins.general.MyDropDownListSkin" fontWeight="bold" fontSize="12" color="0xAEDBE2" rollOverColor="0x5E5E5D" selectionColor="0x5E5E5D" change="{dropDownProfile.selectedIndex == 1 ? currentState = 'profile' : currentState = 'loggedIn'}"> 
-					<mx:ArrayCollection>
-					<fx:String>Isaac Goodman</fx:String>
-					<fx:String>User Profile</fx:String>
-					</mx:ArrayCollection>
-					</s:DropDownList>-->
-					<mx:LinkButton id="btnProfile" label="{controller.model.fullname}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
 					
-					<!--<s:HGroup paddingTop="-6" paddingLeft="-9">
-						<s:DropDownList id="dropDownViewOld" dropShadowVisible="false" skinClass="skins.general.MyOptionsDropDownListSkin" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" width="35" fontSize="12" change="dropDownView_changeHandler(event)"> 
-							<mx:ArrayCollection>
-								<fx:String>     Homepage Options</fx:String>
-								<fx:String>     Font and Units</fx:String>
-								<fx:String>     Notifications</fx:String>
-							</mx:ArrayCollection>
-						</s:DropDownList>
-					</s:HGroup>-->
+					<mx:LinkButton id="btnProfile" label="{controller.model.fullname}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
 					
 					<s:HGroup paddingTop="-12" paddingLeft="-2">
 						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="onShowPreferences(event)"> 
@@ -205,8 +141,11 @@
 					</s:HGroup>
 					
 					<mx:LinkButton id="btnLogout" label="Logout" color="0xE6E6E6" textRollOverColor="0xE6E6E6" textSelectedColor="0xE6E6E6" skin="{null}" paddingLeft="1" click="{currentState='default'}" rollOver="btnLogout.styleName='linkBtnUnderline';" rollOut="btnLogout.styleName='linkBtn';" />
+				
 				</s:HGroup>
+				
 			</s:BorderContainer>
+			
 		</s:Group>
 		
 		<s:HGroup height="40" includeIn="loggedIn, widgetView">
@@ -230,9 +169,9 @@
 		</s:HGroup>
 		
 		<!-- HOME / WIDGET VIEW -->
-		<s:HGroup includeIn="widgetView" paddingTop="-30">
+		<s:HGroup includeIn="widgetView" paddingTop="-30" width="1024" height="{height - 110}">
 			
-			<s:Scroller id="widgetScroller" height="728" width="1024" horizontalScrollPolicy="off">
+			<s:Scroller id="widgetScroller" width="100%" height="100%" horizontalScrollPolicy="off">
 				
 				<s:VGroup id="widgetContent">
 					
@@ -465,99 +404,6 @@
 			</s:Scroller>
 			
 		</s:HGroup>
-		
-		<!--<mx:Grid includeIn="widgetView" horizontalGap="33" verticalGap="18" horizontalAlign="center" width="100%" paddingTop="40">
-		<mx:GridRow>
-		<mx:GridItem>
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsMessages}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsMessages">
-		<s:NavigatorContent label="Messages">
-		<s:TitleWindow id="messages" skinClass="skins.general.myHeaderlessTitleWindow" title="Messages" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenMessages.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		<mx:GridItem colSpan="2">
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsMedicalRecords}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsMedicalRecords">
-		<s:NavigatorContent label="Medical Records">
-		<s:TitleWindow id="medicalRecords" skinClass="skins.general.myHeaderlessTitleWindow" title="Medical Records" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenMedicalRecords.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow>
-		<mx:GridItem>
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsAppointments}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsAppointments">
-		<s:NavigatorContent label="Appointments (2)">
-		<s:TitleWindow id="appointments" skinClass="skins.general.myHeaderlessTitleWindow" title="Appointments" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenAppointments.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		<mx:GridItem>
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsExercise}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsExercise">
-		<s:NavigatorContent label="Exercise">
-		<s:TitleWindow id="exercise" skinClass="skins.general.myHeaderlessTitleWindow" title="Exercise" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenExercise.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		<mx:GridItem rowSpan="2">
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsVitals}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsVitals">
-		<s:NavigatorContent label="Vitals">
-		<s:TitleWindow id="vitals" skinClass="skins.general.myHeaderlessTitleWindow" title="Vitals" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenVitals.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow>
-		<mx:GridItem>
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsNutrition}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsNutrition">
-		<s:NavigatorContent label="Nutrition">
-		<s:TitleWindow id="nutrition" skinClass="skins.general.myHeaderlessTitleWindow" title="Nutrition" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenNutrition.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		<mx:GridItem>	
-		<s:VGroup gap="0">
-		<s:TabBar dataProvider="{vsImmunization}" skinClass="skins.home.myWidgetTabs" styleName="widgetTabTitle" />
-		<mx:ViewStack id="vsImmunization">
-		<s:NavigatorContent label="Immunization (1)">
-		<s:TitleWindow id="immunization" skinClass="skins.general.myHeaderlessTitleWindow" backgroundColor="0x666666" backgroundAlpha="0.2" borderColor="0xF2F2F2" borderAlpha="0.2" dropShadowVisible="false">
-		<mx:Image source="@Embed('/images/screenImmunization.jpg')" />
-		</s:TitleWindow>
-		</s:NavigatorContent>
-		</mx:ViewStack>
-		</s:VGroup>
-		</mx:GridItem>
-		</mx:GridRow>
-		</mx:Grid>-->
 		
 		<!-- USER PROFILE SCREEN -->
 		<s:VGroup id="profile" paddingTop="35" width="100%" horizontalAlign="center" includeIn="profile">
