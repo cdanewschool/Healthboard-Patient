@@ -44,10 +44,9 @@
 			{
 				super.commitProperties();
 				
-				if( dateChooser 
-					&& today )
+				if( dateChooser && today )
 				{
-					dateChooser.enabled = dateChooser.selectedDate.date < today.date
+					navigateNext.enabled = dateChooser.selectedDate.date < today.date
 				}
 			}
 			
