@@ -12,7 +12,6 @@
 	xmlns:calendar="external.com.flexcalendar.components.calendar.*"
 	xmlns:home="components.home.*"
 	xmlns:plus="external.TabBarPlus.plus.*"
-	xmlns:radarchart="fr.kapit.radarchart.*" xmlns:amcharts="http://www.amcharts.com/com_internal"
 	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
 	xmlns:general="components.general.*" 
 	xmlns="*" xmlns:modules="modules.*"
@@ -28,7 +27,6 @@
 	<fx:Script>
 		<![CDATA[
 			import models.modules.MedicalRecordsModel;
-			import models.modules.MessagesModel;
 			
 			import mx.events.FlexEvent;
 			
@@ -240,7 +238,7 @@
 									
 								</s:VGroup>
 								
-								<widgets:ExerciseWidget 
+								<widgets:PatientExerciseWidget 
 									id="widgetExercise" width="305" 
 									title="Exercise" 
 									collapsible="true" headerClickable="false" module="modExercise" 
