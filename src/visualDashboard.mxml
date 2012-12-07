@@ -189,13 +189,13 @@
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
 								visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" />
 							
-							<widgets:ImmunizationsWidget 
+							<widgets:PatientImmunizationsWidget 
 								id="widgetImmunizations" width="305" title="Immunizations (12)" 
 								collapsible="true" headerClickable="false" showCloseButton="{widgetLibraryOpen}" displayWarning="true" 
 								warningToolTip="Immunizations overdue" titleBarHeight="30" 
 								module="modImmunizations" visible="{widgetImmunizationsOpen}" includeInLayout="{widgetImmunizationsOpen}" />	<!--title="{'Immunizations (' + immunizationsDueNumber + ')'}" (see comments on ArrayList below)-->
 							
-							<widgets:MedicalRecordsWidget 
+							<widgets:PatientMedicalRecordsWidget 
 								id="widgetMedicalRecords" width="305" title="Medical Records" 
 								collapsible="true" headerClickable="false" module="modMedicalRecords" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" color="0xFFFFFF" 
@@ -222,7 +222,7 @@
 								
 								<s:VGroup gap="17">
 									
-									<widgets:NutritionWidget 
+									<widgets:PatientNutritionWidget 
 										id="widgetNutrition" width="305" 
 										title="Nutrition" 
 										collapsible="true" headerClickable="false" module="modNutrition" 
@@ -230,7 +230,7 @@
 										visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" 
 										creationComplete="widgetNutrition.subtitle = DateFormatters.dateFormatterDay.format(new Date())" />
 									
-									<widgets:VitalSignsWidget
+									<widgets:PatientVitalSignsWidget
 										id="widgetVitalSigns" width="305" title="Vital Signs" 
 										collapsible="true" headerClickable="false" module="modVitalSigns" 
 										showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
