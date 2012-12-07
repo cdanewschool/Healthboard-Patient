@@ -3,7 +3,8 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" xmlns:radarchart="fr.kapit.radarchart.*">
+	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" 
+	xmlns:performancemeter="skins.general.performancemeter.*">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -27,7 +28,7 @@
 	</enhancedtitlewindow:layout>
 	
 	<mx:DataGrid 
-		id="dgExerciseWidget" width="100%" height="{500 - collapsedPixels}" dataProvider="{model.exerciseForWidget}" selectable="false"
+		id="dgExerciseWidget" width="100%" height="{550 - collapsedPixels}" dataProvider="{model.exerciseForWidget}" selectable="false"
 		color="0xFFFFFF" verticalAlign="middle" 
 		useRollOver="false"
 		headerHeight="0"
@@ -42,12 +43,14 @@
 						<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off">
 							<fx:Script>
 								<![CDATA[
+									import ASclasses.MyCustomDataTip;
+									
 									import components.itemrenderers.chart.MyCircleItemRenderer;
 									import components.itemrenderers.chart.MyCircleItemRendererOver;
-									import ASclasses.MyCustomDataTip;
 									
 									import mx.charts.HitData;
 									import mx.charts.events.ChartItemEvent;
+									import mx.collections.ArrayCollection;
 									import mx.controls.Alert;
 									import mx.events.FlexEvent;
 									
@@ -72,44 +75,157 @@
 								<s:State name="collapsed" />
 							</mx:states>
 							
-							<s:HGroup width="140" gap="-2">
-								<mx:LinkButton icon.expanded="@Embed(source='/images/smallArrowGray.png')" icon.collapsed="@Embed(source='/images/smallArrowCollapsedGray.png')" horizontalGap="10" id="btnVital" label="{data.exerciseType}" fontSize="12" fontWeight="bold" toggle="true" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" click="{if(this.currentState=='expanded') {this.currentState = 'collapsed'; outerDocument.collapsedPixels+= (data.exerciseType == 'Most Recent PRT') ? 210 : (data.exerciseType == 'Physician-assigned' ? 130 : 71);} else {this.currentState = 'expanded'; outerDocument.collapsedPixels-= (data.exerciseType == 'Most Recent PRT') ? 210 : (data.exerciseType == 'Physician-assigned' ? 130 : 71);}}" />
-								<mx:Label text="{'(Last: ' + DateUtil.formatDateFromString(data.lastDate) + ')'}" fontSize="12" color="0x868686" paddingTop="1" />
-							</s:HGroup>
-							
-							<s:Group includeIn="expanded"><!--includeInLayout="{this.currentState == 'expanded'}" visible="{this.currentState == 'expanded'}"-->
-								
+							<s:Group includeIn="expanded" visible="{data.exerciseType != 'Most Recent PRT'}">
 								<s:Line xFrom="0" xTo="280">
 									<s:stroke>
 										<s:SolidColorStroke color="0xB3B3B3" weight="1" alpha="0.1" />
 									</s:stroke>
 								</s:Line>
-								
 							</s:Group>
 							
-							<s:HGroup includeInLayout="{this.currentState == 'expanded' &amp;&amp; data.exerciseType == 'Most Recent PRT'}" visible="{this.currentState == 'expanded' &amp;&amp; data.exerciseType == 'Most Recent PRT'}" width="100%" horizontalAlign="center" paddingBottom="-4">
-								<radarchart:RadarChart 
-									seriesField="series" 
-									dataProvider="{outerDocument.model.exerciseData.getItemAt(outerDocument.model.exerciseData.length - 1)}" 
-									width="200" 
-									height="200" divisions="3" gridAlpha="0.2" axisWidth="1" gridWidth="1" axisNameTextFormat="{new TextFormat('myMyriad',11,'0x868686')}" graduationTextFormat="{new TextFormat('myMyriad',11,'0x868686')}"
-									showGraduations="false"
-									showAxesArrow="false">
-									
-									<radarchart:series>
-										<radarchart:RadarChartSeries id="asdf1" name="PRTresults" label="PRTresults" color="0xFBB03B" />
-									</radarchart:series> 
-									
-									<radarchart:axes>
-										<radarchart:RadarChartAxis id="radarAxis1" name="PRTscore" label="Avg. PRT Score" />
-										<radarchart:RadarChartAxis id="radarAxis2" name="mileRun" label="1.5 Mile Run"/>
-										<radarchart:RadarChartAxis id="radarAxis3" name="curlUps" label="Curl Ups"/>
-										<radarchart:RadarChartAxis id="radarAxis4" name="pushUps" label="Push Ups"/>
-										<radarchart:RadarChartAxis id="radarAxis5" name="weight" label="Weight"/>
-									</radarchart:axes>
-									
-								</radarchart:RadarChart>
+							<s:HGroup width="140" gap="-2">
+								<mx:LinkButton icon.expanded="@Embed(source='/images/smallArrowGray.png')" icon.collapsed="@Embed(source='/images/smallArrowCollapsedGray.png')" horizontalGap="10" id="btnVital" label="{data.exerciseType}" fontSize="12" fontWeight="bold" toggle="true" color="0xAEDEE4" textRollOverColor="0xAEDEE4" textSelectedColor="0xAEDEE4" skin="{null}" click="{if(this.currentState=='expanded') {this.currentState = 'collapsed'; outerDocument.collapsedPixels+= (data.exerciseType == 'Most Recent PRT') ? 210 : (data.exerciseType == 'Physician-assigned' ? 130 : 71);} else {this.currentState = 'expanded'; outerDocument.collapsedPixels-= (data.exerciseType == 'Most Recent PRT') ? 210 : (data.exerciseType == 'Physician-assigned' ? 130 : 71);}}" />
+								<mx:Label text="{'(Last: ' + DateUtil.formatDateFromString(data.lastDate) + ')'}" fontSize="12" color="0x868686" paddingTop="1" />
 							</s:HGroup>
+							
+							<s:Group includeIn="expanded">
+								<s:Line xFrom="0" xTo="280">
+									<s:stroke>
+										<s:SolidColorStroke color="0xB3B3B3" weight="1" alpha="0.1" />
+									</s:stroke>
+								</s:Line>
+							</s:Group>
+							
+							<s:VGroup 
+								width="100%" horizontalAlign="left" paddingBottom="-4" gap="5"
+								visible="{this.currentState == 'expanded' &amp;&amp; data.exerciseType == 'Most Recent PRT'}" 
+								includeInLayout="{this.currentState == 'expanded' &amp;&amp; data.exerciseType == 'Most Recent PRT'}">
+								
+								<s:HGroup gap="15" verticalAlign="middle">
+									
+									<s:Label text="Overal PRT Score" color="0xFFFFFF" fontSize="12" fontWeight="bold" width="55" />
+									
+									<s:HGroup width="150" verticalAlign="middle">
+										
+										<s:Image source="{outerDocument.controller.getPerformanceIconForExercise( {value:data.chart.PRTscore} )}" />
+										
+										<s:Label text="{data.chart.PRTscore}" styleName="orangeStandout" fontSize="32" paddingTop="5" />
+										
+										<s:VGroup gap="0" paddingTop="2">
+											
+											<s:Label text="points" styleName="whiteText13" />
+											<s:Label 
+												fontSize="13" fontWeight="bold" 
+												text="{outerDocument.controller.getPerformanceLabelForExercise( {value:data.chart.PRTscore} )}" 
+												color="{outerDocument.controller.getPerformanceLabelColorForExercise( {value:data.chart.PRTscore} )}" />
+											
+										</s:VGroup>
+										
+									</s:HGroup>
+									
+								</s:HGroup>
+								
+								<s:VGroup paddingTop="-10">
+									<performancemeter:PerformanceMeter value="{data.chart.PRTscore}" width="280" />
+								</s:VGroup>
+								
+								<s:Group>
+									<s:Line xFrom="0" xTo="280">
+										<s:stroke>
+											<s:SolidColorStroke color="0xB3B2B3" alpha=".1" />
+										</s:stroke>
+									</s:Line>
+								</s:Group>
+								
+								<s:DataGroup id="exerciseOverview" dataProvider="{outerDocument.model.exerciseDataByMeasure}">
+									
+									<s:layout>
+										<s:VerticalLayout paddingLeft="0" gap="5" />
+									</s:layout>
+									
+									<s:itemRenderer>
+										
+										<fx:Component>
+											
+											<mx:VBox visible="{data.type != 'overview'}" includeInLayout="{data.type != 'overview'}">
+												
+												<fx:Script>
+													<![CDATA[
+														
+														[Bindable] private var exerciseIcon:Class;
+														[Bindable] private var performanceIcon:Class;
+														[Bindable] private var performanceLabel:String;
+														[Bindable] private var performanceLabelColor:uint;
+														
+														[Bindable] private var resultData:Object;
+														
+														[Bindable] private var isOverview:Boolean;
+														
+														override public function set data(value:Object):void
+														{
+															super.data = value;
+															
+															if( data )
+															{
+																exerciseIcon = outerDocument.outerDocument.controller.getIconForExercise( data, true );
+																
+																if( data.hasOwnProperty('chart') 
+																	&& data.chart.length 
+																	&& data.chart.getItemAt(0).hasOwnProperty('data') 
+																	&& data.chart.getItemAt(0).data.length )
+																{
+																	var latestResult:Object = data.chart.getItemAt(0).data.getItemAt(0);
+																	
+																	for each(var result:Object in data.chart.getItemAt(0).data)
+																	{
+																		if( new Date( result.date ).time > new Date( latestResult.date ).time )
+																			latestResult = result;
+																	}
+																	
+																	resultData = latestResult;
+																	
+																	performanceIcon = outerDocument.outerDocument.controller.getPerformanceIconForExercise( resultData );
+																	performanceLabel = outerDocument.outerDocument.controller.getPerformanceLabelForExercise( resultData );
+																	performanceLabelColor = outerDocument.outerDocument.controller.getPerformanceLabelColorForExercise( resultData );
+																}
+															}
+															
+															isOverview = outerDocument.exerciseOverview.dataProvider.getItemIndex(data) == 0;
+														}
+														
+													]]>
+												</fx:Script>
+												
+												<s:HGroup gap="5" verticalAlign="middle" paddingTop="0" paddingBottom="0">
+													
+													<s:HGroup width="55" verticalAlign="middle" paddingLeft="10">
+														<s:Image source="{exerciseIcon}" visible="{exerciseIcon!=null}" includeInLayout="{exerciseIcon!=null}" />
+													</s:HGroup>
+													
+													<s:HGroup width="150" verticalAlign="middle" paddingLeft="10">
+														
+														<s:Image source="{performanceIcon}" />
+														
+														<s:Label text="{resultData.value}" styleName="orangeStandout" fontSize="32" paddingTop="5" />
+														
+														<s:VGroup gap="0" paddingTop="2">
+															<s:Label text="points" styleName="whiteText12" />
+															<s:Label text="{performanceLabel}" color="{performanceLabelColor}" fontSize="12" fontWeight="bold" />
+														</s:VGroup>
+														
+													</s:HGroup>
+													
+												</s:HGroup>
+												
+											</mx:VBox>
+											
+										</fx:Component>
+										
+									</s:itemRenderer>
+									
+								</s:DataGroup>
+								
+							</s:VGroup>
 							
 							<mx:DataGrid 
 								id="innerDataGrid" includeInLayout="{this.currentState == 'expanded' &amp;&amp; data.exerciseType != 'Most Recent PRT'}" visible="{this.currentState == 'expanded' &amp;&amp; data.exerciseType != 'Most Recent PRT'}" dropIndicatorSkin="skins.general.myDropIndicatorSkin"
@@ -132,6 +248,8 @@
 															import components.itemrenderers.chart.MyCircleItemRendererOver;
 															
 															import controllers.ExerciseController;
+															
+															import enum.ExerciseType;
 															
 															import models.modules.ExerciseModel;
 															
@@ -165,16 +283,16 @@
 															
 															private function chartRolloverEventHandler(event:ChartItemEvent):void 
 															{
-																lblMinutes.text = data.chart[0].data[event.hitData.chartItem.index].value;
-																lblMiles.text = data.chart[0].data[event.hitData.chartItem.index].miles;
+																value1.text = data.chart[0].data[event.hitData.chartItem.index].value;
+																value2.text = data.chart[0].data[event.hitData.chartItem.index].value2;
 																
 																myLineSeries.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.chart.MyCircleItemRendererOverWidget)); 
 															}
 															
 															private function chartRolloutEventHandler(event:ChartItemEvent):void 
 															{
-																lblMinutes.text = item.value;
-																lblMiles.text = item.miles;
+																value1.text = data.chart[0].data[event.hitData.chartItem.index].value;
+																value2.text = data.chart[0].data[event.hitData.chartItem.index].value2;
 																
 																myLineSeries.setStyle("itemRenderer",new ClassFactory(components.itemrenderers.chart.MyCircleItemRendererExercise)); 
 															}
@@ -186,12 +304,11 @@
 														</fx:Array>
 													</fx:Declarations>
 													
-													<s:VGroup width="23" horizontalAlign="center">
-														<s:Image visible="{data.measure == 'Run / Walk'}" includeInLayout="{data.measure == 'Run / Walk'}" source="@Embed('/images/exRunWidget.png')" />
-														<s:Image visible="{data.measure == 'Bike'}" includeInLayout="{data.measure == 'Bike'}" source="@Embed('/images/exBikeWidget.png')" />
+													<s:VGroup width="23" horizontalAlign="center" paddingLeft="10">
+														<s:Image source="{controller.getIconForExercise(data,true)}" />
 													</s:VGroup>
 													
-													<mx:LineChart id="chart" width="150" height="52" backgroundElements="{bge}" seriesFilters="[]" selectionMode="single" itemRollOver="chartRolloverEventHandler(event)" itemRollOut="chartRolloutEventHandler(event)"><!--itemRollOverColor="0xFBB03B" itemSelectionColor="0xFBB03B" showDataTips="true" itemRollOut="{myLineSeries.selectedIndex = 2}" -->
+													<mx:LineChart id="chart" width="150" height="52" backgroundElements="{bge}" seriesFilters="[]" selectionMode="single" itemRollOver="chartRolloverEventHandler(event)" itemRollOut="chartRolloutEventHandler(event)">
 														
 														<mx:series>
 															
@@ -233,36 +350,36 @@
 													<s:VGroup fontSize="12" paddingLeft="10" gap="3">
 														
 														<s:HGroup gap="3">
-															<s:Label id="lblMinutes" color="0xFBB03B" fontWeight="bold" creationComplete="item ? lblMinutes.text=item.value: ''" />
-															<s:Label text="minutes" color="0xFFFFFF" />
+															<s:Label id="value1" color="0xFBB03B" fontWeight="bold" creationComplete="item ? value1.text=item.value: ''" />
+															<s:Label text="{data.unit}" color="0xFFFFFF" />
 														</s:HGroup>
 														
-														<s:HGroup visible="{data.measure == 'Run / Walk'}" includeInLayout="{data.measure == 'Run / Walk'}" gap="3">
-															<s:Label id="lblMiles" color="0xFBB03B" fontWeight="bold" creationComplete="item ? lblMiles.text=item.miles: ''" />
-															<s:Label text="miles" color="0xFFFFFF" />
+														<s:HGroup gap="3">
+															<s:Label id="value2" color="0xFBB03B" fontWeight="bold" creationComplete="item ? value2.text=item.value2: ''" />
+															<s:Label text="{data.unit2}" color="0xFFFFFF" />
 														</s:HGroup>
 														
 													</s:VGroup>
 												</mx:HBox>
 												
 											</fx:Component>
+											
 										</mx:itemRenderer>
+										
 									</mx:DataGridColumn>
+									
 								</mx:columns>
+								
 							</mx:DataGrid>
 							
-							<s:Group>
-								<s:Line xFrom="0" xTo="280">
-									<s:stroke>
-										<s:SolidColorStroke color="0xB3B3B3" weight="1" alpha="0.1" />
-									</s:stroke>
-								</s:Line>
-							</s:Group>
 						</mx:VBox>
 						
 					</fx:Component>
+					
 				</mx:itemRenderer>
+				
 			</mx:DataGridColumn>
+			
 		</mx:columns>
 		
 	</mx:DataGrid>
