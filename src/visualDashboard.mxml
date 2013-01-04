@@ -27,6 +27,7 @@
 	<fx:Script>
 		<![CDATA[
 			import models.modules.MedicalRecordsModel;
+			import models.modules.nutrition.FoodPlan;
 			
 			import mx.events.FlexEvent;
 			
@@ -437,7 +438,7 @@
 		<modules:ExerciseModule includeIn="modExercise" width="976" paddingTop="10" />
 		
 		<!--NUTRITION-->
-		<modules:NutritionModule includeIn="modNutrition" width="976" paddingTop="10" />
+		<modules:NutritionModule includeIn="modNutrition" width="976" paddingTop="10" foodPlan="{FoodPlan.AVERAGE}" />
 		
 	</s:VGroup>
 </s:Application>
