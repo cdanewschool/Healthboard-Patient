@@ -9,6 +9,7 @@ package controllers
 	
 	import enum.ViewModeType;
 	
+	import events.ApplicationDataEvent;
 	import events.ApplicationEvent;
 	import events.AuthenticationEvent;
 	
@@ -49,6 +50,8 @@ package controllers
 			medicationsController = new PatientMedicationsController();
 			nutritionController = new NutritionController();
 			vitalSignsController = new VitalSignsController();
+			
+			patientsController.model.addEventListener( ApplicationDataEvent.LOADED, onPatientsLoaded );
 			
 			loadStyles();
 		}
