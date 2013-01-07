@@ -11,13 +11,16 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import controllers.MainController;
+			
 			import events.ApplicationEvent;
 			
 			import models.ApplicationModel;
 			
 			import spark.components.Application;
 			
-			[Bindable] private var model:ApplicationModel = AppProperties.getInstance().controller.model;
+			[Bindable] private var controller:MainController = AppProperties.getInstance().controller as MainController;
+			[Bindable] private var model:ApplicationModel = controller.model;
 			
 			private function removeMe():void 
 			{
@@ -79,7 +82,7 @@
 	<mx:Form id="myForm" styleName="whiteText13">				
 		<s:HGroup gap="102">
 			<s:VGroup>
-				<mx:FormHeading label="{model.fullname}" styleName="blueBoldSubtitle" paddingTop="-5"/>
+				<mx:FormHeading label="{controller.model.user.fullName}" styleName="blueBoldSubtitle" paddingTop="-5"/>
 				<s:HGroup height="24">
 					<s:Label width="116" textAlign="right" text="SSN:" />
 					<s:Label text="213-55-4232" paddingLeft="13" />

@@ -127,7 +127,7 @@
 				
 				<s:HGroup  paddingTop="6" paddingRight="14">
 					
-					<mx:LinkButton id="btnProfile" label="{controller.model.fullname}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
+					<mx:LinkButton id="btnProfile" label="{controller.model.user.fullName}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
 					
 					<s:HGroup paddingTop="-12" paddingLeft="-2">
 						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="onShowPreferences(event)"> 

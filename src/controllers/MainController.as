@@ -1,6 +1,7 @@
 package controllers
 {
 	import ASclasses.Constants;
+	import ASclasses.PatientConstants;
 	
 	import components.home.NextStepsOverlay;
 	import components.home.preferencesWindow;
@@ -14,7 +15,9 @@ package controllers
 	import external.TabBarPlus.plus.TabBarPlus;
 	
 	import models.PatientApplicationModel;
+	import models.PatientsModel;
 	import models.Preferences;
+	import models.UserModel;
 	import models.UserPreferences;
 	import models.modules.MessagesModel;
 	
@@ -48,6 +51,26 @@ package controllers
 			vitalSignsController = new VitalSignsController();
 			
 			loadStyles();
+		}
+		
+		override protected function onInitialized():void
+		{
+			if( !initialized ) return;
+			
+			if( Constants.DEBUG ) 
+			{
+				for each(var patient:UserModel in PatientsModel(patientsController.model).patients)
+				{
+					if( patient.id == PatientConstants.DEBUG_USER_ID ) 
+					{
+						model.user = patient;
+						
+						application.dispatchEvent( new AuthenticationEvent( AuthenticationEvent.SUCCESS, true ) );
+						
+						break;
+					}
+				}
+			}
 		}
 		
 		override public function showPreferences():UIComponent
