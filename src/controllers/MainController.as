@@ -73,6 +73,32 @@ package controllers
 			}
 		}
 		
+		override public function validateUser( username:String, password:String ):UserModel
+		{
+			for each(var patient:UserModel in PatientsModel(patientsController.model).patients)
+			{
+				if( patient.username == username && patient.password == password ) 
+				{
+					return patient;
+				}
+			}
+			
+			return null;
+		}
+		
+		override public function getDefaultUser():UserModel
+		{
+			for each(var patient:UserModel in PatientsModel(patientsController.model).patients)
+			{
+				if( patient.id == PatientConstants.DEBUG_USER_ID ) 
+				{
+					return patient;
+				}
+			}
+			
+			return null;
+		}
+		
 		override public function showPreferences():UIComponent
 		{
 			var popup:preferencesWindow = preferencesWindow( PopUpManager.createPopUp(application, preferencesWindow) as TitleWindow );
