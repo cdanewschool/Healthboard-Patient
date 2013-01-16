@@ -1,0 +1,2185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:components="components.*" 
+	xmlns:components1="external.flashcommander.components.*">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import edu.newschool.piim.healthboard.view.components.educationalResources.bookmarkAdd;
+			import edu.newschool.piim.healthboard.view.components.educationalResources.bookmarkRemove;
+			
+			import edu.newschool.piim.healthboard.event.BookmarkEvent;
+			
+			import edu.newschool.piim.healthboard.model.Bookmark;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.IndexChangedEvent;
+			import mx.managers.PopUpManager;
+			import mx.utils.ObjectUtil;
+			
+			import spark.components.TitleWindow;
+			
+			[Embed(source="/images/smallArrowCollapsedBlue.png")]
+			[Bindable] public var blueArrow:Class;
+			
+			[Embed(source="/images/smallArrowCollapsed.png")]
+			[Bindable] public var whiteArrow:Class;
+			
+			[Bindable] public var bookmarks:ArrayCollection = new ArrayCollection
+				(
+					[
+						new Bookmark( "Food & Diet", 1),
+						new Bookmark( "Facts About Fat", 2)
+					]
+				);
+			
+			[Bindable] private var bookmark:Bookmark;
+			
+			private var titles:Array = new Array
+				(
+					"Educational Resources Home",
+					"Food & Diet",
+					"Facts About Fat",
+					"Related Links",
+					"Search Results",
+					"Diabetes Basics — Symptoms",
+					"placeholder",
+					"Heartburn/GRED Home",
+					"Physical Conditions",
+					"Digestive Disorders",
+					"Heartburn/GERD",
+					"Mental Conditions"
+				);
+			
+			private function displayBookmark( item:Bookmark ):void 
+			{
+				viewsEducationalResources.selectedIndex = viewsEducationalResourcesMenu.selectedIndex = viewsEducationalResourcesBreadcrumb.selectedIndex = item.index;
+			}
+			
+			private function addBookmark():void 
+			{
+				if(	viewsEducationalResources.selectedIndex != 4 
+					&& viewsEducationalResources.selectedIndex != 6 ) 
+				{
+					bookmark = new Bookmark( titles[viewsEducationalResources.selectedIndex], viewsEducationalResources.selectedIndex );
+					bookmarks.addItemAt( bookmark, 0 );
+					
+					var myBookmarkAdd:bookmarkAdd = bookmarkAdd(PopUpManager.createPopUp(AppProperties.getInstance().controller.application, bookmarkAdd) as spark.components.TitleWindow);
+					myBookmarkAdd.bookmark = bookmark.clone();
+					myBookmarkAdd.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
+					myBookmarkAdd.addEventListener( BookmarkEvent.EDIT, onEditBookmark );
+					
+					PopUpManager.centerPopUp( myBookmarkAdd );
+				}
+			}
+			
+			private function onEditBookmark( event:BookmarkEvent ):void
+			{
+				if( bookmark.label != event.bookmark.label ) bookmark.label = event.bookmark.label;
+			}
+			
+			private function onRemoveBookmark( event:BookmarkEvent ):void
+			{
+				bookmarks.removeItemAt( bookmarks.getItemIndex(bookmark) );
+				bookmark = null;
+			}
+			
+			private function removeBookmark():void 
+			{
+				var myBookmarkRemove:bookmarkRemove = bookmarkRemove(PopUpManager.createPopUp(AppProperties.getInstance().controller.application, bookmarkRemove) as spark.components.TitleWindow);
+				myBookmarkRemove.bookmark = bookmark;
+				myBookmarkRemove.addEventListener( BookmarkEvent.DELETE, onRemoveBookmark );
+				
+				PopUpManager.centerPopUp(myBookmarkRemove);
+			}
+			
+			private function onViewChange(event:IndexChangedEvent):void
+			{
+				updateBookmark();
+			}
+			
+			private function updateBookmark():void
+			{
+				bookmark = getBookmarkByIndex( viewsEducationalResources.selectedIndex );
+			}
+			
+			private function getBookmarkByIndex( index:int ):Bookmark
+			{
+				for each(var bookmark:Bookmark in bookmarks)
+				{
+					if( bookmark.index == index )
+					{
+						return bookmark;
+					}
+				}
+				
+				return null;
+			}
+			
+			[Bindable] private var resourceNames:Array = new Array("Diabetes diet","Diabetes symptoms","Diabetes pictures","Diabetes treatment","Diabetes prevention","Heartburn basics","Heartburn remedies","Heartburn during pregnancy","Heartburn relief","Heartburn prevention");
+			
+		]]>
+	</fx:Script>
+	
+	<components:ModuleHeader 
+		id="header"
+		icon="@Embed('/images/btnHome.png')"
+		title="Educational Resources" 
+		actionCount="0" 
+		showSearch="false" showBackground="false" />
+	
+	<s:Spacer height="10" />
+	
+	<s:BorderContainer borderColor="0xBDBCBC" cornerRadius="4" backgroundColor="0x4A4A49" width="976" height="630">
+		
+		<s:layout>
+			<s:VerticalLayout />
+		</s:layout>
+		
+		<s:BorderContainer height="37" width="100%" borderVisible="false" backgroundColor="0x4A4A49">
+			
+			<s:layout>
+				<s:HorizontalLayout paddingTop="8" paddingLeft="10" />
+			</s:layout>
+			
+			<s:HGroup gap="-1" paddingTop="-2" fontStyle="italic" color="0x4A4A49">
+				<components1:AutoComplete 
+					id="educationalResourcesSearch" dataProvider="{resourceNames}" text="Search terms"
+					focusEnabled="false" height="24" width="166" prefixOnly="false" forceOpen="true"
+					click="{if(educationalResourcesSearch.text == 'Search terms') educationalResourcesSearch.text=''}"
+					enter="{if(educationalResourcesSearch.text.substr(0,1) == 'h' || educationalResourcesSearch.text.substr(0,1) == 'H') viewsEducationalResources.selectedIndex = 6; else viewsEducationalResources.selectedIndex = 4; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}"
+					select="{if(educationalResourcesSearch.text.substr(0,1) == 'h' || educationalResourcesSearch.text.substr(0,1) == 'H') viewsEducationalResources.selectedIndex = 6; else viewsEducationalResources.selectedIndex = 4; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}" />
+				<s:Button styleName="searchButtonIcon" width="24" height="24" click="{if(educationalResourcesSearch.text.substr(0,1) == 'h' || educationalResourcesSearch.text.substr(0,1) == 'H') viewsEducationalResources.selectedIndex = 6; else viewsEducationalResources.selectedIndex = 4; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}" />
+			</s:HGroup>	
+			
+			<s:DropDownList 
+				id="dropDownBookmarks"
+				dataProvider="{bookmarks}" prompt="My Bookmarks   ▼" 
+				width="164" horizontalScrollPolicy="off" dropShadowVisible="false" 
+				contentBackgroundColor="0x4A4A49" rollOverColor="0x5E5E5D" selectionColor="0x5E5E5D" skinClass="skins.general.MyDropDownListSkinNoButton" color="0xAEDBE2" 
+				change="{displayBookmark(dropDownBookmarks.selectedItem); dropDownBookmarks.selectedIndex = -1;}" />
+
+		</s:BorderContainer>
+		
+		<s:HGroup paddingTop="-5" paddingBottom="-6">
+			<s:Line xFrom="0" xTo="973">
+				<s:stroke>
+					<s:SolidColorStroke color="#BDBCBC" weight="1" alpha=".5" caps="square" />
+				</s:stroke>
+			</s:Line>
+		</s:HGroup>
+		
+		<s:BorderContainer height="44" width="100%" borderVisible="false" backgroundColor="0x3C3C3B">
+			
+			<s:layout>
+				<s:HorizontalLayout paddingTop="4" paddingLeft="11" verticalAlign="middle" />
+			</s:layout>
+			
+			<mx:ViewStack id="viewsEducationalResourcesBreadcrumb" fontSize="13">
+				
+				<s:NavigatorContent>
+					<s:Label text="Educational Resources Home" fontWeight="bold" color="0xFF931E" />
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc1" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc1.styleName='linkBtnUnderline';}" rollOut="btnERbc1.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					<s:Label text="Food &amp; Diet" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc2" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc2.styleName='linkBtnUnderline';}" rollOut="btnERbc2.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc3" label="Food &amp; Diet" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc3.styleName='linkBtnUnderline';}" rollOut="btnERbc3.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 1; viewsEducationalResourcesMenu.selectedIndex = 1; viewsEducationalResourcesBreadcrumb.selectedIndex = 1;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc4" label="Handouts" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc4.styleName='linkBtnUnderline';}" rollOut="btnERbc4.styleName='linkBtn';" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Facts About Fat" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc5" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc5.styleName='linkBtnUnderline';}" rollOut="btnERbc5.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc6" label="Food &amp; Diet" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc6.styleName='linkBtnUnderline';}" rollOut="btnERbc6.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 1; viewsEducationalResourcesMenu.selectedIndex = 1; viewsEducationalResourcesBreadcrumb.selectedIndex = 1;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Related Links" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc7" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc7.styleName='linkBtnUnderline';}" rollOut="btnERbc7.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Search Results" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc8" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc8.styleName='linkBtnUnderline';}" rollOut="btnERbc8.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc9" label="Search Results" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc9.styleName='linkBtnUnderline';}" rollOut="btnERbc9.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 4; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Diabetes Basics — Symptoms" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent id="placeholder" />
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc10" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc10.styleName='linkBtnUnderline';}" rollOut="btnERbc10.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc11" label="Search Results" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc11.styleName='linkBtnUnderline';}" rollOut="btnERbc11.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 6; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Heartburn/GERD Home" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc12" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc12.styleName='linkBtnUnderline';}" rollOut="btnERbc12.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Physical Conditions" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc13" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc13.styleName='linkBtnUnderline';}" rollOut="btnERbc13.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc14" label="Physical Conditions" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc14.styleName='linkBtnUnderline';}" rollOut="btnERbc14.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 8; viewsEducationalResourcesMenu.selectedIndex = 8; viewsEducationalResourcesBreadcrumb.selectedIndex = 8;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Digestive Disorders" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc15" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc15.styleName='linkBtnUnderline';}" rollOut="btnERbc15.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					
+					<mx:LinkButton id="btnERbc16" label="Physical Conditions" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc16.styleName='linkBtnUnderline';}" rollOut="btnERbc16.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 8; viewsEducationalResourcesMenu.selectedIndex = 8; viewsEducationalResourcesBreadcrumb.selectedIndex = 8;}" />
+					
+					<s:Label text=">" color="0xAEDBE2" paddingTop="6" />
+					
+					<mx:LinkButton id="btnERbc17" label="Digestive Disorders" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc17.styleName='linkBtnUnderline';}" rollOut="btnERbc17.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 9; viewsEducationalResourcesMenu.selectedIndex = 9; viewsEducationalResourcesBreadcrumb.selectedIndex = 9;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Heartburn/GERD" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="-6" paddingLeft="-10" gap="-4" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERbc18" label="Home" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnERbc18.styleName='linkBtnUnderline';}" rollOut="btnERbc18.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					
+					<s:Label text=">" color="0xFF931E" paddingTop="6" />
+					
+					<s:Label text="Mental Conditions" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingLeft="10" />
+				
+				</s:NavigatorContent>
+				
+			</mx:ViewStack>
+			
+			<s:Spacer width="100%" />
+			
+			<s:HGroup verticalAlign="middle" gap="8" paddingRight="11">
+				<s:Button width="48" height="24" label="Print" />
+				<s:Image id="addBookmarkButton" source="@Embed('/images/erBookmark0.png')" buttonMode="true" click="addBookmark()" toolTip="Bookmark this page" visible="{bookmark==null}" includeInLayout="{bookmark==null}" />
+				<s:Image id="removeBookmarkButton" source="@Embed('/images/erBookmark1.png')" buttonMode="true" click="removeBookmark()" toolTip="Remove this bookmark" visible="{bookmark!=null}" includeInLayout="{bookmark!=null}" />
+				<s:Image source="@Embed('/images/erBtnHelp.png')" buttonMode="true" />
+			</s:HGroup>
+			
+		</s:BorderContainer>
+		
+		<s:HGroup paddingTop="-5" paddingBottom="-6">
+			<s:Line xFrom="0" xTo="971">
+				<s:stroke>
+					<s:SolidColorStroke color="#7C7C7C" weight="3" caps="square" />
+				</s:stroke>
+			</s:Line>
+		</s:HGroup>
+		
+		<s:HGroup width="100%" height="100%">
+			<mx:ViewStack id="viewsEducationalResourcesMenu" width="143" paddingLeft="14" paddingTop="10">
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenu1" label="Physical Conditions" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu1.styleName='linkBtnUnderline'; btnERmenu1.setStyle('icon',blueArrow);}" rollOut="btnERmenu1.styleName='linkBtn'; btnERmenu1.setStyle('icon',whiteArrow);" click="{viewsEducationalResources.selectedIndex = 8; viewsEducationalResourcesMenu.selectedIndex = 8; viewsEducationalResourcesBreadcrumb.selectedIndex = 8;}" />
+					<mx:LinkButton id="btnERmenu2" label="Mental Conditions" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu2.styleName='linkBtnUnderline'; btnERmenu2.setStyle('icon',blueArrow);}" rollOut="btnERmenu2.styleName='linkBtn'; btnERmenu2.setStyle('icon',whiteArrow);" click="{viewsEducationalResources.selectedIndex = 11; viewsEducationalResourcesMenu.selectedIndex = 11; viewsEducationalResourcesBreadcrumb.selectedIndex = 11;}" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu3" label="Food &amp; Diet" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu3.styleName='linkBtnUnderline'; btnERmenu3.setStyle('icon',blueArrow);}" rollOut="btnERmenu3.styleName='linkBtn'; btnERmenu3.setStyle('icon',whiteArrow);" click="{viewsEducationalResources.selectedIndex = 1; viewsEducationalResourcesMenu.selectedIndex = 1; viewsEducationalResourcesBreadcrumb.selectedIndex = 1;}" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu4" label="Physical Activities" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu4.styleName='linkBtnUnderline'; btnERmenu4.setStyle('icon',blueArrow);}" rollOut="btnERmenu4.styleName='linkBtn'; btnERmenu4.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu5" label="Medications" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu5.styleName='linkBtnUnderline'; btnERmenu5.setStyle('icon',blueArrow);}" rollOut="btnERmenu5.styleName='linkBtn'; btnERmenu5.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu6" label="Preventive Care" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu6.styleName='linkBtnUnderline'; btnERmenu6.setStyle('icon',blueArrow);}" rollOut="btnERmenu6.styleName='linkBtn'; btnERmenu6.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu7" label="TRICARE Member Guidelines" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu7.styleName='linkBtnUnderline'; btnERmenu7.setStyle('icon',blueArrow);}" rollOut="btnERmenu7.styleName='linkBtn'; btnERmenu7.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK1" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK1.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK1.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					<mx:LinkButton id="btnERmenu8" label="Food Groups" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu8.styleName='linkBtnUnderline'; btnERmenu8.setStyle('icon',blueArrow);}" rollOut="btnERmenu8.styleName='linkBtn'; btnERmenu8.setStyle('icon',whiteArrow);" />
+					<mx:LinkButton id="btnERmenu9" label="Tips &amp; Resources" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu9.styleName='linkBtnUnderline'; btnERmenu9.setStyle('icon',blueArrow);}" rollOut="btnERmenu9.styleName='linkBtn'; btnERmenu9.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu10" label="Handouts" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu10.styleName='linkBtnUnderline'; btnERmenu10.setStyle('icon',blueArrow);}" rollOut="btnERmenu10.styleName='linkBtn'; btnERmenu10.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu11" label="Interactive Tools" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu11.styleName='linkBtnUnderline'; btnERmenu11.setStyle('icon',blueArrow);}" rollOut="btnERmenu11.styleName='linkBtn'; btnERmenu11.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu12" label="Specific Audiences" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu12.styleName='linkBtnUnderline'; btnERmenu12.setStyle('icon',blueArrow);}" rollOut="btnERmenu12.styleName='linkBtn'; btnERmenu12.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu13" label="Multimedia" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu13.styleName='linkBtnUnderline'; btnERmenu13.setStyle('icon',blueArrow);}" rollOut="btnERmenu13.styleName='linkBtn'; btnERmenu13.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu14" label="For Professionals" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu14.styleName='linkBtnUnderline'; btnERmenu14.setStyle('icon',blueArrow);}" rollOut="btnERmenu14.styleName='linkBtn'; btnERmenu14.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu15" label="Partnering Program" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu15.styleName='linkBtnUnderline'; btnERmenu15.setStyle('icon',blueArrow);}" rollOut="btnERmenu15.styleName='linkBtn'; btnERmenu15.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu16" label="Related Links" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu16.styleName='linkBtnUnderline'; btnERmenu16.setStyle('icon',blueArrow);}" rollOut="btnERmenu16.styleName='linkBtn'; btnERmenu16.setStyle('icon',whiteArrow);" click="{viewsEducationalResources.selectedIndex = 3; viewsEducationalResourcesMenu.selectedIndex = 3; viewsEducationalResourcesBreadcrumb.selectedIndex = 3}" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu17" label="FQA" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu17.styleName='linkBtnUnderline'; btnERmenu17.setStyle('icon',blueArrow);}" rollOut="btnERmenu17.styleName='linkBtn'; btnERmenu17.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK2" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK2.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK2.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu18" label="Dietary Guidelines for Americans, 2010" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu18.styleName='linkBtnUnderline';}" rollOut="btnERmenu18.styleName='linkBtn';" /><!--remember to remove! -->
+					<s:Label text="Facts About Fat" fontSize="13" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingBottom="3" paddingLeft="-4" />
+					<mx:LinkButton id="btnERmenu20" label="Getting Started with MyPlate" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu20.styleName='linkBtnUnderline';}" rollOut="btnERmenu20.styleName='linkBtn';" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu21" label="10 Tips Nutrition Education Series" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu21.styleName='linkBtnUnderline';}" rollOut="btnERmenu21.styleName='linkBtn';" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu22" label="Sample Menus" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu22.styleName='linkBtnUnderline';}" rollOut="btnERmenu22.styleName='linkBtn';" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="6" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK3" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK3.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK3.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 1; viewsEducationalResourcesMenu.selectedIndex = 1; viewsEducationalResourcesBreadcrumb.selectedIndex = 1;}" />
+					<mx:LinkButton id="btnERmenu23" label="Team Nutrition" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu23.styleName='linkBtnUnderline'; btnERmenu23.setStyle('icon',blueArrow);}" rollOut="btnERmenu23.styleName='linkBtn'; btnERmenu23.setStyle('icon',whiteArrow);" />
+					<mx:LinkButton id="btnERmenu24" label="Know Your Farmer, Know Your Food" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu24.styleName='linkBtnUnderline'; btnERmenu24.setStyle('icon',blueArrow);}" rollOut="btnERmenu24.styleName='linkBtn'; btnERmenu24.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu25" label="Farmers Markets" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu25.styleName='linkBtnUnderline'; btnERmenu25.setStyle('icon',blueArrow);}" rollOut="btnERmenu25.styleName='linkBtn'; btnERmenu25.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu26" label="Food and Nutrition Information" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu26.styleName='linkBtnUnderline'; btnERmenu26.setStyle('icon',blueArrow);}" rollOut="btnERmenu26.styleName='linkBtn'; btnERmenu26.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu27" label="Fruits and Vegetable Video Center" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu27.styleName='linkBtnUnderline'; btnERmenu27.setStyle('icon',blueArrow);}" rollOut="btnERmenu27.styleName='linkBtn'; btnERmenu27.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu28" label="Fruits and Veggies—More Matters" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu28.styleName='linkBtnUnderline'; btnERmenu28.setStyle('icon',blueArrow);}" rollOut="btnERmenu28.styleName='linkBtn'; btnERmenu28.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu29" label="Dietary Guidelines for Americans, 2010" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu29.styleName='linkBtnUnderline'; btnERmenu29.setStyle('icon',blueArrow);}" rollOut="btnERmenu29.styleName='linkBtn'; btnERmenu29.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu30" label="Nutrition Facts Label" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu30.styleName='linkBtnUnderline'; btnERmenu30.setStyle('icon',blueArrow);}" rollOut="btnERmenu30.styleName='linkBtn'; btnERmenu30.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu31" label="Food and Nutrition Service Assistance Program" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu31.styleName='linkBtnUnderline'; btnERmenu31.setStyle('icon',blueArrow);}" rollOut="btnERmenu31.styleName='linkBtn'; btnERmenu31.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu32" label="Food Safety Info." width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu32.styleName='linkBtnUnderline'; btnERmenu32.setStyle('icon',blueArrow);}" rollOut="btnERmenu32.styleName='linkBtn'; btnERmenu32.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu33" label="Physical Activity" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu33.styleName='linkBtnUnderline'; btnERmenu33.setStyle('icon',blueArrow);}" rollOut="btnERmenu33.styleName='linkBtn'; btnERmenu33.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu34" label="Food Composition" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu34.styleName='linkBtnUnderline'; btnERmenu34.setStyle('icon',blueArrow);}" rollOut="btnERmenu34.styleName='linkBtn'; btnERmenu34.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu35" label="Coronary Heart Disease/Cardio-Vascular Disease" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu35.styleName='linkBtnUnderline'; btnERmenu35.setStyle('icon',blueArrow);}" rollOut="btnERmenu35.styleName='linkBtn'; btnERmenu35.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu36" label="High Blood Pressure" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu36.styleName='linkBtnUnderline'; btnERmenu36.setStyle('icon',blueArrow);}" rollOut="btnERmenu36.styleName='linkBtn'; btnERmenu36.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu37" label="Obesity &amp; Maintaining Healthy Weight" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu37.styleName='linkBtnUnderline'; btnERmenu37.setStyle('icon',blueArrow);}" rollOut="btnERmenu37.styleName='linkBtn'; btnERmenu37.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu38" label="Diabetes" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu38.styleName='linkBtnUnderline'; btnERmenu38.setStyle('icon',blueArrow);}" rollOut="btnERmenu38.styleName='linkBtn'; btnERmenu38.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu39" label="Neural Tube Defects" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu39.styleName='linkBtnUnderline'; btnERmenu39.setStyle('icon',blueArrow);}" rollOut="btnERmenu39.styleName='linkBtn'; btnERmenu39.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu40" label="FQA" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu40.styleName='linkBtnUnderline'; btnERmenu40.setStyle('icon',blueArrow);}" rollOut="btnERmenu40.styleName='linkBtn'; btnERmenu40.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent id="placeholder2" />
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK4" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK4.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK4.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 4; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 4;}" />
+					<mx:LinkButton id="btnERmenu41" label="Type 1" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu41.styleName='linkBtnUnderline';}" rollOut="btnERmenu41.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu42" label="Type 2" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu42.styleName='linkBtnUnderline';}" rollOut="btnERmenu42.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu43" label="Gestational" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu43.styleName='linkBtnUnderline';}" rollOut="btnERmenu43.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu44" label="Prevention" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu44.styleName='linkBtnUnderline';}" rollOut="btnERmenu44.styleName='linkBtn';" />
+					<s:Label text="Symptoms" fontSize="13" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingBottom="3" paddingLeft="-4" />
+					<mx:LinkButton id="btnERmenu45" label="Diabetes Statistics" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu45.styleName='linkBtnUnderline';}" rollOut="btnERmenu45.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu46" label="Tips" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu46.styleName='linkBtnUnderline';}" rollOut="btnERmenu46.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu47" label="Common Terms" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu47.styleName='linkBtnUnderline';}" rollOut="btnERmenu47.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu48" label="Diabetes Myths" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu48.styleName='linkBtnUnderline';}" rollOut="btnERmenu48.styleName='linkBtn';" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent id="placeholder3" />
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK5" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK5.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK5.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 9; viewsEducationalResourcesMenu.selectedIndex = 9; viewsEducationalResourcesBreadcrumb.selectedIndex = 9;}" /><!--orig: 6/0/4 (search)-->
+					<s:Label text="Overview" fontSize="13" fontWeight="bold" color="0xFF931E" paddingTop="6" paddingBottom="3" paddingLeft="-4" />
+					<mx:LinkButton id="btnERmenu49" label="Basics &amp; Causes" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu49.styleName='linkBtnUnderline';}" rollOut="btnERmenu49.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu50" label="Symptoms &amp; Types" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu50.styleName='linkBtnUnderline';}" rollOut="btnERmenu50.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu51" label="Diagnosis &amp; Tests" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu51.styleName='linkBtnUnderline';}" rollOut="btnERmenu51.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu52" label="Treatment &amp; Care" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu52.styleName='linkBtnUnderline';}" rollOut="btnERmenu52.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu53" label="Living &amp; Managing" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu53.styleName='linkBtnUnderline';}" rollOut="btnERmenu53.styleName='linkBtn';" />
+					<mx:LinkButton id="btnERmenu54" label="Support &amp; Resources" width="130" textAlign="left" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu54.styleName='linkBtnUnderline';}" rollOut="btnERmenu54.styleName='linkBtn';" />
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK6" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK6.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK6.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					<mx:LinkButton id="btnERmenu55" label="Location" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu55.styleName='linkBtnUnderline'; btnERmenu55.setStyle('icon',blueArrow);}" rollOut="btnERmenu55.styleName='linkBtn'; btnERmenu55.setStyle('icon',whiteArrow);" />
+					<mx:LinkButton id="btnERmenu56" label="Systems" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu56.styleName='linkBtnUnderline'; btnERmenu56.setStyle('icon',blueArrow);}" rollOut="btnERmenu56.styleName='linkBtn'; btnERmenu56.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu57" label="Profile" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu57.styleName='linkBtnUnderline'; btnERmenu57.setStyle('icon',blueArrow);}" rollOut="btnERmenu57.styleName='linkBtn'; btnERmenu57.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu58" label="Common Physical Health Conditions" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu58.styleName='linkBtnUnderline'; btnERmenu58.setStyle('icon',blueArrow);}" rollOut="btnERmenu58.styleName='linkBtn'; btnERmenu58.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK7" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK7.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK7.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 8; viewsEducationalResourcesMenu.selectedIndex = 8; viewsEducationalResourcesBreadcrumb.selectedIndex = 8;}" />
+					<mx:LinkButton id="btnERmenu59" label="Heartburn/GERD" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu59.styleName='linkBtnUnderline'; btnERmenu59.setStyle('icon',blueArrow);}" rollOut="btnERmenu59.styleName='linkBtn'; btnERmenu59.setStyle('icon',whiteArrow);" click="{viewsEducationalResources.selectedIndex = 7; viewsEducationalResourcesMenu.selectedIndex = 7; viewsEducationalResourcesBreadcrumb.selectedIndex = 10;}" />
+					<mx:LinkButton id="btnERmenu60" label="Inflammatory Bowel Disease" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu60.styleName='linkBtnUnderline'; btnERmenu60.setStyle('icon',blueArrow);}" rollOut="btnERmenu60.styleName='linkBtn'; btnERmenu60.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu61" label="Irritable Bowel Syndrome" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu61.styleName='linkBtnUnderline'; btnERmenu61.setStyle('icon',blueArrow);}" rollOut="btnERmenu61.styleName='linkBtn'; btnERmenu61.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu62" label="Diarrhea" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu62.styleName='linkBtnUnderline'; btnERmenu62.setStyle('icon',blueArrow);}" rollOut="btnERmenu62.styleName='linkBtn'; btnERmenu62.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu63" label="Appendicitis" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu63.styleName='linkBtnUnderline'; btnERmenu63.setStyle('icon',blueArrow);}" rollOut="btnERmenu63.styleName='linkBtn'; btnERmenu63.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu64" label="Bowel Obstruction" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu64.styleName='linkBtnUnderline'; btnERmenu64.setStyle('icon',blueArrow);}" rollOut="btnERmenu64.styleName='linkBtn'; btnERmenu64.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu65" label="Celiac Disease" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu65.styleName='linkBtnUnderline'; btnERmenu65.setStyle('icon',blueArrow);}" rollOut="btnERmenu65.styleName='linkBtn'; btnERmenu65.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu66" label="Constipation" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu66.styleName='linkBtnUnderline'; btnERmenu66.setStyle('icon',blueArrow);}" rollOut="btnERmenu66.styleName='linkBtn'; btnERmenu66.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu67" label="Depression Symptoms" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu67.styleName='linkBtnUnderline'; btnERmenu67.setStyle('icon',blueArrow);}" rollOut="btnERmenu67.styleName='linkBtn'; btnERmenu67.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu68" label="Digestive News &amp; Features" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu68.styleName='linkBtnUnderline'; btnERmenu68.setStyle('icon',blueArrow);}" rollOut="btnERmenu68.styleName='linkBtn'; btnERmenu68.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu69" label="Digestive Disorders References" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu69.styleName='linkBtnUnderline'; btnERmenu69.setStyle('icon',blueArrow);}" rollOut="btnERmenu69.styleName='linkBtn'; btnERmenu69.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu70" label="Related Videos" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu70.styleName='linkBtnUnderline'; btnERmenu70.setStyle('icon',blueArrow);}" rollOut="btnERmenu70.styleName='linkBtn'; btnERmenu70.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu71" label="More Related Topics" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu71.styleName='linkBtnUnderline'; btnERmenu71.setStyle('icon',blueArrow);}" rollOut="btnERmenu71.styleName='linkBtn'; btnERmenu71.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent id="placeholder4" />
+				
+				<s:NavigatorContent>
+					
+					<s:layout>
+						<s:VerticalLayout gap="10" />
+					</s:layout>
+					
+					<mx:LinkButton id="btnERmenuBACK8" label="« Back" width="130" textAlign="left" fontSize="13" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenuBACK8.styleName='linkBtnUnderline';}" rollOut="btnERmenuBACK8.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 0; viewsEducationalResourcesMenu.selectedIndex = 0; viewsEducationalResourcesBreadcrumb.selectedIndex = 0;}" />
+					<mx:LinkButton id="btnERmenu72" label="Neurosis" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" styleName="erButtonIcon" labelPlacement="left" textAlign="right" horizontalGap="5" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu72.styleName='linkBtnUnderline'; btnERmenu72.setStyle('icon',blueArrow);}" rollOut="btnERmenu72.styleName='linkBtn'; btnERmenu72.setStyle('icon',whiteArrow);" />
+					<mx:LinkButton id="btnERmenu73" label="Psychosis" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu73.styleName='linkBtnUnderline'; btnERmenu73.setStyle('icon',blueArrow);}" rollOut="btnERmenu73.styleName='linkBtn'; btnERmenu73.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu74" label="Social" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu74.styleName='linkBtnUnderline'; btnERmenu74.setStyle('icon',blueArrow);}" rollOut="btnERmenu74.styleName='linkBtn'; btnERmenu74.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+					<mx:LinkButton id="btnERmenu75" label="Common Mental Health Conditions" width="130" icon="@Embed('/images/smallArrowCollapsed.png')" labelPlacement="left" textAlign="right" horizontalGap="9" fontSize="13" color="0xFFFFFF" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnERmenu75.styleName='linkBtnUnderline'; btnERmenu75.setStyle('icon',blueArrow);}" rollOut="btnERmenu75.styleName='linkBtn'; btnERmenu75.setStyle('icon',whiteArrow);" /><!--click="{select('all')}" -->
+				
+				</s:NavigatorContent>
+			
+			</mx:ViewStack>
+			
+			<mx:ViewStack id="viewsEducationalResources" width="100%" height="100%" color="0x3C3C3B" change="onViewChange(event)" creationComplete="updateBookmark()">
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:VerticalLayout paddingTop="16" paddingLeft="16" />
+					</s:layout>
+					
+					<s:Label text="September 24, 2011" fontSize="13" fontStyle="italic" color="0x4A4A49" />
+					
+					<s:HGroup paddingTop="5" gap="18">
+						
+						<s:BorderContainer width="389" height="317" styleName="transparentBorderContainer">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="16" paddingLeft="15" />
+							</s:layout>
+							
+							<s:HGroup paddingTop="-6">
+								<s:Label id="dummyFocus" text="Topics recommended by your" paddingTop="6" />
+								<mx:LinkButton id="btnERhealthcareProvider" label="healthcare provider" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERhealthcareProvider.styleName='linkBtnUnderline';}" rollOut="btnERhealthcareProvider.styleName='linkBtn';" /><!--click="{select('all')}" -->
+							</s:HGroup>
+							
+							<s:HGroup paddingTop="-11">
+								<s:Label text="View my" paddingTop="6" />
+								<mx:LinkButton id="btnERmedicalRecords" label="Medical Records" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERmedicalRecords.styleName='linkBtnUnderline';}" rollOut="btnERmedicalRecords.styleName='linkBtn';" /><!--click="{select('all')}" -->
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER1.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Balancing Calories" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER1" label="Enjoy your food, but eat less" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER1.styleName='linkBtnUnderline';}" rollOut="btnER1.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER2" label="Avoid oversized portions" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER2.styleName='linkBtnUnderline';}" rollOut="btnER2.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER2.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Foods to Increase" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER3" label="Make half your plate fruits and vegetables" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER3.styleName='linkBtnUnderline';}" rollOut="btnER3.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER4" label="Make at least half your grains whole grains" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER4.styleName='linkBtnUnderline';}" rollOut="btnER4.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER5" label="Switch to fat-free or low-fat (1%) milk" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER5.styleName='linkBtnUnderline';}" rollOut="btnER5.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER3.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Living with Diabetes" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER6" label="Diabetes Superfoods" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER6.styleName='linkBtnUnderline';}" rollOut="btnER6.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER7" label="Blood Glucose Control" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER7.styleName='linkBtnUnderline';}" rollOut="btnER7.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER8" label="Medications" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER8.styleName='linkBtnUnderline';}" rollOut="btnER8.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:VGroup gap="14">
+							
+							<s:BorderContainer width="389" height="232" styleName="transparentBorderContainer">
+								
+								<s:layout>
+									<s:VerticalLayout paddingTop="16" paddingLeft="15" />
+								</s:layout>
+								
+								<s:HGroup paddingTop="-6">
+									<s:Label text="Based on your recent" paddingTop="6" />
+									<mx:LinkButton id="btnERweightGain" label="weight gain" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERweightGain.styleName='linkBtnUnderline';}" rollOut="btnERweightGain.styleName='linkBtn';" /><!--click="{select('all')}" -->
+									<s:Label text=", here are topics you should read:" paddingTop="6" paddingLeft="-16" />
+								</s:HGroup>
+								
+								<s:HGroup paddingTop="-11">
+									<s:Label text="View your weight in" paddingTop="6" />
+									<mx:LinkButton id="btnERvitalSigns" label="Vital Signs" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERvitalSigns.styleName='linkBtnUnderline';}" rollOut="btnERvitalSigns.styleName='linkBtn';" /><!--click="{select('all')}" -->
+								</s:HGroup>
+								
+								<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+									<s:Image source="@Embed('/images/ER4.png')" />
+									<s:VGroup gap="0">
+										<s:Label text="Losing Weight" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER9" label="Evaluator: Assess Your Diet" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER9.styleName='linkBtnUnderline';}" rollOut="btnER9.styleName='linkBtn';" />
+										</s:HGroup>
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER10" label="Fitness for Couch Potatoes" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER10.styleName='linkBtnUnderline';}" rollOut="btnER10.styleName='linkBtn';" />
+										</s:HGroup>
+									</s:VGroup>
+								</s:HGroup>
+								
+								<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+									<s:Image source="@Embed('/images/ER5.png')" />
+									<s:VGroup gap="0">
+										<s:Label text="Get Lean" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER11" label="Cardiovascular Exercise: The Basics" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER11.styleName='linkBtnUnderline';}" rollOut="btnER11.styleName='linkBtn';" />
+										</s:HGroup>
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER12" label="Food &amp; Fitness Planner: Get Started" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER12.styleName='linkBtnUnderline';}" rollOut="btnER12.styleName='linkBtn';" />
+										</s:HGroup>
+									</s:VGroup>
+								</s:HGroup>
+							
+							</s:BorderContainer>
+							
+							<s:BorderContainer width="389" height="150" styleName="transparentBorderContainer">
+								
+								<s:layout>
+									<s:VerticalLayout paddingTop="16" paddingLeft="15" />
+								</s:layout>
+								
+								<s:HGroup paddingTop="-6">
+									<s:Label text="Learn more about" paddingTop="6" />
+									<mx:LinkButton id="btnERvaccines" label="vaccines" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERvaccines.styleName='linkBtnUnderline';}" rollOut="btnERvaccines.styleName='linkBtn';" /><!--click="{select('all')}" -->
+									<s:Label text="you need to take:" paddingTop="6" paddingLeft="-12" />
+								</s:HGroup>
+								
+								<s:HGroup paddingTop="-11">
+									<s:Label text="View your records in" paddingTop="6" />
+									<mx:LinkButton id="btnERimmunizations" label="Immunizations" fontSize="12" fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" rollOver="{btnERimmunizations.styleName='linkBtnUnderline';}" rollOut="btnERimmunizations.styleName='linkBtn';" /><!--click="{select('all')}" -->
+								</s:HGroup>
+								
+								<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+									<s:Image source="@Embed('/images/ER6.png')" />
+									<s:VGroup gap="0">
+										<s:Label text="Measles, Mumps and Rubella (MMR)" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER13" label="What is MMR?" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER13.styleName='linkBtnUnderline';}" rollOut="btnER13.styleName='linkBtn';" />
+										</s:HGroup>
+										<s:HGroup paddingTop="-6" paddingLeft="12">
+											<s:Label text="•" paddingTop="6" />
+											<mx:LinkButton id="btnER14"  label="Benefits &amp; Risks of MMR vaccine" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER14.styleName='linkBtnUnderline';}" rollOut="btnER14.styleName='linkBtn';" />
+										</s:HGroup>
+									</s:VGroup>
+								</s:HGroup>
+								
+							</s:BorderContainer>
+						</s:VGroup>
+						
+					</s:HGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:VerticalLayout paddingTop="16" paddingLeft="16" />
+					</s:layout>
+					
+					<s:Label text="September 24, 2011" fontSize="13" fontStyle="italic" color="0x4A4A49" />
+					
+					<s:HGroup paddingTop="8" gap="9">
+						
+						<s:HGroup paddingRight="8" paddingTop="-2">
+							<s:Image source="@Embed('/images/chooseMyPlate.png')" />
+						</s:HGroup>
+						
+						<s:BorderContainer width="316" height="233" styleName="transparentBorderContainer">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="16" paddingLeft="18" />
+							</s:layout>
+							
+							<s:Label text="Handouts" fontWeight="bold" />
+							
+							<s:HGroup paddingLeft="-1" paddingTop="1" gap="11">
+								<s:Image source="@Embed('/images/ER7.png')" />
+								<s:VGroup gap="-3" paddingTop="-5">
+									<s:Label text="Dietary Guidelines for Americans, 2010" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:Label text="Released January 31, 2011" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<mx:LinkButton id="btnER15" label="Selected Messages for Consumers" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER15.styleName='linkBtnUnderline';}" rollOut="btnER15.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER16"  label="Questions and Answers" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER16.styleName='linkBtnUnderline';}" rollOut="btnER16.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER17"  label="Consumer Brochure" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER17.styleName='linkBtnUnderline';}" rollOut="btnER17.styleName='linkBtn';" />
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:VGroup gap="0" paddingTop="7">
+								<s:Label text="More Handouts:" fontWeight="bold" paddingBottom="4" />
+								<s:HGroup paddingTop="-6" paddingLeft="12">
+									<s:Label text="•" paddingTop="6" />
+									<mx:LinkButton id="btnER18" label="Facts about Fat" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER18.styleName='linkBtnUnderline';}" rollOut="btnER18.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 2; viewsEducationalResourcesMenu.selectedIndex = 2; viewsEducationalResourcesBreadcrumb.selectedIndex = 2;}" />
+								</s:HGroup>
+								<s:HGroup paddingTop="-6" paddingLeft="12">
+									<s:Label text="•" paddingTop="6" />
+									<mx:LinkButton id="btnER19"  label="Getting Started with MyPlate" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER19.styleName='linkBtnUnderline';}" rollOut="btnER19.styleName='linkBtn';" />
+								</s:HGroup>
+								<s:HGroup paddingTop="-6" paddingLeft="12">
+									<s:Label text="•" paddingTop="6" />
+									<mx:LinkButton id="btnER20"  label="10 Tips Nutrition Education Series" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER20.styleName='linkBtnUnderline';}" rollOut="btnER20.styleName='linkBtn';" />
+								</s:HGroup>
+								<s:HGroup paddingTop="-6" paddingLeft="12">
+									<s:Label text="•" paddingTop="6" />
+									<mx:LinkButton id="btnER21"  label="Sample Menus" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER21.styleName='linkBtnUnderline';}" rollOut="btnER21.styleName='linkBtn';" />
+								</s:HGroup>
+							</s:VGroup>
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="178" height="233" styleName="transparentBorderContainer">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="16" paddingLeft="18" gap="-3" />
+							</s:layout>
+							
+							<s:Label text="I Want To..." fontWeight="bold" paddingBottom="4" />
+							<mx:LinkButton id="btnER22" label="Eat healthy on a budget" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER22.styleName='linkBtnUnderline';}" rollOut="btnER22.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER23" label="Look up a food" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER23.styleName='linkBtnUnderline';}" rollOut="btnER23.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER24" label="Learn about food groups" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER24.styleName='linkBtnUnderline';}" rollOut="btnER24.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER25" label="Get a personalized Plan" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER25.styleName='linkBtnUnderline';}" rollOut="btnER25.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER26" label="Learn healthy eating tips" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER26.styleName='linkBtnUnderline';}" rollOut="btnER26.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER27" label="Get weight loss information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER27.styleName='linkBtnUnderline';}" rollOut="btnER27.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER28" label="Plan a healthy menu" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER28.styleName='linkBtnUnderline';}" rollOut="btnER28.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER29" label="Analyze my diet" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER29.styleName='linkBtnUnderline';}" rollOut="btnER29.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER30" label="Get MyPlate updates" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER30.styleName='linkBtnUnderline';}" rollOut="btnER30.styleName='linkBtn';" />
+							<mx:LinkButton id="btnER31" label="Ask a question" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER31.styleName='linkBtnUnderline';}" rollOut="btnER31.styleName='linkBtn';" />
+						</s:BorderContainer>
+					</s:HGroup>
+					
+					<s:HGroup paddingTop="9" gap="30">
+						
+						<s:VGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER1.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Balancing Calories" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER32" label="Enjoy your food, but eat less" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER32.styleName='linkBtnUnderline';}" rollOut="btnER32.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER33" label="Avoid oversized portions" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER33.styleName='linkBtnUnderline';}" rollOut="btnER33.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER2.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Foods to Increase" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER34" label="Make half your plate fruits and vegetables" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER34.styleName='linkBtnUnderline';}" rollOut="btnER34.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER35" label="Make at least half your grains whole grains" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER35.styleName='linkBtnUnderline';}" rollOut="btnER35.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER36" label="Switch to fat-free or low-fat (1%) milk" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER36.styleName='linkBtnUnderline';}" rollOut="btnER36.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER3.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Foods to Reduce" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER37" width="200" label="Compare sodium in foods and choose the foods with lower numbers" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER37.styleName='linkBtnUnderline';}" rollOut="btnER37.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER38" label="Drink water instead of sugary drinks" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER38.styleName='linkBtnUnderline';}" rollOut="btnER38.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+						</s:VGroup>
+						
+						<s:VGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER8.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Take Control of Your Food" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER39" label="Eat at home so you know what you are eating" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER39.styleName='linkBtnUnderline';}" rollOut="btnER39.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER40" label="If you eat out, check the nutrition information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER40.styleName='linkBtnUnderline';}" rollOut="btnER40.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER41" label="Choose healthier options (baked instead of fried)" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER41.styleName='linkBtnUnderline';}" rollOut="btnER41.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER9.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Avoid Oversized Portions" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER42" label="Use a smaller plate, bowl, and glass" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER42.styleName='linkBtnUnderline';}" rollOut="btnER42.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER43" label="Portion out foods before you eat" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER43.styleName='linkBtnUnderline';}" rollOut="btnER43.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER44" label="When eating out, try sharing a dish" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER44.styleName='linkBtnUnderline';}" rollOut="btnER44.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+							<s:HGroup paddingLeft="-4" paddingTop="4" gap="11">
+								<s:Image source="@Embed('/images/ER10.png')" />
+								<s:VGroup gap="0">
+									<s:Label text="Drink water instead of Sugary Drinks" fontWeight="bold" paddingTop="4" paddingBottom="4" />
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER45" label="Choose to drink water or  unsweetened beverages" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER45.styleName='linkBtnUnderline';}" rollOut="btnER45.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6" paddingLeft="12">
+										<s:Label text="•" paddingTop="6" />
+										<mx:LinkButton id="btnER46" width="200" label="Soda, energy drinks, and sports drinks are a major source of added sugar and calories" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" fontStyle="italic" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER46.styleName='linkBtnUnderline';}" rollOut="btnER46.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:HGroup>
+							
+						</s:VGroup>
+						
+					</s:HGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="16" paddingLeft="15" />
+					</s:layout>
+					
+					<s:Label text="{'All fats are composed of a mixture of three types of fat–saturated, monounsaturated and polyunsaturated fat.\n\nAnimal fats are composed of more saturated fats and vegetable fats are composed of primarily unsaturated fats.'}" width="162" lineHeight="16" />
+					
+					<s:HGroup paddingLeft="3" paddingRight="11">
+						<s:Line yFrom="0" yTo="508">
+							<s:stroke>
+								<s:SolidColorStroke color="0x3C3C3B" weight="1"/>
+							</s:stroke>
+						</s:Line>
+					</s:HGroup>
+					
+					<s:Scroller verticalScrollPolicy="on" horizontalScrollPolicy="off" width="622" height="526">
+						
+						<s:VGroup paddingBottom="8">
+							<s:Label text="Unhealthy" fontWeight="bold" paddingBottom="3" />
+							<s:Image source="@Embed('/images/ERunhealthyFat.png')" />
+							<s:Label text="Healthy" fontWeight="bold" paddingTop="16" paddingBottom="3" />
+							<s:Image source="@Embed('/images/ERhealthyFat.png')" />
+						</s:VGroup>
+						
+					</s:Scroller>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:Scroller verticalScrollPolicy="on" horizontalScrollPolicy="off" width="826" height="542">
+						
+						<s:HGroup paddingTop="4" paddingLeft="10" gap="16">
+							
+							<s:VGroup>
+								
+								<s:BorderContainer width="525" height="112" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="8" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch1.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER56" label="Team Nutrition" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER56.styleName='linkBtnUnderline';}" rollOut="btnER56.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: USDA Food and Nutrition Service" paddingTop="-3" />
+										<s:Label width="445" text="Team Nutrition is an initiative of the USDA Food and Nutrition Service to support the Child Nutrition Programs through training and technical assistance for foodservice, nutrition education for children and their caregivers, and school and community support for healthy eating and physical activity." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="101" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="8" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch2.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER57" label="Know Your Farmer, Know Your Food" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER57.styleName='linkBtnUnderline';}" rollOut="btnER57.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: USDA" paddingTop="-3" />
+										<s:Label width="445" text="This initiative and website from USDA uses social media tools to help focus the public conversation about farming and food, while engaging American agriculture and linking producers to customers." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="101" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="8" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch3.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER58" label="Farmers Markets" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER58.styleName='linkBtnUnderline';}" rollOut="btnER58.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: USDA Agricultural Marketing Service" paddingTop="-3" />
+										<s:Label width="445" text="Farmers markets allow consumers to have access to locally grown, farm-fresh produce, and enables farmers the opportunity to develop a personal relationship with their customers. Search the database to find one of the 4,800 farmers market in the U.S." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="77" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="8" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch4.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER59" label="Food And Nutrition Information" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER59.styleName='linkBtnUnderline';}" rollOut="btnER59.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: USDA National Agricultural Library" paddingTop="-3" />
+										<s:Label width="445" text="Click to access more Federal government food and nutrition information." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="77" styleName="erSearchLight">
+								
+									<s:layout>
+										<s:HorizontalLayout paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch5.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erVideo.png')" />
+											<mx:LinkButton id="btnER60" label="Fruit and Vegetable Video Center" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER60.styleName='linkBtnUnderline';}" rollOut="btnER60.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Produce for Better Health Foundation" paddingTop="-3" />
+										<s:Label width="445" text="Selection. Storage. Preparation. We cover it all! Let our fruit and vegetable videos help solve your fruit and vegetable dilemmas." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="112" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="8" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch6.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER61" label="Fruits and Veggies—More Matters" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER61.styleName='linkBtnUnderline';}" rollOut="btnER61.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Centers for Disease Control and Prevention" paddingTop="-3" />
+										<s:Label width="445" text="Offering expert cooking advice, nutrition information, and shopping tips, the Fruits &amp; Veggies—More Matters campaign demonstrates that eating MORE fruits and vegetables does matter to all of us. The Fruits &amp; Veggies—More Matters campaign replaces the 5 A Day for Better Health Program." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+							</s:VGroup>
+							
+							<s:VGroup paddingTop="36">
+								
+								<s:BorderContainer width="244" height="224" styleName="transparentBorderContainer">
+									
+									<s:layout>
+										<s:VerticalLayout paddingTop="16" paddingLeft="18" gap="-3" />
+									</s:layout>
+									
+									<s:Label text="Most popular:" fontWeight="bold" paddingBottom="4" />
+									<mx:LinkButton id="btnER46b" label="1. diabetes diet" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER46b.styleName='linkBtnUnderline';}" rollOut="btnER46b.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER47" label="2. food and nutrition information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER47.styleName='linkBtnUnderline';}" rollOut="btnER47.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER48" label="3. food safety information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER48.styleName='linkBtnUnderline';}" rollOut="btnER48.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER49" label="4. team nutrition" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER49.styleName='linkBtnUnderline';}" rollOut="btnER49.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER50" label="5. farmers markets" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER50.styleName='linkBtnUnderline';}" rollOut="btnER50.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER51" label="6. diabetes treatment" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER51.styleName='linkBtnUnderline';}" rollOut="btnER51.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER52" label="7. nutrition facts label" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER52.styleName='linkBtnUnderline';}" rollOut="btnER52.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER53" label="8. dietary guidelines for americans, 2010" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER53.styleName='linkBtnUnderline';}" rollOut="btnER53.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER54" label="9. food composition" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER54.styleName='linkBtnUnderline';}" rollOut="btnER54.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER55" label="10. heart disease" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER55.styleName='linkBtnUnderline';}" rollOut="btnER55.styleName='linkBtn';" />
+								</s:BorderContainer>
+								
+							</s:VGroup>
+							
+						</s:HGroup>
+						
+					</s:Scroller>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:Scroller verticalScrollPolicy="auto" horizontalScrollPolicy="off" width="826" height="542">
+						
+						<s:HGroup paddingTop="17" paddingLeft="10" gap="16">
+							
+							<s:VGroup>
+								
+								<s:HGroup gap="3" paddingLeft="6">
+									<s:Label text="Results" />
+									<s:Label text="1 - 10" fontWeight="bold" />
+									<s:Label text="of about" />
+									<s:Label text="45" fontWeight="bold" />
+								</s:HGroup>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch1.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER62" label="Symptoms" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER62.styleName='linkBtnUnderline';}" rollOut="btnER62.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: NNMC" paddingTop="-3" />
+										<s:Label width="445" text="The leading source for trustworthy and timely health and medical news and information. Providing credible health information, supportive community, and ... " />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch7.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER63" label="Symptoms" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER63.styleName='linkBtnUnderline';}" rollOut="btnER63.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: CDC.gov" paddingTop="-3" />
+										<s:Label width="445" text="Our Center is dedicated to helping people live to the fullest. Much of our work focuses on protecting people who are especially vulnerable to health risks..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch8.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER64" label="Diabetes Basics" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER64.styleName='linkBtnUnderline';}" rollOut="btnER64.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 5; viewsEducationalResourcesMenu.selectedIndex = 5; viewsEducationalResourcesBreadcrumb.selectedIndex = 5;}" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Web MD" paddingTop="-3" />
+										<s:Label width="445" text="Recent studies indicate that the early detection of diabetes symptoms and treatment can decrease the chance of developing the complications of diabetes. ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch9.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER65" label="Diabetes Basics" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER65.styleName='linkBtnUnderline';}" rollOut="btnER65.styleName='linkBtn';" click="navigateToURL(new URLRequest('http://www.mayoclinic.com/health/diabetes-symptoms/DA00125'), '_blank')" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Mayo Foundation for Medical Education and Research" paddingTop="-3" />
+										<s:Label width="445" text="... Symptoms. Concerned about your health or the health of a loved one? Learn about the symptoms of diabetes. Prevention ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch10.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER66" label="Hypoglycemia (Low blood glucose)" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER66.styleName='linkBtnUnderline';}" rollOut="btnER66.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: American Diabetes Association" paddingTop="-3" />
+										<s:Label width="445" text="... your blood glucose levels were dropping or that you were showing other symptoms of hypoglycemia. It tends to happen to people who have had diabetes for many ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch11.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER67" label="Diabetes Report" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER67.styleName='linkBtnUnderline';}" rollOut="btnER67.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: World Health Organization" paddingTop="-3" />
+										<s:Label width="445" text="The United Nations public health arm. Monitors disease outbreaks, assesses the performance of health systems around the globe, maintains ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+							</s:VGroup>
+							
+							<s:VGroup paddingTop="24">
+								
+								<s:BorderContainer width="244" height="224" styleName="transparentBorderContainer">
+									
+									<s:layout>
+										<s:VerticalLayout paddingTop="16" paddingLeft="18" gap="-3" />
+									</s:layout>
+									
+									<s:Label text="Most popular:" fontWeight="bold" paddingBottom="4" />
+									<mx:LinkButton id="btnER68" label="1. diabetes diet" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER68.styleName='linkBtnUnderline';}" rollOut="btnER68.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER69" label="2. food and nutrition information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER69.styleName='linkBtnUnderline';}" rollOut="btnER69.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER70" label="3. food safety information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER70.styleName='linkBtnUnderline';}" rollOut="btnER70.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER71" label="4. team nutrition" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER71.styleName='linkBtnUnderline';}" rollOut="btnER71.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER72" label="5. farmers markets" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER72.styleName='linkBtnUnderline';}" rollOut="btnER72.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER73" label="6. diabetes treatment" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER73.styleName='linkBtnUnderline';}" rollOut="btnER73.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER74" label="7. nutrition facts label" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER74.styleName='linkBtnUnderline';}" rollOut="btnER74.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER75" label="8. dietary guidelines for americans, 2010" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER75.styleName='linkBtnUnderline';}" rollOut="btnER75.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER76" label="9. food composition" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER76.styleName='linkBtnUnderline';}" rollOut="btnER76.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER77" label="10. heart disease" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER77.styleName='linkBtnUnderline';}" rollOut="btnER77.styleName='linkBtn';" />
+								
+								</s:BorderContainer>
+								
+							</s:VGroup>
+							
+						</s:HGroup>
+						
+					</s:Scroller>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="16" paddingLeft="15" />
+					</s:layout>
+					
+					<s:VGroup>
+						<s:Label text="Diabetes often goes undiagnosed because many of its symptoms seem so harmless. Recent studies indicate that the early detection of diabetes symptoms and treatment can decrease the chance of developing the complications of diabetes." width="357" lineHeight="16" />
+						<s:Label text="Type 1 Diabetes" fontWeight="bold" paddingTop="14" />
+						<s:Label text="{'• Frequent urination\n• Unusual thirst\n• Extreme hunger\n• Unusual weight loss\n• Extreme fatigue and irritability'}" fontStyle="italic" paddingLeft="12" lineHeight="16" />
+						<s:Label text="Type 2 Diabetes*" fontWeight="bold" paddingTop="14" />
+						<s:Label text="Often people with type 2 diabetes have no symptoms" />
+						<s:Label text="{'• Any of the type 1 symptoms\n• Frequent infections\n• Blurred vision\n• Cuts/bruises that are slow to heal\n• Tingling/numbness in the hands/feet\n• Recurring skin, gum, or bladder infections'}" fontStyle="italic" paddingLeft="12" lineHeight="16" />
+						<s:Label text="*Often people with type 2 diabetes have no symptoms" paddingTop="14" />
+					</s:VGroup>
+					
+					<s:HGroup paddingLeft="35" paddingRight="19">
+						<s:Line yFrom="0" yTo="489">
+							<s:stroke>
+								<s:SolidColorStroke color="0x3C3C3B" weight="1"/>
+							</s:stroke>
+						</s:Line>
+					</s:HGroup>
+					
+					<s:VGroup gap="19">
+						
+						<s:VGroup paddingBottom="-16">
+							<s:Image source="@Embed('/images/erVideoTN.png')" click="navigateToURL(new URLRequest('http://www.youtube.com/watch?v=MHlWM8_iqfA'), '_blank')" buttonMode="true" />
+						</s:VGroup>
+						
+						<mx:LinkButton id="btnER78" label="http://www.youtube.com/watch?v=MHlWM8_iqfA" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER78.styleName='linkBtnUnderline';}" rollOut="btnER78.styleName='linkBtn';" click="navigateToURL(new URLRequest('http://www.youtube.com/watch?v=MHlWM8_iqfA'), '_blank')" />
+						<s:Label text="If you have one or more of these diabetes symptoms, see your doctor right away. You can also take Online Diabetes Risk Test to find out if you are at risk for diabetes." width="335" />
+						<s:Label text="Symptoms of Diabetes Complications" fontWeight="bold" />
+						<s:Label text="Have you already been diagnosed with diabetes but are concerned about symptoms that may be the result of complications related to diabetes?" width="335" paddingTop="-16" />
+						<s:HGroup verticalAlign="middle" gap="3" paddingTop="-6" paddingBottom="-3">
+							<s:Label text="Visit the" paddingTop="2" />
+							<mx:LinkButton id="btnER79" label="Complications section." fontWeight="bold" fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER79.styleName='linkBtnUnderline';}" rollOut="btnER79.styleName='linkBtn';" />
+						</s:HGroup>
+						<s:Label text="You may also be interested in our book:" paddingBottom="-22" />
+						<mx:LinkButton id="btnER80" label="Uncomplicated Guide To Diabetes’ Complications, 3rd Edition." fontStyle="italic" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER80.styleName='linkBtnUnderline';}" rollOut="btnER80.styleName='linkBtn';" />
+						
+					</s:VGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:Scroller verticalScrollPolicy="auto" horizontalScrollPolicy="off" width="826" height="542">
+						
+						<s:HGroup paddingTop="17" paddingLeft="10" gap="16">
+							
+							<s:VGroup>
+								
+								<s:HGroup gap="3" paddingLeft="6">
+									<s:Label text="Results" />
+									<s:Label text="1 - 5" fontWeight="bold" />
+									<s:Label text="of about" />
+									<s:Label text="5" fontWeight="bold" />
+								</s:HGroup>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch1.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER81" label="Symptoms" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER81.styleName='linkBtnUnderline';}" rollOut="btnER81.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: NNMC" paddingTop="-3" />
+										<s:Label width="445" text="The leading source for trustworthy and timely health and medical news and information. Providing credible health information, supportive community, and ... " />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch7.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER82" label="Symptoms" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER82.styleName='linkBtnUnderline';}" rollOut="btnER82.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: CDC.gov" paddingTop="-3" />
+										<s:Label width="445" text="Our Center is dedicated to helping people live to the fullest. Much of our work focuses on protecting people who are especially vulnerable to health risks..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch8.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER83" label="Heartburn Basics" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER83.styleName='linkBtnUnderline';}" rollOut="btnER83.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 7; viewsEducationalResourcesMenu.selectedIndex = 7; viewsEducationalResourcesBreadcrumb.selectedIndex = 7;}" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Web MD" paddingTop="-3" />
+										<s:Label width="445" text="Heartburn, also known as pyrosis or acid indigestion is a burning sensation in the chest, just behind the breastbone or in the epigastrium. The pain often rises in ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchDark">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch11.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER84" label="Heartburn Overview" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER84.styleName='linkBtnUnderline';}" rollOut="btnER84.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Wikipedia" paddingTop="-3" />
+										<s:Label width="445" text="Heartburn strikes an estimated 20% of Americans at least once a week. Here you'll find in-depth heartburn and GERD information including their symptoms, ..." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+								<s:BorderContainer width="525" height="74" styleName="erSearchLight">
+									
+									<s:layout>
+										<s:HorizontalLayout paddingTop="3" paddingLeft="2" gap="11" />
+									</s:layout>
+									
+									<s:Image source="@Embed('/images/erSearch9.png')" />
+									
+									<s:VGroup gap="2" paddingTop="-3">
+										<s:HGroup verticalAlign="middle" gap="11">
+											<s:Image source="@Embed('/images/erSearchFile.png')" />
+											<mx:LinkButton id="btnER85" label="Heartburn" fontSize="14" fontWeight="bold" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-6" paddingRight="-8" rollOver="{btnER85.styleName='linkBtnUnderline';}" rollOut="btnER85.styleName='linkBtn';" />
+											<s:Button width="61" height="16" label="Copy URL" styleName="erCopyURLButton" />
+										</s:HGroup>
+										<s:Label fontStyle="italic" color="0x1D1D1B" text="Source: Mayo Foundation for Medical Education and Research" paddingTop="-3" />
+										<s:Label width="445" text="Heartburn — Comprehensive overview covers treatment, symptoms, causes of this common digestive problem." />
+									</s:VGroup>
+									
+								</s:BorderContainer>
+								
+							</s:VGroup>
+							
+							<s:VGroup paddingTop="24">
+								
+								<s:BorderContainer width="244" height="224" styleName="transparentBorderContainer">
+									
+									<s:layout>
+										<s:VerticalLayout paddingTop="16" paddingLeft="18" gap="-3" />
+									</s:layout>
+									
+									<s:Label text="Most popular:" fontWeight="bold" paddingBottom="4" />
+									<mx:LinkButton id="btnER86" label="1. heartburn/GERD" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER86.styleName='linkBtnUnderline';}" rollOut="btnER86.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER87" label="2. food and nutrition information" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER87.styleName='linkBtnUnderline';}" rollOut="btnER87.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER88" label="3. food to eat and avoid heartburn" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER88.styleName='linkBtnUnderline';}" rollOut="btnER88.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER89" label="4. common treatments for heartburn" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER89.styleName='linkBtnUnderline';}" rollOut="btnER89.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER90" label="5. top 10 Heartburn Foods" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER90.styleName='linkBtnUnderline';}" rollOut="btnER90.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER91" label="6. acid reflux symptoms" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER91.styleName='linkBtnUnderline';}" rollOut="btnER91.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER92" label="7. nutrition facts label" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER92.styleName='linkBtnUnderline';}" rollOut="btnER92.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER93" label="8. heartburn relief &amp; other digestive tips" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER93.styleName='linkBtnUnderline';}" rollOut="btnER93.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER94" label="9. food composition" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER94.styleName='linkBtnUnderline';}" rollOut="btnER94.styleName='linkBtn';" />
+									<mx:LinkButton id="btnER95" label="10. heart disease" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER95.styleName='linkBtnUnderline';}" rollOut="btnER95.styleName='linkBtn';" />
+								
+								</s:BorderContainer>
+							</s:VGroup>
+							
+						</s:HGroup>
+						
+					</s:Scroller>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:HorizontalLayout paddingTop="16" paddingLeft="15" />
+					</s:layout>
+					
+					<s:VGroup>
+						<s:Label text="One in 10 Americans experiences heartburn symptoms at least once a week. Heartburn has different triggers, including certain foods, medications, obesity, or even stress. Knowing your triggers will help you design a prevention strategy. If you suffer from heartburn it’s important to find effective heartburn remedies to prevent the acid reflux from worsening. Heartburn treatment may include medications, home remedies, or diet changes." width="357" lineHeight="16" />
+						<s:Label text="Acid Reflux Symptoms" fontWeight="bold" paddingTop="14" />
+						<s:Label text="• Heartburn is just one" fontStyle="italic" paddingLeft="12" lineHeight="16" />
+						<s:Label text="Indigestion" fontWeight="bold" paddingTop="14" />
+						<s:Label text="• Is it heartburn?" fontStyle="italic" paddingLeft="12" lineHeight="16" />
+						<s:Label text="Gastroesophageal Reflux Disease (GERD)" fontWeight="bold" paddingTop="14" />
+						<s:Label text="• How hernia is related" fontStyle="italic" paddingLeft="12" lineHeight="16" />
+						<s:Label text="Related Topics" fontWeight="bold" paddingTop="14" />
+						<s:HGroup gap="-1">
+							<s:VGroup gap="-2">
+								<s:Image source="@Embed('/images/erSearch12.png')" />
+								<s:Image source="@Embed('/images/erSearch13.png')" />
+								<s:Image source="@Embed('/images/erSearch14.png')" />
+							</s:VGroup>
+							<s:Label text="{'• Steps to Change Heartburn Habits\n• How to Stop Nighttime Heartburn\n• 10 Foods That Cause Heartburn\n• What Is GERD?\n• Heartburn or Heart Attack?\n• Digestive Tip: Gum for Heartburn?'}" fontStyle="italic" paddingTop="3" paddingLeft="12" lineHeight="19" />
+						</s:HGroup>
+					</s:VGroup>
+					
+					<s:HGroup paddingLeft="35" paddingRight="8">
+						<s:Line yFrom="0" yTo="489">
+							<s:stroke>
+								<s:SolidColorStroke color="0x3C3C3B" weight="1"/>
+							</s:stroke>
+						</s:Line>
+					</s:HGroup>
+					
+					<s:VGroup>
+						<s:Label text="Visual Aids" fontWeight="bold" />
+						<s:Label text="• Heartburn: What It Is, How to Stop It" fontStyle="italic" lineHeight="16" paddingBottom="-5" />
+						<s:Image source="@Embed('/images/erHeartburn1.png')" />
+						<s:Label text="• Foods to Eat and Avoid for Heartburn" fontStyle="italic" lineHeight="16" paddingBottom="-5" paddingTop="12" />
+						<s:Image source="@Embed('/images/erHeartburn2.png')" />
+						<s:Label text="• Heartburn Relief &amp; Other Digestive Tips" fontStyle="italic" lineHeight="16" paddingBottom="-5" paddingTop="12" />
+						<s:HGroup verticalAlign="bottom">
+							<s:Image source="@Embed('/images/erHeartburn3.png')" />
+							<s:Label text="(Credit: Content adopted from WebMD)" fontStyle="italic" paddingBottom="3" />
+						</s:HGroup>
+					</s:VGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0x4A4A49">
+					
+					<s:layout>
+						<s:HorizontalLayout />
+					</s:layout>
+					
+					<s:Line yFrom="0" yTo="541">
+						<s:stroke>
+							<s:SolidColorStroke color="0xBDBDBC" weight="1"/>
+						</s:stroke>
+					</s:Line>
+					
+					<s:TileGroup horizontalGap="13" verticalGap="13" paddingTop="16" paddingLeft="8"><!--requestedColumnCount="5" clipAndEnableScrolling="true"-->
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:HGroup>
+								<s:Label text="Location" styleName="orangeSubtitle" />
+								<s:Label text="click on a body part to see related topics" fontSize="11" fontStyle="italic" color="0xFFFFFF" paddingTop="4" />
+							</s:HGroup>
+							
+							<s:HGroup gap="30">
+								
+								<s:VGroup gap="1">
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER96" label="Head" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER96.styleName='linkBtnUnderline';}" rollOut="btnER96.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER97" label="Face" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER97.styleName='linkBtnUnderline';}" rollOut="btnER97.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER98" label="Eyes, Ears &amp; Nose" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER98.styleName='linkBtnUnderline';}" rollOut="btnER98.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER99" label="Mouth &amp; Teeth" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER99.styleName='linkBtnUnderline';}" rollOut="btnER99.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER100" label="Neck &amp; Shoulders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER100.styleName='linkBtnUnderline';}" rollOut="btnER100.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER101" label="Arms &amp; Hands" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER101.styleName='linkBtnUnderline';}" rollOut="btnER101.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER102" label="Chest" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER102.styleName='linkBtnUnderline';}" rollOut="btnER102.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER103" label="Stomach" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER103.styleName='linkBtnUnderline';}" rollOut="btnER103.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER104" label="Back" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER104.styleName='linkBtnUnderline';}" rollOut="btnER104.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER105" label="Legs &amp; Feet" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER105.styleName='linkBtnUnderline';}" rollOut="btnER105.styleName='linkBtn';" />
+									</s:HGroup>
+									
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER106" label="Skin" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER106.styleName='linkBtnUnderline';}" rollOut="btnER106.styleName='linkBtn';" />
+									</s:HGroup>
+									
+								</s:VGroup>
+								
+								<s:HGroup paddingTop="3" gap="20">
+									
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erManFront.png')" buttonMode="true" rollOver="{btnER107.styleName='linkBtnUnderline';}" rollOut="btnER107.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER107" label="Front" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER107.styleName='linkBtnUnderline';}" rollOut="btnER107.styleName='linkBtn';" />
+									</s:VGroup>
+									
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erManBack.png')" buttonMode="true" rollOver="{btnER108.styleName='linkBtnUnderline';}" rollOut="btnER108.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER108" label="Back" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER108.styleName='linkBtnUnderline';}" rollOut="btnER108.styleName='linkBtn';" />
+									</s:VGroup>
+									
+								</s:HGroup>
+								
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:HorizontalLayout paddingTop="11" paddingLeft="13" gap="-10" />
+							</s:layout>
+							
+							<s:VGroup gap="8">
+								
+								<s:Label text="Profile" styleName="orangeSubtitle" />
+								
+								<s:VGroup gap="1">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER118" label="Gender" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER118.styleName='linkBtnUnderline';}" rollOut="btnER118.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER119" label="Age" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER119.styleName='linkBtnUnderline';}" rollOut="{btnER118.styleName='linkBtn';}" />
+									</s:HGroup>
+								</s:VGroup>
+								
+							</s:VGroup>
+							
+							<s:HGroup paddingTop="50" gap="21">
+								
+								<s:HGroup gap="1">
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erMan.png')" buttonMode="true" rollOver="{btnER120.styleName='linkBtnUnderline';}" rollOut="btnER120.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER120" label="Man" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER120.styleName='linkBtnUnderline';}" rollOut="btnER120.styleName='linkBtn';" />
+									</s:VGroup>
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erBoy.png')" buttonMode="true" rollOver="{btnER121.styleName='linkBtnUnderline';}" rollOut="btnER121.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER121" label="Boy" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER121.styleName='linkBtnUnderline';}" rollOut="btnER121.styleName='linkBtn';" />
+									</s:VGroup>
+								</s:HGroup>
+								
+								<s:HGroup gap="1">
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erWoman.png')" buttonMode="true" rollOver="{btnER122.styleName='linkBtnUnderline';}" rollOut="btnER122.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER122" label="Woman" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER122.styleName='linkBtnUnderline';}" rollOut="btnER122.styleName='linkBtn';" />
+									</s:VGroup>
+									<s:VGroup horizontalAlign="center" gap="3">
+										<s:Image source="@Embed('/images/erGirl.png')" buttonMode="true" rollOver="{btnER123.styleName='linkBtnUnderline';}" rollOut="btnER123.styleName='linkBtn';" />
+										<mx:LinkButton id="btnER123" label="Girl" textAlign="left" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER123.styleName='linkBtnUnderline';}" rollOut="btnER123.styleName='linkBtn';" />
+									</s:VGroup>
+								</s:HGroup>
+								
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:HorizontalLayout paddingTop="11" paddingLeft="13" gap="40" />
+							</s:layout>
+							
+							<s:VGroup gap="8">
+								
+								<s:Label text="Systems" styleName="orangeSubtitle" />
+								
+								<s:VGroup gap="1">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER107b" label="Cardiovascular" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER107b.styleName='linkBtnUnderline';}" rollOut="btnER107b.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER108b" label="Digestive" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER108b.styleName='linkBtnUnderline'; imgDigestive.alpha = 1}" rollOut="{btnER108b.styleName='linkBtn'; imgDigestive.alpha = 0}" click="{viewsEducationalResources.selectedIndex = 9; viewsEducationalResourcesMenu.selectedIndex = 9; viewsEducationalResourcesBreadcrumb.selectedIndex = 9;}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER109" label="Endocrine" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER109.styleName='linkBtnUnderline';}" rollOut="btnER109.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER110" label="Excretory" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER110.styleName='linkBtnUnderline';}" rollOut="btnER110.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER111" label="Immune" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER111.styleName='linkBtnUnderline';}" rollOut="btnER111.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER112" label="Integumentary" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER112.styleName='linkBtnUnderline';}" rollOut="btnER112.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER113" label="Muscular" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER113.styleName='linkBtnUnderline';}" rollOut="btnER113.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER114" label="Nervous" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER114.styleName='linkBtnUnderline';}" rollOut="btnER114.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER115" label="Reproductive" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER115.styleName='linkBtnUnderline';}" rollOut="btnER115.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER116" label="Respiratory" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER116.styleName='linkBtnUnderline';}" rollOut="btnER116.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER117" label="Skeletal" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER117.styleName='linkBtnUnderline';}" rollOut="btnER117.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+							</s:VGroup>
+							
+							<s:BorderContainer backgroundAlpha="0" borderAlpha="0">
+								<s:Image source="@Embed('/images/ERsystem.png')" />
+								<s:Image id="imgDigestive" source="@Embed('/images/erSystemDigestive.png')" x="13" y="133" alpha="0" rollOver="{imgDigestive.alpha = 1}" rollOut="{imgDigestive.alpha = 0}" buttonMode="true" click="{viewsEducationalResources.selectedIndex = 9; viewsEducationalResourcesMenu.selectedIndex = 9; viewsEducationalResourcesBreadcrumb.selectedIndex = 9;}" />
+							</s:BorderContainer>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:Label text="Common Physical Health Conditions" styleName="orangeSubtitle" />
+							
+							<s:HGroup gap="40">
+								
+								<s:VGroup gap="6">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER124" label="Allergies" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER124.styleName='linkBtnUnderline';}" rollOut="btnER124.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER125" label="Arthritis" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER125.styleName='linkBtnUnderline';}" rollOut="{btnER125.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER126" label="Asthma" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER126.styleName='linkBtnUnderline';}" rollOut="btnER126.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER127" label="Back Pain" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER127.styleName='linkBtnUnderline';}" rollOut="btnER127.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER128" label="Cancer" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER128.styleName='linkBtnUnderline';}" rollOut="btnER128.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER129" label="Cholesterol" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER129.styleName='linkBtnUnderline';}" rollOut="btnER129.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER130" label="Cold &amp; Flu" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER130.styleName='linkBtnUnderline';}" rollOut="btnER130.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER131" label="COPD" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER131.styleName='linkBtnUnderline';}" rollOut="btnER131.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER132" label="Diabetes" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER132.styleName='linkBtnUnderline';}" rollOut="btnER132.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER133" label="Eye Health" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER133.styleName='linkBtnUnderline';}" rollOut="btnER133.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+								<s:VGroup gap="6">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER134" label="Fibromyalgia" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER134.styleName='linkBtnUnderline';}" rollOut="btnER134.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER135" label="Heart Disease" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER135.styleName='linkBtnUnderline';}" rollOut="{btnER135.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER136" label="Heartburn/GERD" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER136.styleName='linkBtnUnderline';}" rollOut="btnER136.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 7; viewsEducationalResourcesMenu.selectedIndex = 7; viewsEducationalResourcesBreadcrumb.selectedIndex = 10;}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER137" label="Hypertension" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER137.styleName='linkBtnUnderline';}" rollOut="btnER137.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER138" label="Incontinence/OAB" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER138.styleName='linkBtnUnderline';}" rollOut="btnER138.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER139" label="Kidney Disease" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER139.styleName='linkBtnUnderline';}" rollOut="btnER139.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER140" label="Migraines" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER140.styleName='linkBtnUnderline';}" rollOut="btnER140.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER141" label="Osteoporosis" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER141.styleName='linkBtnUnderline';}" rollOut="btnER141.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER142" label="Overweight" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER142.styleName='linkBtnUnderline';}" rollOut="btnER142.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER143" label="Sexual Conditions" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER143.styleName='linkBtnUnderline';}" rollOut="btnER143.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+								<s:VGroup gap="6">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER144" label="Skin Problems" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER144.styleName='linkBtnUnderline';}" rollOut="btnER144.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER145" label="Skin Infection" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER145.styleName='linkBtnUnderline';}" rollOut="{btnER145.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER146" label="Sleep Disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER146.styleName='linkBtnUnderline';}" rollOut="btnER146.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER147" label="Stroke" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER147.styleName='linkBtnUnderline';}" rollOut="btnER147.styleName='linkBtn';" />
+									</s:HGroup>
+									<mx:LinkButton id="btnER148" label="Complete List »" paddingTop="99" paddingLeft="22" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER148.styleName='linkBtnUnderline';}" rollOut="btnER148.styleName='linkBtn';" />
+								</s:VGroup>
+								
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+					</s:TileGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent width="100%" backgroundColor="0xE3E3E3">
+					
+					<s:layout>
+						<s:VerticalLayout paddingTop="16" paddingLeft="16" />
+					</s:layout>
+					
+					<s:Label text="Digestive Disorders Overview" fontSize="14" fontWeight="bold" color="0x3C3C3B" />
+					
+					<s:HGroup paddingTop="5" gap="15">
+						
+						<s:BorderContainer width="589" height="233" borderAlpha="0" backgroundAlpha="0">
+							<s:Image source="@Embed('/images/erDigestive.png')" />
+							<s:Label width="221" x="352" y="18" lineHeight="18" text="The digestive system is an intricate system that can be disrupted by disease, diet, and emotional stress. Common digestive problems such as heartburn/GERD, IBD, and IBS cause millions of Americans to suffer daily and limit quality of life. Digestive problems often result in symptoms such as bloating, diarrhea, gas, stomach pain, and stomach cramps. Learning more about the digestive system may help with managing these problems." />
+						</s:BorderContainer>
+						
+						<s:VGroup paddingTop="1">
+							
+							<s:BorderContainer width="178" height="232" styleName="transparentBorderContainer">
+								
+								<s:layout>
+									<s:VerticalLayout paddingTop="14" paddingLeft="17" gap="-3" />
+								</s:layout>
+								
+								<s:Label text="{'Top Search Terms for\nDigestive Disorders'}" fontWeight="bold" paddingBottom="6" />
+								<mx:LinkButton id="btnER149" label="Diarrhea" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER149.styleName='linkBtnUnderline';}" rollOut="btnER149.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER150" label="Constipation" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER150.styleName='linkBtnUnderline';}" rollOut="btnER150.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER151" label="Diverticulitis Diet" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER151.styleName='linkBtnUnderline';}" rollOut="btnER151.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER152" label="Gallstones" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER152.styleName='linkBtnUnderline';}" rollOut="btnER152.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER153" label="Ulcer" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER153.styleName='linkBtnUnderline';}" rollOut="btnER153.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER154" label="Blood in Stool" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER154.styleName='linkBtnUnderline';}" rollOut="btnER154.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER155" label="Dumping Syndrome" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER155.styleName='linkBtnUnderline';}" rollOut="btnER155.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER156" label="Hernia" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER156.styleName='linkBtnUnderline';}" rollOut="btnER156.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER157" label="Diverticulitis" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="-2" rollOver="{btnER157.styleName='linkBtnUnderline';}" rollOut="btnER157.styleName='linkBtn';" />
+								<mx:LinkButton id="btnER158" label="See more terms »" color="0x054E71" textRollOverColor="0x054E71" textSelectedColor="0x054E71" skin="{null}" paddingLeft="62" rollOver="{btnER158.styleName='linkBtnUnderline';}" rollOut="btnER158.styleName='linkBtn';" />
+							</s:BorderContainer>
+						</s:VGroup>
+						
+					</s:HGroup>
+					
+					<s:HGroup paddingTop="7" gap="23">
+						
+						<s:VGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER11.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER159" label="Heartburn/GERD" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER159.styleName='linkBtnUnderline';}" rollOut="btnER159.styleName='linkBtn';" click="{viewsEducationalResources.selectedIndex = 7; viewsEducationalResourcesMenu.selectedIndex = 7; viewsEducationalResourcesBreadcrumb.selectedIndex = 10;}" />
+									<s:Label text="{'• H2 blockers can stop the burn before it starts,\n  but only if you know when to take them.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Lose excess weight and wear loose-fitting\n  clothes and belts'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER12.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER160" label="Crohn’s Disease" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER160.styleName='linkBtnUnderline';}" rollOut="btnER160.styleName='linkBtn';" />
+									<s:Label text="{'• Get at least 1,500 mg of calcium and at least\n  800 international units (IUs) of vitamin D'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Damage to your small intestine caused by\n  Crohn\'s can put you at risk for gallstones'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER13.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER161" label="Lactose Intolerance" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER161.styleName='linkBtnUnderline';}" rollOut="btnER161.styleName='linkBtn';" />
+									<s:Label text="{'• Symptoms tend to develop 30 minutes to\n  two hours after consuming dairy products.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Intolerance develops as you grow older.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+						</s:VGroup>
+						
+						<s:VGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER14.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER162" label="Probiotics and Your Gut" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER162.styleName='linkBtnUnderline';}" rollOut="btnER162.styleName='linkBtn';" />
+									<s:Label text="{'• May help prevent diarrhea from antibiotics and\n  help you recover from infectious diarrhea.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Improves intestinal function and maintain the\n  integrity of the lining of the intestines.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER15.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER163" label="Fiber and Constipation" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER163.styleName='linkBtnUnderline';}" rollOut="btnER163.styleName='linkBtn';" />
+									<s:Label text="{'• Fiber helps digestion and keeps your digestive system\n  to function regularly.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Helps keep weight gain, heart disease, blood sugar\n  fluctuations, and hemorrhoids at bay.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+							<s:HGroup paddingLeft="-4" paddingTop="3" gap="11">
+								<s:Image source="@Embed('/images/ER16.png')" />
+								<s:VGroup gap="3">
+									<mx:LinkButton id="btnER164" label="Chew Gum to Fight Heartburn" paddingBottom="-1" fontWeight="bold" color="0x3C3C3B" textRollOverColor="0x3C3C3B" textSelectedColor="0x3C3C3B" skin="{null}" paddingLeft="-2" rollOver="{btnER164.styleName='linkBtnUnderline';}" rollOut="btnER164.styleName='linkBtn';" />
+									<s:Label text="{'• May help relieve reflux and heartburn by stimulating\n  the production of acid-neutralizing saliva.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+									<s:Label text="{'• Peppermint can irritate heartburn; opt for other flavors.'}" fontStyle="italic" paddingLeft="12" lineHeight="14" />
+								</s:VGroup>
+							</s:HGroup>
+						</s:VGroup>
+						
+					</s:HGroup>
+					
+				</s:NavigatorContent>
+				
+				<s:NavigatorContent id="placeholder5" />
+				
+				<s:NavigatorContent width="100%" backgroundColor="0x4A4A49">
+					
+					<s:layout>
+						<s:HorizontalLayout />
+					</s:layout>
+					
+					<s:Line yFrom="0" yTo="541">
+						<s:stroke>
+							<s:SolidColorStroke color="0xBDBDBC" weight="1"/>
+						</s:stroke>
+					</s:Line>
+					
+					<s:TileGroup horizontalGap="13" verticalGap="13" paddingTop="16" paddingLeft="8"><!--requestedColumnCount="5" clipAndEnableScrolling="true"-->
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:Label text="Neurosis" styleName="orangeSubtitle" />
+							
+							<s:HGroup gap="7">
+								
+								<s:VGroup gap="1">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER165" label="Addiction Disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER165.styleName='linkBtnUnderline';}" rollOut="btnER165.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER166" label="Anxiety and Panic Disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER166.styleName='linkBtnUnderline';}" rollOut="btnER166.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER167" label="Bipolar" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER167.styleName='linkBtnUnderline';}" rollOut="btnER167.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER168" label="Depression" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER168.styleName='linkBtnUnderline';}" rollOut="btnER168.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER169" label="Eating Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER169.styleName='linkBtnUnderline';}" rollOut="btnER169.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER170" label="Hysteria" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER170.styleName='linkBtnUnderline';}" rollOut="btnER170.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER171" label="Impulse Control" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER171.styleName='linkBtnUnderline';}" rollOut="btnER171.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER172" label="Low Self-esteem" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER172.styleName='linkBtnUnderline';}" rollOut="btnER172.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER173" label="Obsessive-compulsive Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER173.styleName='linkBtnUnderline';}" rollOut="btnER173.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER174" label="Phobias" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER174.styleName='linkBtnUnderline';}" rollOut="btnER174.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER175" label="Somatoform disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER175.styleName='linkBtnUnderline';}" rollOut="btnER175.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER176" label="Tic disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER176.styleName='linkBtnUnderline';}" rollOut="btnER176.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+								<s:Image source="@Embed('/images/erMental1.png')" />
+								
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:Label text="Social" styleName="orangeSubtitle" />
+							
+							<s:HGroup gap="22">
+								
+								<s:VGroup gap="1">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER177" label="Adjustment disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER177.styleName='linkBtnUnderline';}" rollOut="btnER177.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER178" label="Antisocial Personal Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER178.styleName='linkBtnUnderline';}" rollOut="{btnER178.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER179" label="Dissociative disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER179.styleName='linkBtnUnderline';}" rollOut="btnER179.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER180" label="Sexual and gender disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER180.styleName='linkBtnUnderline';}" rollOut="{btnER180.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER181" label="Social Anxiety" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER181.styleName='linkBtnUnderline';}" rollOut="btnER181.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+								<s:Image source="@Embed('/images/erMental2.png')" />
+								
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:Label text="Psychosis" styleName="orangeSubtitle" />
+							
+							<s:HGroup gap="76">
+								<s:VGroup gap="1">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER182" label="Delusions" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER182.styleName='linkBtnUnderline';}" rollOut="btnER182.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER183" label="Hallucinations" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER183.styleName='linkBtnUnderline';}" rollOut="{btnER183.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER184" label="Pyromania" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER184.styleName='linkBtnUnderline';}" rollOut="btnER184.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER185" label="Schizophrenia" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER185.styleName='linkBtnUnderline';}" rollOut="{btnER185.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER186" label="Thought Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER186.styleName='linkBtnUnderline';}" rollOut="btnER186.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								<s:Image source="@Embed('/images/erMental3.png')" />
+							</s:HGroup>
+							
+						</s:BorderContainer>
+						
+						<s:BorderContainer width="391" height="246" styleName="transparentBorderContainerAlternative">
+							
+							<s:layout>
+								<s:VerticalLayout paddingTop="11" paddingLeft="13" gap="8" />
+							</s:layout>
+							
+							<s:Label text="Common Mental Health Conditions" styleName="orangeSubtitle" />
+							
+							<s:HGroup gap="121" verticalAlign="bottom">
+								
+								<s:VGroup gap="6">
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER187" label="ADHD" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER187.styleName='linkBtnUnderline';}" rollOut="btnER187.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER188" label="Alcohol Abuse" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER188.styleName='linkBtnUnderline';}" rollOut="{btnER188.styleName='linkBtn';}" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER189" label="Anxiety and Panic Disorders" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER189.styleName='linkBtnUnderline';}" rollOut="btnER189.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER190" label="Bipolar Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER190.styleName='linkBtnUnderline';}" rollOut="btnER190.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER191" label="Depression" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER191.styleName='linkBtnUnderline';}" rollOut="btnER191.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER192" label="Drug Abuse" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER192.styleName='linkBtnUnderline';}" rollOut="btnER192.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER193" label="Dysthymia" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER193.styleName='linkBtnUnderline';}" rollOut="btnER193.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER194" label="Eating Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER194.styleName='linkBtnUnderline';}" rollOut="btnER194.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER195" label="Seasonal Affective Disorder" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER195.styleName='linkBtnUnderline';}" rollOut="btnER195.styleName='linkBtn';" />
+									</s:HGroup>
+									<s:HGroup paddingTop="-6">
+										<s:Label text="•" paddingTop="6" color="0x868686" />
+										<mx:LinkButton id="btnER196" label="Smoking" color="0x868686" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" paddingLeft="-6" rollOver="{btnER196.styleName='linkBtnUnderline';}" rollOut="btnER196.styleName='linkBtn';" />
+									</s:HGroup>
+								</s:VGroup>
+								
+								<mx:LinkButton id="btnER197" label="Complete List »" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" rollOver="{btnER197.styleName='linkBtnUnderline';}" rollOut="btnER197.styleName='linkBtn';" />
+							
+							</s:HGroup>
+						
+						</s:BorderContainer>
+					</s:TileGroup>
+					
+				</s:NavigatorContent>
+				
+			</mx:ViewStack>
+			
+		</s:HGroup>
+		
+	</s:BorderContainer>
+	
+</s:VGroup>
