@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="300"
+			   close="PopUpManager.removePopUp(this);" skinClass="skins.general.myHeaderlessTitleWindow">
+	
+	<fx:Script>
+		<![CDATA[
+			import ASclasses.Constants;
+			
+			import controllers.Controller;
+			
+			import enum.ViewModeType;
+			
+			import events.ApplicationEvent;
+			
+			import edu.newschool.piim.healthboard.model.UserPreferences;
+			
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var preferences:UserPreferences;
+			
+			[Bindable] private var controller:Controller = AppProperties.getInstance().controller;
+			
+			private function saveSettings():void 
+			{
+				AppProperties.getInstance().controller.savePreferences( preferences );
+				
+				var evt:ApplicationEvent = new ApplicationEvent( ApplicationEvent.SHOW_STATUS, true );
+				evt.data = "Your preferences have been saved";
+				AppProperties.getInstance().controller.application.dispatchEvent( evt );
+				
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		.myLinkButton {
+			color: #064E71;
+			paddingTop: -2;
+			skin: ClassReference(null);
+			disabledColor: #A0A0A0;
+		}
+		
+		.smallNote {
+			fontSize: 9;
+			fontStyle: italic;
+			color: #808080;
+		}
+	</fx:Style>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="17" paddingBottom="14" paddingLeft="17" paddingRight="14" />
+	</s:layout>
+	
+	<s:HGroup>
+		<s:VGroup>
+			<s:Label text="Preferences" fontWeight="bold" fontSize="16" color="0x4E4D4D" />
+			
+			<mx:LinkBar paddingTop="11" paddingLeft="-10" direction="vertical" styleName="myLinkButton" dataProvider="{viewStackPreferences}" contentBackgroundAlpha="0" separatorWidth="0" verticalGap="5" linkButtonStyleName="myLinkButton" />
+			
+			<s:Label text="{(viewStackPreferences.selectedIndex == 0) ? 'Edit view mode and layout\nof homepage.' : ((viewStackPreferences.selectedIndex == 1) ? 'Change font size.' : 'Edit notification options.')}" styleName="smallNote" paddingTop="88" />
+		</s:VGroup>
+		
+		<s:VGroup paddingTop="-17" paddingLeft="6" paddingRight="13">
+			<s:Line yFrom="0" yTo="260">
+				<s:stroke>
+					<s:SolidColorStroke color="0xB0B0B0" weight="1"/>
+				</s:stroke>
+			</s:Line>
+		</s:VGroup>
+		
+		<mx:ViewStack id="viewStackPreferences">
+			<s:NavigatorContent label="Homepage Options">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
+				<s:Label text="View mode" fontStyle="italic" color="0x4D4D4D" />
+				<s:HGroup gap="30">
+					<s:VGroup horizontalAlign="center" gap="0">
+						<s:Image source="@Embed(source='/images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="{viewButton.selected = true;}" />
+						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Button View" click="{viewButton.selected = true;}" />
+						<s:RadioButton groupName="viewMode" id="viewButton" selected="{preferences.viewMode == ViewModeType.BUTTON}" click="preferences.viewMode = ViewModeType.BUTTON"  />
+					</s:VGroup>
+					<s:VGroup horizontalAlign="center" gap="0">
+						<s:Image source="@Embed(source='/images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
+						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Widget View" click="{viewWidget.selected = true;}" />
+						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{preferences.viewMode == ViewModeType.WIDGET}" click="preferences.viewMode = ViewModeType.WIDGET"  />
+					</s:VGroup>
+				</s:HGroup>
+				<s:Label text="Select view mode for homepage" styleName="smallNote" paddingTop="78" />
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Font and Units">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
+				<s:Label text="Font size" fontStyle="italic" color="0x4D4D4D" />
+				<s:VGroup gap="2">
+					<s:HGroup verticalAlign="middle">
+						<s:RadioButton groupName="fontSize" id="fontSizeDefault" selected="true" />
+						<s:Image source="@Embed(source='/images/fontSizeDefault.png')" width="23" height="23" />
+						<s:Label text="Default point size" paddingLeft="2" />
+					</s:HGroup>
+					<s:HGroup verticalAlign="middle">
+						<s:RadioButton groupName="fontSize" id="fontSizeMedium" />
+						<s:Image source="@Embed(source='/images/fontSizeMedium.png')" width="23" height="23" />
+						<s:Label text="+1 point size" paddingLeft="2" />
+					</s:HGroup>
+					<s:HGroup verticalAlign="middle">
+						<s:RadioButton groupName="fontSize" id="fontSizeLarge" />
+						<s:Image source="@Embed(source='/images/fontSizeLarge.png')" width="23" height="23" />
+						<s:Label text="+2 point size" paddingLeft="2" />
+					</s:HGroup>
+				</s:VGroup>
+				<s:Label text="Units" fontStyle="italic" color="0x4D4D4D" paddingTop="18" />
+				<s:HGroup gap="20">
+					<s:VGroup>
+						<s:Label text="Height" color="0x808080" />
+						<s:VGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:RadioButton groupName="unitsHeight" id="heightAmerican" label="American" selected="true" />
+								<s:Label text="(inch, foot)" styleName="smallNote" paddingLeft="-4" paddingTop="4" />
+							</s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:RadioButton groupName="unitsHeight" id="heightInternational" label="International" />
+								<s:Label text="(cm)" styleName="smallNote" paddingLeft="-4" paddingTop="4" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:VGroup>
+					<s:VGroup>
+						<s:Label text="Weight" color="0x808080" />
+						<s:VGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:RadioButton groupName="unitsWeight" id="weightAmerican" label="American" selected="true" />
+								<s:Label text="(pound)" styleName="smallNote" paddingLeft="-4" paddingTop="4" />
+							</s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:RadioButton groupName="unitsWeight" id="weightInternational" label="International" />
+								<s:Label text="(kg)" styleName="smallNote" paddingLeft="-4" paddingTop="4" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:VGroup>
+				</s:HGroup>
+				<s:Label text="Select font size and units" styleName="smallNote" paddingTop="15	" />
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Notifications">
+				
+				<s:Scroller height="242">
+					<s:VGroup color="0x4E4D4D" paddingRight="14">
+						<s:HGroup verticalAlign="middle">
+							<s:Image source="@Embed(source='/images/notificationsIconAppointments.png')" width="20" height="20" />
+							<s:Label text="Appointments" fontStyle="italic" />
+						</s:HGroup>
+						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
+							<s:Line xFrom="0" xTo="260">
+								<s:stroke>
+									<s:SolidColorStroke color="0x989898" weight="1"/>
+								</s:stroke>
+							</s:Line>
+						</s:VGroup>
+						<s:VGroup>
+							<s:CheckBox id="apptNewRecommendations" label="New recommendations" />
+							<s:CheckBox id="apptConfirmations" label="Appointment confirmations" />
+							<s:CheckBox id="apptUpcoming" label="Upcoming appointments" />
+						</s:VGroup>
+						<s:HGroup paddingLeft="18" verticalAlign="middle">
+							<s:TextInput id="inputAppts" width="35" height="18" text="1" textAlign="right" paddingTop="3" />
+							<s:DropDownList id="dropDownAppts" selectedIndex="0" width="116" dropShadowVisible="false" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" skinClass="edu.newschool.piim.healthboard.view.skins.general.MyDropDownListSkinDarkerArrow" color="0x054E71">
+								<mx:ArrayCollection>
+									<fx:String>weeks before</fx:String>
+									<fx:String>days before</fx:String>
+									<fx:String>hours before</fx:String>
+									<fx:String>minutes before</fx:String>
+								</mx:ArrayCollection>
+							</s:DropDownList>
+						</s:HGroup>
+						
+						<s:HGroup verticalAlign="middle" paddingTop="13">
+							<s:Image source="@Embed(source='/images/notificationsIconClasses.png')" width="20" height="20" />
+							<s:Label text="Classes" fontStyle="italic" />
+						</s:HGroup>
+						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
+							<s:Line xFrom="0" xTo="260">
+								<s:stroke>
+									<s:SolidColorStroke color="0x989898" weight="1"/>
+								</s:stroke>
+							</s:Line>
+						</s:VGroup>
+						<s:VGroup>
+							<s:CheckBox id="classesNewRecommendations" label="New recommendations" />
+							<s:CheckBox id="classesConfirmations" label="Class confirmations" />
+							<s:CheckBox id="classesUpcoming" label="Upcoming classes" />
+						</s:VGroup>
+						<s:HGroup paddingLeft="18" verticalAlign="middle">
+							<s:TextInput id="inputClasses" width="35" height="18" text="1" textAlign="right" paddingTop="3" />
+							<s:DropDownList id="dropDownClasses" selectedIndex="0" width="116" dropShadowVisible="false" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" skinClass="edu.newschool.piim.healthboard.view.skins.general.MyDropDownListSkinDarkerArrow" color="0x054E71">
+								<mx:ArrayCollection>
+									<fx:String>weeks before</fx:String>
+									<fx:String>days before</fx:String>
+									<fx:String>hours before</fx:String>
+									<fx:String>minutes before</fx:String>
+								</mx:ArrayCollection>
+							</s:DropDownList>
+						</s:HGroup>
+						
+						<s:HGroup verticalAlign="middle" paddingTop="13">
+							<s:Image source="@Embed(source='/images/notificationsIconMedications.png')" width="20" height="20" />
+							<s:Label text="Medications" fontStyle="italic" />
+						</s:HGroup>
+						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
+							<s:Line xFrom="0" xTo="260">
+								<s:stroke>
+									<s:SolidColorStroke color="0x989898" weight="1"/>
+								</s:stroke>
+							</s:Line>
+						</s:VGroup>
+						<s:VGroup>
+							<s:CheckBox id="medicationsReminder" label="Reminder" />
+							<s:CheckBox id="medicationsDetail" label="Detail" />
+						</s:VGroup>
+						
+						<s:HGroup verticalAlign="middle" paddingTop="13">
+							<s:Image source="@Embed(source='/images/notificationsIconMedicalRecords.png')" width="20" height="20" />
+							<s:Label text="Medical Records" fontStyle="italic" />
+						</s:HGroup>
+						<s:VGroup paddingTop="-2" paddingLeft="-1"><!-- paddingRight="13"-->
+							<s:Line xFrom="0" xTo="260">
+								<s:stroke>
+									<s:SolidColorStroke color="0x989898" weight="1"/>
+								</s:stroke>
+							</s:Line>
+						</s:VGroup>
+						<s:VGroup>
+							<s:CheckBox id="medicalRecordsNextStep" label="Next Step" />
+							<s:CheckBox id="medicalRecordsNewServiceRecord" label="New Service Record" />
+						</s:VGroup>
+						<s:VGroup paddingTop="11" paddingBottom="11">
+							<s:CheckBox id="textMessageAlerts" label="Receive text message alerts" />
+							<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Custom Reminder" paddingLeft="-3" />
+						</s:VGroup>
+					</s:VGroup>
+				</s:Scroller>
+			</s:NavigatorContent>
+		</mx:ViewStack>
+		
+	</s:HGroup>
+	
+	<s:HGroup paddingLeft="-17" paddingTop="-9">
+		<s:BorderContainer backgroundColor="0xB3B3B3" width="448" height="40" borderAlpha="0">
+			<s:layout>
+				<s:HorizontalLayout horizontalAlign="right" paddingTop="7" paddingRight="13" />
+			</s:layout>
+			<s:Button label="Save Settings" styleName="buttonText" height="24" click="saveSettings()" />
+			<s:Button label="Cancel" click="PopUpManager.removePopUp(this);" styleName="buttonText" height="24" width="55" />
+		</s:BorderContainer>
+	</s:HGroup>
+</s:TitleWindow>

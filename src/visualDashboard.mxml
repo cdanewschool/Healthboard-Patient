@@ -10,19 +10,19 @@
 	xmlns:ns="calendar.mxml_views.*"
 	xmlns:views="calendar.classes.views.*"
 	xmlns:calendar="external.com.flexcalendar.components.calendar.*"
-	xmlns:home="components.home.*"
+	xmlns:home="edu.newschool.piim.healthboard.view.components.home.*"
 	xmlns:plus="external.TabBarPlus.plus.*"
 	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
 	xmlns:general="components.general.*" 
 	xmlns="*" xmlns:modules="modules.*"
-	xmlns:models="models.*" 
+	xmlns:model="edu.newschool.piim.healthboard.model.*" 
 	xmlns:widgets="components.widgets.*"
 	xmlns:views1="components.views.*" 
-	xmlns:modules1="components.modules.*"
+	xmlns:modules1="edu.newschool.piim.healthboard.view.components.modules.*"
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()">
+	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()" xmlns:widgets1="edu.newschool.piim.healthboard.view.components.widgets.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -47,7 +47,7 @@
 	</fx:Script>
 	
 	<!--	external actionscript includes 	-->
-	<fx:Script source="ASfiles/home.as" />
+	<fx:Script source="visualDashboard.as" />
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -178,7 +178,7 @@
 						
 						<s:VGroup gap="17">
 							
-							<widgets:MessagesWidget
+							<widgets1:MessagesWidget
 								id="widgetMessages" width="305" 
 								collapsible="true" headerClickable="false" module="modMessages" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
@@ -202,7 +202,7 @@
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" color="0xFFFFFF" 
 								visible="{widgetMedicalRecordsOpen}" includeInLayout="{widgetMedicalRecordsOpen}" />
 							
-							<widgets:EducationalResourcesWidget 
+							<widgets1:EducationalResourcesWidget 
 								id="widgetEducationalResources" width="305" title="Educational Resources" 
 								collapsible="true" headerClickable="false" module="modEducationalResources" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
@@ -407,7 +407,7 @@
 		<!-- USER PROFILE SCREEN -->
 		<s:VGroup id="profile" paddingTop="35" width="100%" horizontalAlign="center" includeIn="profile">
 			<home:userProfileForm 
-				id="myProfileForm" skinClass="skins.general.myChromelessTitleWindow"
+				id="myProfileForm" skinClass="edu.newschool.piim.healthboard.view.skins.general.myChromelessTitleWindow"
 				width="980" height="681"
 				title=" User Profile" 
 				backgroundColor="0x4A4A49" borderColor="0X898989" styleName="whiteBoldTitle" dropShadowVisible="false" chromeColor="#706F6F" />
