@@ -114,7 +114,7 @@
 						
 						<s:HGroup buttonMode="true" click="controller.showNextStepsOverlay()" verticalAlign="middle" paddingLeft="10" paddingTop="6" paddingRight="10">
 							<s:Label text="You have" styleName="moduleSubtitleItalic" color="{controller.nextStepsOverlay?0x000000:0xFFFFFF}" />
-							<s:Label text="{MedicalRecordsModel(medicalRecordsController.model).medicalRecordsNextStepsActive.length}" styleName="moduleSubtitleItalic moduleSubtitleNumber" color="{controller.nextStepsOverlay?0x000000:0xFF931E}" />
+							<s:Label text="{AppointmentsModel(appointmentsController.model).nextStepsActive.length}" styleName="moduleSubtitleItalic moduleSubtitleNumber" color="{controller.nextStepsOverlay?0x000000:0xFF931E}" />
 							<s:Label text="Next Steps" styleName="moduleSubtitleItalic" color="{controller.nextStepsOverlay?0x000000:0xFFFFFF}" />
 							<s:Label text="{controller.nextStepsOverlay?'▲':'▼'}" fontSize="10" color="{controller.nextStepsOverlay?0x000000:0xFFFFFF}" paddingTop="4" paddingLeft="5" />
 						</s:HGroup>

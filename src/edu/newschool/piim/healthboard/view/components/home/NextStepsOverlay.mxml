@@ -18,30 +18,24 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import ASclasses.Constants;
+			import controllers.AppointmentsController;
 			
 			import edu.newschool.piim.healthboard.view.popups.YourNextStepsPopup;
 			
-			import controllers.MedicalRecordsController;
-			
-			import events.ApplicationEvent;
-			
 			import models.NextStep;
-			import models.modules.MedicalRecordsModel;
+			import models.modules.AppointmentsModel;
 			
-			import mx.collections.ArrayCollection;
 			import mx.collections.Sort;
 			import mx.events.CollectionEvent;
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
 			
 			import spark.collections.SortField;
-			import spark.events.IndexChangeEvent;
 			
 			import util.DateFormatters;
 			
-			[Bindable] private var controller:MedicalRecordsController = AppProperties.getInstance().controller.medicalRecordsController as MedicalRecordsController;
-			[Bindable] public var model:MedicalRecordsModel = controller.model as MedicalRecordsModel;
+			[Bindable] private var controller:AppointmentsController = AppProperties.getInstance().controller.appointmentsController as AppointmentsController;
+			[Bindable] public var model:AppointmentsModel = controller.model as AppointmentsModel;
 			
 			private var sort:Sort = new Sort();
 			private var timer:Timer;
@@ -67,8 +61,8 @@
 			
 			private function update():void
 			{
-				model.medicalRecordsNextSteps.sort = sort;
-				model.medicalRecordsNextSteps.refresh();
+				model.nextSteps.sort = sort;
+				model.nextSteps.refresh();
 			}
 			
 			private function onFilterClick(event:MouseEvent):void
@@ -91,7 +85,7 @@
 				item.completed = completed;
 				item.status = completed ? "inactive" : "active";
 				
-				model.medicalRecordsNextSteps.dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE ) );
+				model.nextSteps.dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE ) );
 				
 				timer.reset();
 				timer.start();
@@ -106,7 +100,7 @@
 				item.removed = true;
 				item.status = "inactive";
 				
-				model.medicalRecordsNextSteps.dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE ) );
+				model.nextSteps.dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE ) );
 				
 				timer.reset();
 				timer.start();
@@ -129,7 +123,7 @@
 			
 			private function onTimerComplete(event:TimerEvent):void
 			{
-				model.medicalRecordsNextSteps.refresh();
+				model.nextSteps.refresh();
 			}
 			
 			private function onAdded():void
@@ -152,9 +146,9 @@
 				sort = new Sort();
 				sort.fields = [ new SortField('completed'), new SortField('dateAssigned',false,true) ];
 				
-				model.medicalRecordsNextSteps.sort = sort;
-				model.medicalRecordsNextSteps.filterFunction = filterByRemoved;
-				model.medicalRecordsNextSteps.refresh();
+				model.nextSteps.sort = sort;
+				model.nextSteps.filterFunction = filterByRemoved;
+				model.nextSteps.refresh();
 			}
 		]]>
 	</fx:Script>
@@ -181,7 +175,7 @@
 	
 	<mx:DataGrid 
 		id="grid"
-		dataProvider="{model.medicalRecordsNextSteps}" styleName="standardDataGrid" fontFamily="myMyriad"
+		dataProvider="{model.nextSteps}" styleName="standardDataGrid" fontFamily="myMyriad"
 		width="100%" height="100%"  
 		headerStyleName="dataGridHeader" rowHeight="22" headerHeight="22"
 		fontSize="12"

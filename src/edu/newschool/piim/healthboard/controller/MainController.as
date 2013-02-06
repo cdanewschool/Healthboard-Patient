@@ -1,8 +1,14 @@
 package edu.newschool.piim.healthboard.controller
 {
 	import ASclasses.Constants;
-	import edu.newschool.piim.healthboard.constant.PatientConstants;
 	
+	import controllers.Controller;
+	import controllers.NutritionController;
+	import controllers.VitalSignsController;
+	
+	import edu.newschool.piim.healthboard.constant.PatientConstants;
+	import edu.newschool.piim.healthboard.model.PatientApplicationModel;
+	import edu.newschool.piim.healthboard.model.UserPreferences;
 	import edu.newschool.piim.healthboard.view.components.home.NextStepsOverlay;
 	import edu.newschool.piim.healthboard.view.components.home.preferencesWindow;
 	import edu.newschool.piim.healthboard.view.components.widgets.EducationalResourcesWidget;
@@ -15,15 +21,18 @@ package edu.newschool.piim.healthboard.controller
 	
 	import external.TabBarPlus.plus.TabBarPlus;
 	
-	import edu.newschool.piim.healthboard.model.PatientApplicationModel;
 	import models.PatientsModel;
 	import models.Preferences;
 	import models.UserModel;
-	import edu.newschool.piim.healthboard.model.UserPreferences;
+	import models.modules.AppointmentsModel;
+	import models.modules.MedicalRecordsModel;
 	import models.modules.MessagesModel;
+	import models.modules.appointments.PatientAppointment;
+	import models.modules.medicalrecords.MedicalRecord;
 	
 	import modules.NutritionModule;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.core.UIComponent;
 	import mx.events.CloseEvent;
@@ -32,9 +41,6 @@ package edu.newschool.piim.healthboard.controller
 	import mx.managers.PopUpManager;
 	
 	import spark.components.TitleWindow;
-	import controllers.Controller;
-	import controllers.NutritionController;
-	import controllers.VitalSignsController;
 	
 	public class MainController extends Controller
 	{
@@ -54,7 +60,9 @@ package edu.newschool.piim.healthboard.controller
 			nutritionController = new NutritionController();
 			vitalSignsController = new VitalSignsController();
 			
+			appointmentsController.model.addEventListener( ApplicationDataEvent.LOADED, onAppointmentsLoaded );
 			patientsController.model.addEventListener( ApplicationDataEvent.LOADED, onPatientsLoaded );
+			providersController.model.addEventListener( ApplicationDataEvent.LOADED, onProvidersLoaded );
 			
 			loadStyles();
 		}
@@ -181,6 +189,23 @@ package edu.newschool.piim.healthboard.controller
 		private function onNextStepsOutsideClick( event:FlexMouseEvent = null ):void
 		{
 			if(!visualDashboard(application).nextStepsTrigger.hitTestPoint(event.stageX,event.stageY)) onNextStepsClose();
+		}
+		
+		private function onAppointmentsLoaded(event:ApplicationDataEvent):void
+		{
+			var medicalRecords:ArrayCollection = new ArrayCollection();
+			
+			for each(var appointment:PatientAppointment in AppointmentsModel(appointmentsController.model).appointments)
+			{
+				for each(var medicalRecord:MedicalRecord in appointment.medicalRecords)
+				{
+					medicalRecords.addItem( medicalRecord );
+				}
+			}
+			
+			MedicalRecordsModel( medicalRecordsController.model ).medicalRecords = medicalRecords;
+			MedicalRecordsModel( medicalRecordsController.model ).categories = AppointmentsModel(appointmentsController.model).appointmentCategories;
+			MedicalRecordsModel( medicalRecordsController.model ).nextSteps = AppointmentsModel(appointmentsController.model).nextSteps;
 		}
 		
 		override protected function onAuthenticated(event:AuthenticationEvent):void

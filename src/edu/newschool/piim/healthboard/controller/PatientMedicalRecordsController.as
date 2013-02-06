@@ -8,12 +8,5 @@ package edu.newschool.piim.healthboard.controller
 		{
 			super();
 		}
-		
-		override public function init():void
-		{
-			super.init();
-			
-			model.dataService.send();
-		}
 	}
 }

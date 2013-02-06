@@ -56,10 +56,10 @@ import util.DateUtil;
 [Bindable] public var controller:MainController;
 [Bindable] public var model:ApplicationModel;
 
-private var appointmentsController:AppointmentsController;
-private var immunizationsController:ImmunizationsController;
+[Bindable] private var appointmentsController:AppointmentsController;
+[Bindable] private var immunizationsController:ImmunizationsController;
 [Bindable] private var medicalRecordsController:MedicalRecordsController;
-private var medicationsController:MedicationsController;
+[Bindable] private var medicationsController:MedicationsController;
 
 protected function init():void
 {
