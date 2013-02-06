@@ -24,15 +24,16 @@
 	</target>
 	
 	<target name="copyAssets">
-		<copy todir="${APP_ROOT}/${OUTPUT_FOLDER}/data">
+		<mkdir dir="${APP_ROOT}/${OUTPUT_FOLDER}/data" />
+		<copy todir="${APP_ROOT}/${OUTPUT_FOLDER}/data" failonerror="false">
 			<fileset dir="${APP_ROOT}/src/data"/>
 			<fileset dir="${LIB_ROOT}/src/data"/>
 		</copy>
-		<copy todir="${APP_ROOT}/${OUTPUT_FOLDER}/assets/images">
+		<mkdir dir="${APP_ROOT}/${OUTPUT_FOLDER}/assets/images" />
+		<copy todir="${APP_ROOT}/${OUTPUT_FOLDER}/assets/images" failonerror="false">
 			<!--	http://stackoverflow.com/questions/3423555/copy-content-of-subfolders-with-ant	-->
 			<fileset dir="${LIB_ROOT}/src/assets/images">
 				<include name="*/**"/>
-				<exclude name="*"/>
 			</fileset>
 		</copy>
 	</target>

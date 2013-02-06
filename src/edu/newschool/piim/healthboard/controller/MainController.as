@@ -1,10 +1,7 @@
 package edu.newschool.piim.healthboard.controller
 {
-	import ASclasses.Constants;
+	import edu.newschool.piim.healthboard.Constants;
 	
-	import controllers.Controller;
-	import controllers.NutritionController;
-	import controllers.VitalSignsController;
 	
 	import edu.newschool.piim.healthboard.constant.PatientConstants;
 	import edu.newschool.piim.healthboard.model.PatientApplicationModel;
@@ -13,24 +10,24 @@ package edu.newschool.piim.healthboard.controller
 	import edu.newschool.piim.healthboard.view.components.home.preferencesWindow;
 	import edu.newschool.piim.healthboard.view.components.widgets.EducationalResourcesWidget;
 	
-	import enum.ViewModeType;
+	import edu.newschool.piim.healthboard.enum.ViewModeType;
 	
-	import events.ApplicationDataEvent;
-	import events.ApplicationEvent;
-	import events.AuthenticationEvent;
+	import edu.newschool.piim.healthboard.events.ApplicationDataEvent;
+	import edu.newschool.piim.healthboard.events.ApplicationEvent;
+	import edu.newschool.piim.healthboard.events.AuthenticationEvent;
 	
-	import external.TabBarPlus.plus.TabBarPlus;
+	import net.flexwiz.blog.tabbar.plus.TabBarPlus;
 	
-	import models.PatientsModel;
-	import models.Preferences;
-	import models.UserModel;
-	import models.modules.AppointmentsModel;
-	import models.modules.MedicalRecordsModel;
-	import models.modules.MessagesModel;
-	import models.modules.appointments.PatientAppointment;
-	import models.modules.medicalrecords.MedicalRecord;
+	import edu.newschool.piim.healthboard.model.PatientsModel;
+	import edu.newschool.piim.healthboard.model.Preferences;
+	import edu.newschool.piim.healthboard.model.UserModel;
+	import edu.newschool.piim.healthboard.model.module.AppointmentsModel;
+	import edu.newschool.piim.healthboard.model.module.MedicalRecordsModel;
+	import edu.newschool.piim.healthboard.model.module.MessagesModel;
+	import edu.newschool.piim.healthboard.model.module.appointments.PatientAppointment;
+	import edu.newschool.piim.healthboard.model.module.medicalrecords.MedicalRecord;
 	
-	import modules.NutritionModule;
+	import edu.newschool.piim.healthboard.view.modules.NutritionModule;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;

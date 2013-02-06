@@ -1,6 +1,6 @@
 package edu.newschool.piim.healthboard.model
 {
-	import models.modules.ImmunizationsModel;
+	import edu.newschool.piim.healthboard.model.module.ImmunizationsModel;
 	
 	public class PatientImmunizationsModel extends ImmunizationsModel
 	{

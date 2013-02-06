@@ -3,7 +3,6 @@ package edu.newschool.piim.healthboard.controller
 	import edu.newschool.piim.healthboard.view.popups.RecordIntakePopup;
 	
 	import mx.managers.PopUpManager;
-	import controllers.MedicationsController;
 
 	public class PatientMedicationsController extends MedicationsController
 	{

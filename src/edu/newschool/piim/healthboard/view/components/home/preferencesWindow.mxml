@@ -2,17 +2,17 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="300"
-			   close="PopUpManager.removePopUp(this);" skinClass="skins.general.myHeaderlessTitleWindow">
+			   close="PopUpManager.removePopUp(this);" skinClass="edu.newschool.piim.healthboard.view.skins.general.myHeaderlessTitleWindow">
 	
 	<fx:Script>
 		<![CDATA[
-			import ASclasses.Constants;
+			import edu.newschool.piim.healthboard.Constants;
 			
-			import controllers.Controller;
+			import edu.newschool.piim.healthboard.controller.Controller;
 			
-			import enum.ViewModeType;
+			import edu.newschool.piim.healthboard.enum.ViewModeType;
 			
-			import events.ApplicationEvent;
+			import edu.newschool.piim.healthboard.events.ApplicationEvent;
 			
 			import edu.newschool.piim.healthboard.model.UserPreferences;
 			

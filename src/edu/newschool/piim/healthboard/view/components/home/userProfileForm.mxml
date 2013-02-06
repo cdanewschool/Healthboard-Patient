@@ -13,9 +13,9 @@
 		<![CDATA[
 			import edu.newschool.piim.healthboard.controller.MainController;
 			
-			import events.ApplicationEvent;
+			import edu.newschool.piim.healthboard.events.ApplicationEvent;
 			
-			import models.ApplicationModel;
+			import edu.newschool.piim.healthboard.model.ApplicationModel;
 			
 			import spark.components.Application;
 			

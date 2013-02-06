@@ -1,7 +1,6 @@
 package edu.newschool.piim.healthboard.model
 {
 	import mx.collections.ArrayCollection;
-	import models.Preferences;
 
 	public class UserPreferences extends Preferences
 	{

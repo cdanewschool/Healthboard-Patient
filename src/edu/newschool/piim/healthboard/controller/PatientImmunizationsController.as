@@ -4,7 +4,6 @@ package edu.newschool.piim.healthboard.controller
 	
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.mxml.HTTPService;
-	import controllers.ImmunizationsController;
 
 	public class PatientImmunizationsController extends ImmunizationsController
 	{

@@ -3,9 +3,9 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	xmlns:components="external.flashcommander.components.*"
+	xmlns:components="org.flashcommander.components.*"
 	controlBarVisible="true"
-	skinClass="skins.general.myHeaderlessTitleWindow" 
+	skinClass="edu.newschool.piim.healthboard.view.skins.general.myHeaderlessTitleWindow" 
 	width="373" height="426"
 	creationComplete="init()">
 	

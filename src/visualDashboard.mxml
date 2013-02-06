@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application 
 	xmlns:ASclasses="ASclasses.*"
-	xmlns:autocomplete="external.flashcommander.components.*"
+	xmlns:components1="org.flashcommander.components.*"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	xmlns:components="components.*"
-	xmlns:fxg="components.fxg.*"
+	xmlns:components="edu.newschool.piim.healthboard.view.components.*"
+	xmlns:fxg="edu.newschool.piim.healthboard.view.components.fxg.*"
 	xmlns:ns="calendar.mxml_views.*"
 	xmlns:views="calendar.classes.views.*"
 	xmlns:calendar="external.com.flexcalendar.components.calendar.*"
 	xmlns:home="edu.newschool.piim.healthboard.view.components.home.*"
 	xmlns:plus="external.TabBarPlus.plus.*"
-	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*"
-	xmlns:general="components.general.*" 
-	xmlns="*" xmlns:modules="modules.*"
+	xmlns:enhancedtitlewindow="com.ninemmedia.code.collapsibleTitleWindow.components.enhancedtitlewindow.*"
+	xmlns:general="edu.newschool.piim.healthboard.view.components.general.*" 
+	xmlns="*" xmlns:modules="edu.newschool.piim.healthboard.view.modules.*"
 	xmlns:model="edu.newschool.piim.healthboard.model.*" 
-	xmlns:widgets="components.widgets.*"
-	xmlns:views1="components.views.*" 
+	xmlns:views1="edu.newschool.piim.healthboard.view.components.views.*" 
 	xmlns:modules1="edu.newschool.piim.healthboard.view.components.modules.*"
 	minWidth="1024" minHeight="600" width="100%" height="100%"
-	fontFamily="myMyriad" skinClass="skins.general.backgroundGradient"
+	fontFamily="myMyriad" skinClass="edu.newschool.piim.healthboard.view.skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
 	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()" xmlns:widgets1="edu.newschool.piim.healthboard.view.components.widgets.*">
 	
 	<fx:Script>
 		<![CDATA[
-			import models.modules.MedicalRecordsModel;
-			import models.modules.nutrition.FoodPlan;
+			import edu.newschool.piim.healthboard.model.module.MedicalRecordsModel;
+			import edu.newschool.piim.healthboard.model.module.nutrition.FoodPlan;
 			
 			import mx.events.FlexEvent;
 			
@@ -54,7 +53,7 @@
 	</fx:Declarations>
 	
 	<fx:Style source="css/styles.css" />
-	<fx:Style source="external/calendar/styles/skin.css"/>
+	<fx:Style source="edu/asu/chir/calendar/styles/skin.css"/>
 	
 	<!--	application states	-->
 	<s:states>
@@ -130,7 +129,7 @@
 					<mx:LinkButton id="btnProfile" label="{controller.model.user.fullName}" color="0xAEDBE2" textRollOverColor="0xAEDBE2" textSelectedColor="0xAEDBE2" skin="{null}" click="{currentState='profile'}" rollOver="btnProfile.styleName='linkBtnUnderline';" rollOut="btnProfile.styleName='linkBtn';" />
 					
 					<s:HGroup paddingTop="-12" paddingLeft="-2">
-						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="onShowPreferences(event)"> 
+						<s:DropDownList id="dropDownView" dropShadowVisible="false" skinClass="edu.newschool.piim.healthboard.view.skins.general.MySettingsDropDownListSkin" prompt="Settings" fontSize="12" color="0x074F72" rollOverColor="0xAEDBE2" selectionColor="0xAEDBE2" change="onShowPreferences(event)"> 
 							<mx:ArrayCollection>
 								<fx:String>     Homepage Options</fx:String>
 								<fx:String>     Font and Units</fx:String>
@@ -184,19 +183,19 @@
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
 								visible="{widgetMessagesOpen}" includeInLayout="{widgetMessagesOpen}" />
 							
-							<widgets:PatientAppointmentsWidget
+							<widgets1:PatientAppointmentsWidget
 								id="widgetAppointments" width="305" title="Appointments (4)" 
 								collapsible="true" headerClickable="false" module="modAppointments" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
 								visible="{widgetAppointmentsOpen}" includeInLayout="{widgetAppointmentsOpen}" />
 							
-							<widgets:PatientImmunizationsWidget 
+							<widgets1:PatientImmunizationsWidget 
 								id="widgetImmunizations" width="305" title="Immunizations (12)" 
 								collapsible="true" headerClickable="false" showCloseButton="{widgetLibraryOpen}" displayWarning="true" 
 								warningToolTip="Immunizations overdue" titleBarHeight="30" 
 								module="modImmunizations" visible="{widgetImmunizationsOpen}" includeInLayout="{widgetImmunizationsOpen}" />	<!--title="{'Immunizations (' + immunizationsDueNumber + ')'}" (see comments on ArrayList below)-->
 							
-							<widgets:PatientMedicalRecordsWidget 
+							<widgets1:PatientMedicalRecordsWidget 
 								id="widgetMedicalRecords" width="305" title="Medical Records" 
 								collapsible="true" headerClickable="false" module="modMedicalRecords" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" color="0xFFFFFF" 
@@ -212,7 +211,7 @@
 						
 						<s:VGroup gap="17">
 							
-							<widgets:PatientMedicationsWidget
+							<widgets1:PatientMedicationsWidget
 								id="widgetMedications" width="633" title="Medications" 
 								collapsible="true" headerClickable="false" module="modMedications" 
 								showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
@@ -223,7 +222,7 @@
 								
 								<s:VGroup gap="17">
 									
-									<widgets:PatientNutritionWidget 
+									<widgets1:PatientNutritionWidget 
 										id="widgetNutrition" width="305" 
 										title="Nutrition" 
 										collapsible="true" headerClickable="false" module="modNutrition" 
@@ -231,7 +230,7 @@
 										visible="{widgetNutritionOpen}" includeInLayout="{widgetNutritionOpen}" 
 										creationComplete="widgetNutrition.subtitle = DateFormatters.dateFormatterDay.format(new Date())" />
 									
-									<widgets:PatientVitalSignsWidget
+									<widgets1:PatientVitalSignsWidget
 										id="widgetVitalSigns" width="305" title="Vital Signs" 
 										collapsible="true" headerClickable="false" module="modVitalSigns" 
 										showCloseButton="{widgetLibraryOpen}" titleBarHeight="30" 
@@ -239,7 +238,7 @@
 									
 								</s:VGroup>
 								
-								<widgets:PatientExerciseWidget 
+								<widgets1:PatientExerciseWidget 
 									id="widgetExercise" width="305" 
 									title="Exercise" 
 									collapsible="true" headerClickable="false" module="modExercise" 

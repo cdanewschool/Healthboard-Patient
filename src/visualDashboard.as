@@ -1,32 +1,30 @@
-import ASclasses.Constants;
+import edu.newschool.piim.healthboard.Constants;
 import edu.newschool.piim.healthboard.constant.PatientConstants;
 
 import edu.newschool.piim.healthboard.view.components.home.preferencesWindow;
-import components.popups.myAppointmentsWindow;
-import components.popups.myClassesWindow;
+import edu.newschool.piim.healthboard.view.components.popups.myAppointmentsWindow;
+import edu.newschool.piim.healthboard.view.components.popups.myClassesWindow;
 
-import controllers.AppointmentsController;
-import controllers.ImmunizationsController;
+import edu.newschool.piim.healthboard.controller.AppointmentsController;
+import edu.newschool.piim.healthboard.controller.ImmunizationsController;
 import edu.newschool.piim.healthboard.controller.MainController;
-import controllers.MedicalRecordsController;
-import controllers.MedicationsController;
+import edu.newschool.piim.healthboard.controller.MedicalRecordsController;
+import edu.newschool.piim.healthboard.controller.MedicationsController;
 
-import events.ApplicationDataEvent;
-import events.ApplicationEvent;
-import events.AppointmentEvent;
+import edu.newschool.piim.healthboard.events.ApplicationDataEvent;
+import edu.newschool.piim.healthboard.events.ApplicationEvent;
+import edu.newschool.piim.healthboard.events.AppointmentEvent;
 
-import external.*;
-import external.TabBarPlus.plus.TabBarPlus;
-import external.TabBarPlus.plus.TabPlus;
-import external.TabBarPlus.plus.tabskins.TabBarPlusSkin;
+import net.flexwiz.blog.tabbar.plus.TabPlus;
+import net.flexwiz.blog.tabbar.plus.tabskins.TabBarPlusSkin;
 
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 
 import flashx.textLayout.compose.TextLineRecycler;
 
-import models.ApplicationModel;
-import models.modules.AppointmentsModel;
+import edu.newschool.piim.healthboard.model.ApplicationModel;
+import edu.newschool.piim.healthboard.model.module.AppointmentsModel;
 
 import mx.collections.IList;
 import mx.controls.Alert;
@@ -46,11 +44,11 @@ import spark.components.Image;
 import spark.events.IndexChangeEvent;
 import spark.filters.DropShadowFilter;
 
-import styles.ChartStyles;
+import edu.newschool.piim.healthboard.view.styles.ChartStyles;
 
-import util.ChartLabelFunctions;
-import util.DateFormatters;
-import util.DateUtil;
+import edu.newschool.piim.healthboard.util.ChartLabelFunctions;
+import edu.newschool.piim.healthboard.util.DateFormatters;
+import edu.newschool.piim.healthboard.util.DateUtil;
 
 [Bindable] public var chartStyles:ChartStyles;
 [Bindable] public var controller:MainController;

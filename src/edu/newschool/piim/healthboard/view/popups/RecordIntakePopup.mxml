@@ -4,9 +4,9 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
 	controlBarVisible="true"
-	skinClass="skins.general.myHeaderlessTitleWindow" 
+	skinClass="edu.newschool.piim.healthboard.view.skins.general.myHeaderlessTitleWindow" 
 	width="400" height="{medication.directedFrequency == 1 ? 372 : 396 + ((medication.directedFrequency-1) * 29)}"
-	creationComplete="init()" xmlns:components="external.flashcommander.components.*">
+	creationComplete="init()" xmlns:components="org.flashcommander.components.*">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -17,9 +17,9 @@
 		<![CDATA[
 			import edu.newschool.piim.healthboard.view.components.medications.medicationIntakeDosageGridRow;
 			
-			import controllers.MedicationsController;
+			import edu.newschool.piim.healthboard.controller.MedicationsController;
 			
-			import models.modules.MedicationsModel;
+			import edu.newschool.piim.healthboard.model.module.MedicationsModel;
 			
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
@@ -28,7 +28,7 @@
 			import spark.components.NumericStepper;
 			import spark.components.TextInput;
 			
-			import util.DateFormatters;
+			import edu.newschool.piim.healthboard.util.DateFormatters;
 			
 			[Bindable] private var controller:MedicationsController = AppProperties.getInstance().controller.medicationsController as MedicationsController;
 			[Bindable] public var model:MedicationsModel = controller.model as MedicationsModel;

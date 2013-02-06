@@ -1,7 +1,6 @@
 package edu.newschool.piim.healthboard.model
 {
-	import enum.AppContext;
-	import models.ApplicationModel;
+	import edu.newschool.piim.healthboard.enum.AppContext;
 
 	public class PatientApplicationModel extends ApplicationModel
 	{

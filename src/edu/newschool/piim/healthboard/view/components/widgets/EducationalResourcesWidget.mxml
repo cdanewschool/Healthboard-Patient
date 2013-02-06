@@ -3,7 +3,7 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	 xmlns:mx="library://ns.adobe.com/flex/mx" 
-	 xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*">
+	 xmlns:enhancedtitlewindow="com.ninemmedia.code.collapsibleTitleWindow.components.enhancedtitlewindow.*">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -11,9 +11,9 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import ASclasses.Constants;
+			import edu.newschool.piim.healthboard.Constants;
 			
-			import events.ApplicationEvent;
+			import edu.newschool.piim.healthboard.events.ApplicationEvent;
 			
 			public var viewIndex:int = -1;
 			public var menuIndex:int = -1;

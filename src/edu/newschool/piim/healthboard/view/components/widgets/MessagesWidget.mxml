@@ -3,14 +3,14 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	xmlns:enhancedtitlewindow="external.collapsibleTitleWindow.components.enhancedtitlewindow.*" 
-	title="Messages {model.unreadMessageCount ? '(' + model.unreadMessageCount + ')' : ''}">
+	xmlns:enhancedtitlewindow="com.ninemmedia.code.collapsibleTitleWindow.components.enhancedtitlewindow.*" 
+	title="Messages {model.unreadMessageCount ? '(' + model.unreadMessageCount + ')' : ''}" >
 	
 	<fx:Script>
 		<![CDATA[
-			import ASclasses.Constants;
+			import edu.newschool.piim.healthboard.Constants;
 			
-			import events.ApplicationEvent;
+			import edu.newschool.piim.healthboard.events.ApplicationEvent;
 			
 			[Bindable] private var rowCount:int = 4;
 		]]>
@@ -22,9 +22,9 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import controllers.MessagesController;
+			import edu.newschool.piim.healthboard.controller.MessagesController;
 			
-			import models.modules.MessagesModel;
+			import edu.newschool.piim.healthboard.model.module.MessagesModel;
 			
 			[Bindable] public var controller:MessagesController = AppProperties.getInstance().controller.messagesController as MessagesController;
 			[Bindable] public var model:MessagesModel = controller.model as MessagesModel;

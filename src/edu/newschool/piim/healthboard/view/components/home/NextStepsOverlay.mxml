@@ -18,12 +18,12 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import controllers.AppointmentsController;
+			import edu.newschool.piim.healthboard.controller.AppointmentsController;
 			
 			import edu.newschool.piim.healthboard.view.popups.YourNextStepsPopup;
 			
-			import models.NextStep;
-			import models.modules.AppointmentsModel;
+			import edu.newschool.piim.healthboard.model.NextStep;
+			import edu.newschool.piim.healthboard.model.module.AppointmentsModel;
 			
 			import mx.collections.Sort;
 			import mx.events.CollectionEvent;
@@ -32,7 +32,7 @@
 			
 			import spark.collections.SortField;
 			
-			import util.DateFormatters;
+			import edu.newschool.piim.healthboard.util.DateFormatters;
 			
 			[Bindable] private var controller:AppointmentsController = AppProperties.getInstance().controller.appointmentsController as AppointmentsController;
 			[Bindable] public var model:AppointmentsModel = controller.model as AppointmentsModel;
@@ -190,7 +190,7 @@
 						<mx:HBox width="68" horizontalAlign="center" paddingTop="5">
 							<fx:Script>
 								<![CDATA[
-									import enum.UrgencyType;
+									import edu.newschool.piim.healthboard.enum.UrgencyType;
 								]]>
 							</fx:Script>
 							<s:Image source="@Embed('/images/messagesUrgentSmall.png')" toolTip="Urgent" visible="{data.urgency == UrgencyType.URGENT}" includeInLayout="{data.urgency == UrgencyType.URGENT}" />
@@ -200,16 +200,16 @@
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
 			
-			<mx:DataGridColumn dataField="dateAssigned" headerText="Date" width="92" paddingLeft="10" labelFunction="getDateLabel" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
-			<mx:DataGridColumn dataField="recommendation" headerText="Next Steps" width="288" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
-			<mx:DataGridColumn dataField="assignee" headerText="Assignee" width="94" paddingLeft="10" itemRenderer="components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />			
+			<mx:DataGridColumn dataField="dateAssigned" headerText="Date" width="92" paddingLeft="10" labelFunction="getDateLabel" itemRenderer="edu.newschool.piim.healthboard.view.components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
+			<mx:DataGridColumn dataField="recommendation" headerText="Next Steps" width="288" paddingLeft="10" itemRenderer="edu.newschool.piim.healthboard.view.components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />
+			<mx:DataGridColumn dataField="assignee" headerText="Assignee" width="94" paddingLeft="10" itemRenderer="edu.newschool.piim.healthboard.view.components.itemrenderers.datagridcolumn.CustomRowColorAlternative" />			
 			<mx:DataGridColumn dataField="completed" headerText="Status" paddingLeft="10" showDataTips="true">
 				<mx:itemRenderer>
 					<fx:Component>
 						<mx:HBox paddingTop="2" horizontalGap="10">
 							<fx:Script>
 								<![CDATA[
-									import models.NextStep;
+									import edu.newschool.piim.healthboard.model.NextStep;
 								]]>
 							</fx:Script>
 							<s:Label text="{data.removed ? 'Declined' : (data.completed ? 'Complete' : 'In Progress')}" color="{data.status == 'inactive' ? 0x999999 : 0xAEDEE4}" fontFamily="myMyriad" />
