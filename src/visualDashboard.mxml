@@ -21,7 +21,7 @@
 	minWidth="1024" minHeight="600" width="100%" height="100%"
 	fontFamily="myMyriad" skinClass="edu.newschool.piim.healthboard.view.skins.general.backgroundGradient"
 	initialize="{TextLineRecycler.textLineRecyclerEnabled = false;}" 
-	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()" xmlns:widgets1="edu.newschool.piim.healthboard.view.components.widgets.*">
+	resize="onResize()" preinitialize="onPreinitialize(event)" creationComplete="init();onResize()" xmlns:widgets1="edu.newschool.piim.healthboard.view.components.widgets.*" xmlns:nutrition="edu.newschool.piim.healthboard.view.components.modules.nutrition.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -437,7 +437,7 @@
 		<modules:ExerciseModule includeIn="modExercise" width="976" paddingTop="10" />
 		
 		<!--NUTRITION-->
-		<modules:NutritionModule includeIn="modNutrition" width="976" paddingTop="10" foodPlan="{FoodPlan.AVERAGE}" />
+		<nutrition:PatientNutritionModule includeIn="modNutrition" width="976" paddingTop="10" foodPlan="{FoodPlan.AVERAGE}" />
 		
 	</s:VGroup>
 </s:Application>
