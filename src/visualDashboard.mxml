@@ -96,7 +96,7 @@
 					</s:LinearGradient>
 				</s:backgroundFill>
 				
-				<s:VGroup paddingLeft="27" paddingTop="6" click="{currentState=controller.model.viewMode}" buttonMode="{currentState!=controller.model.viewMode}"><!--includeIn="loggedIn, widgetView, profile"-->
+				<s:VGroup paddingLeft="27" paddingTop="6" click="dispatchEvent(new ApplicationEvent(ApplicationEvent.NAVIGATE, true, false, 0))" buttonMode="{currentState!=Constants.STATE_LOGGED_IN &amp;&amp; currentState!=Constants.STATE_WIDGET_VIEW}"><!--includeIn="loggedIn, widgetView, profile"-->
 					<fxg:healthBoardLogoGray />
 				</s:VGroup>
 				
