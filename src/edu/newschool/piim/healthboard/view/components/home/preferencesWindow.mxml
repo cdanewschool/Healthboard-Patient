@@ -86,12 +86,12 @@
 				<s:Label text="View mode" fontStyle="italic" color="0x4D4D4D" />
 				<s:HGroup gap="30">
 					<s:VGroup horizontalAlign="center" gap="0">
-						<s:Image source="@Embed(source='/images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="{viewButton.selected = true;}" />
+						<s:Image source="@Embed(source='/images/thumbButtonView.jpg')" width="100" height="75" buttonMode="true" click="preferences.viewMode = ViewModeType.BUTTON" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Button View" click="preferences.viewMode = ViewModeType.BUTTON" />
 						<s:RadioButton groupName="viewMode" id="viewButton" selected="{preferences.viewMode == ViewModeType.BUTTON}" click="preferences.viewMode = ViewModeType.BUTTON"  />
 					</s:VGroup>
 					<s:VGroup horizontalAlign="center" gap="0">
-						<s:Image source="@Embed(source='/images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="{viewWidget.selected = true;}" />
+						<s:Image source="@Embed(source='/images/thumbWidgetView.jpg')" width="100" height="75" buttonMode="true" click="preferences.viewMode = ViewModeType.WIDGET" />
 						<mx:LinkButton styleName="myLinkButton" skin="{null}" label="Widget View" click="preferences.viewMode = ViewModeType.WIDGET" />
 						<s:RadioButton groupName="viewMode" id="viewWidget" selected="{preferences.viewMode == ViewModeType.WIDGET}" click="preferences.viewMode = ViewModeType.WIDGET"  />
 					</s:VGroup>
