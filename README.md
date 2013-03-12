@@ -1,6 +1,5 @@
-TATRAC2-VisualDashboard-Patient
+HealthBoard - Parsons Institute for Information Mapping
 ===============================
-Parsons Institute for Information Mapping / HealthBoard
 
 DESCRIPTION
 
