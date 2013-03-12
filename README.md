@@ -1,5 +1,5 @@
-HealthBoard - Parsons Institute for Information Mapping
-===============================
+HealthBoard - Patient Portal
+============================
 
 DESCRIPTION
 
