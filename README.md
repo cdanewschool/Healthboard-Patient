@@ -3,7 +3,7 @@ HealthBoard - Parsons Institute for Information Mapping
 
 DESCRIPTION
 
-Funded through the Telemedicine and Advanced Technology Research Center (TATRC) and driven by consultations with the Walter Reed National Military Medical Center (WRNMMC), HealthBoard is a visual dashboard <b>prototype</b> that is designed to improve better patient care through better design. Consisting of two portals—the "PATIENT PORTAL" and the "PROVIDER PORTAL"—HealthBoard is designed to serve both communities through better information.
+Funded through the Telemedicine and Advanced Technology Research Center (TATRC) and driven by consultations with the Walter Reed National Military Medical Center (WRNMMC), HealthBoard is a visual dashboard <b>prototype</b> that is designed to improve better patient care through better design. Consisting of two portals—the "<b>Patient Portal</b>" and the "<b>Provider Portal</b>"—HealthBoard is designed to serve both communities through better information.
 
 This repository includes the source for the "<b>Patient Portal</b>". Concurrently, the "<b>Provider Portal</b>" is available separately: https://github.com/piim/TATRC2-VisualDashboard-Provider. Both portals make use of a <b>Shared Library</b>, available at https://github.com/piim/TATRAC2-VisualDashboard-Shared, which should be referenced in order for the application to run.
 
