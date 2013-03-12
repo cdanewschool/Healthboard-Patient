@@ -24,5 +24,5 @@ You will find the text of the Apache 2.0 License in the LICENSE File.
 
 FURTHER DETAILS
 
-http://piim.newschool.edu/healthboard
+http://piim.newschool.edu/healthboard <br>
 http://www.osehra.org/group/healthboard
