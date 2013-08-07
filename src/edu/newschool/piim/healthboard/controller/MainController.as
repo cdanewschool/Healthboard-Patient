@@ -172,7 +172,7 @@ package edu.newschool.piim.healthboard.controller
 			nextStepsOverlay.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, onNextStepsOutsideClick);
 			
 			nextStepsOverlay.x = application.stage.width/2 - nextStepsOverlay.width/2;
-			nextStepsOverlay.y = visualDashboard(application).header.height - 1;
+			nextStepsOverlay.y = Main(application).header.height - 1;
 		}
 		
 		private function onNextStepsClose( event:CloseEvent = null ):void
@@ -185,7 +185,7 @@ package edu.newschool.piim.healthboard.controller
 		
 		private function onNextStepsOutsideClick( event:FlexMouseEvent = null ):void
 		{
-			if(!visualDashboard(application).nextStepsTrigger.hitTestPoint(event.stageX,event.stageY)) onNextStepsClose();
+			if(!Main(application).nextStepsTrigger.hitTestPoint(event.stageX,event.stageY)) onNextStepsClose();
 		}
 		
 		override protected function onAuthenticated(event:AuthenticationEvent):void
@@ -209,7 +209,7 @@ package edu.newschool.piim.healthboard.controller
 		{
 			super.onSetState( event );
 			
-			var dashboard:visualDashboard = application as visualDashboard;
+			var dashboard:Main = application as Main;
 			
 			if( application.currentState == Constants.MODULE_MESSAGES
 				&& event.message )
@@ -245,7 +245,7 @@ package edu.newschool.piim.healthboard.controller
 		{
 			super.onTabClose(event);
 			
-			var dashboard:visualDashboard = application as visualDashboard;
+			var dashboard:Main = application as Main;
 			
 			if( TabBarPlus( event.target.owner).dataProvider is IList )
 			{
